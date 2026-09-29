@@ -19,6 +19,8 @@ jobs:
           curl --fail --location --retry 3 \
             'https://raw.githubusercontent.com/lucasfrmg25-del/lucas-freire-martins-data-portfolio/main/github-pages.html' \
             --output index.html
+          grep -q 'avatar-frame' index.html
+          grep -q 'lucas-ai-avatar.png' index.html
       - name: Commit published version
         run: |
           git config user.name 'github-actions[bot]'
@@ -27,6 +29,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No changes to publish.'
           else
-            git commit -m 'Publish approved Lovable portfolio avatar layout'
+            git commit -m 'Publish approved Lovable portfolio layout'
             git push
           fi
