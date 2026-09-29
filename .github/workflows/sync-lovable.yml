@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Replace GitHub Pages index with Lovable static build
+      - name: Replace GitHub Pages index with approved Lovable static build
         run: |
           curl --fail --location --retry 3 \
             'https://raw.githubusercontent.com/lucasfrmg25-del/lucas-freire-martins-data-portfolio/main/github-pages.html' \
@@ -27,6 +27,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No changes to publish.'
           else
-            git commit -m 'Publish Lovable portfolio to GitHub Pages'
+            git commit -m 'Publish approved Lovable portfolio avatar layout'
             git push
           fi
