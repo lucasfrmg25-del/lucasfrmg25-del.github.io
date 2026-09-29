@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Replace GitHub Pages index with approved Lovable static build
         run: |
-          curl --fail --location --retry 3 --no-cache \
-            'https://raw.githubusercontent.com/lucasfrmg25-del/lucas-freire-martins-data-portfolio/main/github-pages.html' \
+          curl --fail --location --retry 3 \
+            'https://raw.githubusercontent.com/lucasfrmg25-del/lucas-freire-martins-data-portfolio/main/github-pages.html?sync=20260929-2' \
             --output index.html
           grep -q 'avatar-frame' index.html
           grep -q 'lucas-ai-avatar.png' index.html
@@ -37,6 +37,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No changes to publish.'
           else
-            git commit -m 'Publish Lovable layout without legacy avatar'
+            git commit -m 'Publish approved Lovable portfolio directly'
             git push
           fi
