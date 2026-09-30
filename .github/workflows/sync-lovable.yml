@@ -1,4 +1,4 @@
-name: Sync approved portfolio
+name: Apply portfolio hero
 
 on:
   push:
@@ -10,34 +10,42 @@ permissions:
   contents: write
 
 jobs:
-  sync:
+  update-hero:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch approved portfolio through GitHub API
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Apply approved black and gold hero
         run: |
-          gh api repos/lucasfrmg25-del/lucas-freire-martins-data-portfolio/contents/github-pages.html \
-            --jq '.content' | tr -d '\n' | base64 --decode > index.html
-          grep -q 'avatar-frame' index.html
-          grep -q 'lucas-ai-avatar.png' index.html
-          if grep -q 'avatar-svg' index.html; then
-            echo 'Old avatar layout detected; refusing publish.'
-            exit 1
-          fi
-          if grep -q 'chip c1' index.html; then
-            echo 'Old floating metric cards detected; refusing publish.'
-            exit 1
-          fi
-      - name: Commit published version
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='/* HERO-ILLUSTRATED-V2 */'
+          css='''<style>/* HERO-ILLUSTRATED-V2 */
+          .hero{background:radial-gradient(circle at 78% 52%,rgba(244,196,0,.30) 0,rgba(244,196,0,.12) 24%,rgba(7,17,29,0) 48%),linear-gradient(115deg,#020305 0%,#080a0d 48%,#171100 100%)!important;border-bottom:1px solid #332b12!important;overflow:hidden}
+          .hero-art{min-height:590px!important;position:relative!important}
+          .avatar-stage{width:min(560px,100%)!important;aspect-ratio:307/360!important;background:url('assets/lucas-illustrated.svg') center bottom/contain no-repeat!important;filter:drop-shadow(0 30px 45px rgba(0,0,0,.65))!important}
+          .avatar-stage:before{content:''!important;position:absolute!important;inset:8% 0 0!important;border-radius:45%!important;background:radial-gradient(circle,rgba(244,196,0,.34),rgba(244,196,0,0) 68%)!important;filter:blur(30px)!important;z-index:-1!important}
+          .avatar-svg,.chip{display:none!important}
+          .kicker,.yellow{color:#f4c400!important}
+          .btn.primary{background:linear-gradient(135deg,#ffd83d,#f4c400)!important;border-color:#f4c400!important;box-shadow:0 12px 35px rgba(244,196,0,.14)}
+          .ai-launch{background:#090b0d url('assets/lucas-illustrated.svg') center 22%/cover no-repeat!important;border-color:#f4c400!important;box-shadow:0 0 0 7px rgba(244,196,0,.10),0 15px 40px #0008!important}
+          .ai-launch svg,.ai-avatar svg{display:none!important}
+          .ai-avatar{background:#090b0d url('assets/lucas-illustrated.svg') center 20%/cover no-repeat!important;border-color:#f4c400!important}
+          @media(max-width:850px){.hero{padding-top:105px!important}.hero-art{min-height:390px!important}.avatar-stage{max-width:330px!important;margin:auto!important}.hero h1{font-size:clamp(50px,15vw,68px)!important}.lead{font-size:16px!important}.buttons{margin-bottom:10px!important}}
+          </style>'''
+          if marker not in s:
+              s=s.replace('</head>',css+'</head>')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit hero update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
           if git diff --cached --quiet; then
-            echo 'No changes to publish.'
+            echo 'Hero already applied.'
           else
-            git commit -m 'Publish approved portfolio directly'
+            git commit -m 'Apply illustrated black and gold hero'
             git push
           fi
