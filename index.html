@@ -1,778 +1,571 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucas Freire Martins | Fraud Analytics & Data Analysis</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome para ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --bg-color: #181a1b; /* Fundo cinza grafite moderno */
-            --text-color: #f0f0f0;
-            --text-muted: #a0a0a0;
-            --primary-color: #f3cc40; /* Amarelo ouro elegante */
-            --primary-hover: #d4af37;
-            --card-bg: #222528;
-            --border-color: #2f3336;
-            --nav-bg: rgba(24, 26, 27, 0.9);
-            --shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lucas Freire Martins — Prevenção a Fraudes e Analytics</title>
+<meta name="description" content="Portfólio de Lucas Freire Martins: prevenção a fraudes, análise de riscos, SQL e análise de dados." />
+<meta name="theme-color" content="#ffffff" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26' font-family='monospace' fill='%230284c7'>_</text></svg>" />
+<style>
+  :root{
+    --bg:#ffffff;
+    --surface:#f8fafc;
+    --text:#0f172a;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --accent:#0284c7;
+    --accent-soft:#e0f2fe;
+    --alert:#dc2626;
+    --ok:#059669;
+    --amber:#d97706;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --max:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{line-height:1.1;margin:0}
+  p{margin:0}
+  a{color:inherit}
+  ul{margin:0;padding:0;list-style:none}
+  img,canvas{display:block;max-width:100%}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono)}
+  .eyebrow{
+    font-family:var(--mono);font-size:.8125rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;
+  }
+  section{scroll-margin-top:80px}
+  .title{font-size:clamp(2rem,5vw,3.25rem);font-weight:800;letter-spacing:-.02em}
 
-        .light-mode {
-            --bg-color: #fbfbfb;
-            --text-color: #2b2b2b;
-            --text-muted: #666666;
-            --primary-color: #d4af37;
-            --primary-hover: #b5952f;
-            --card-bg: #ffffff;
-            --border-color: #e5e5e5;
-            --nav-bg: rgba(251, 251, 251, 0.9);
-            --shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;inset:0 0 auto 0;z-index:50;height:64px;
+    display:flex;align-items:center;
+    background:rgba(255,255,255,.78);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;width:100%}
+  .brand{font-family:var(--mono);font-weight:600;font-size:.95rem;text-decoration:none}
+  .brand span{color:var(--accent)}
+  .nav-links{display:flex;gap:2rem}
+  .nav-links a{font-size:.9rem;color:var(--muted);text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--accent)}
+  .menu-btn{
+    display:none;background:none;border:0;padding:8px;cursor:pointer;color:var(--text);
+  }
+  .menu-btn svg{width:22px;height:22px}
+  @media (max-width:820px){
+    .menu-btn{display:block}
+    .nav-links{
+      position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;
+      background:#fff;border-bottom:1px solid var(--line);padding:.5rem 24px 1rem;
+      display:none;
+    }
+    .nav-links.open{display:flex}
+    .nav-links a{padding:.75rem 0;border-bottom:1px solid var(--surface);font-size:1rem}
+  }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+  #graph{position:absolute;inset:0;width:100%;height:100%}
+  .hero-veil{
+    position:absolute;inset:0;
+    background:linear-gradient(to bottom,rgba(255,255,255,.72),rgba(255,255,255,.35) 45%,#fff);
+  }
+  .hero-inner{position:relative;padding-top:96px;padding-bottom:80px}
+  .hero h1{
+    font-size:clamp(2.6rem,9vw,6rem);font-weight:800;letter-spacing:-.03em;line-height:.95;
+  }
+  .hero h1 span{color:var(--accent)}
+  .hero-sub{max-width:44ch;margin-top:2rem;font-size:1.0625rem;color:#475569}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2.5rem}
+  .btn{
+    display:inline-flex;align-items:center;gap:.5rem;
+    padding:.8rem 1.5rem;border-radius:999px;font-weight:500;font-size:.95rem;
+    text-decoration:none;transition:.2s;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--text);color:#fff}
+  .btn-primary:hover{background:var(--accent)}
+  .btn-ghost{border-color:var(--line);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .btn svg{width:16px;height:16px}
+  .scroll-hint{
+    position:absolute;left:24px;bottom:2.5rem;color:#94a3b8;text-decoration:none;
+  }
+  .scroll-hint:hover{color:var(--accent)}
+  .scroll-hint svg{width:20px;height:20px;animation:bounce 1.6s infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+  @media (max-width:640px){.scroll-hint{display:none}}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-        }
+  /* ---------- SOBRE ---------- */
+  .about{display:grid;gap:3rem;padding:7rem 0}
+  @media (min-width:900px){.about{grid-template-columns:5fr 7fr}}
+  .about-text p{font-size:1.0625rem;color:#475569;margin-top:1rem}
+  .stats{display:grid;gap:1.5rem;margin-top:3rem}
+  @media (min-width:640px){.stats{grid-template-columns:repeat(3,1fr)}}
+  .stat{border-top:1px solid #cbd5e1;padding-top:1rem}
+  .stat b{display:block;font-size:3rem;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .stat p{margin-top:.5rem;font-family:var(--mono);font-size:.8125rem;color:var(--muted)}
 
-        /* Fundo com canvas animado (Gráficos variando ao longo do fluxo) */
-        #chart-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.45;
-        }
+  /* ---------- EXPERIÊNCIA ---------- */
+  .section-surface{background:var(--surface);padding:7rem 0}
+  .timeline{border-left:1px solid #cbd5e1;margin-left:.5rem;margin-top:3.5rem}
+  .job{position:relative;padding-left:2rem;margin-bottom:3.5rem}
+  .job:last-child{margin-bottom:0}
+  .job::before{
+    content:"";position:absolute;left:-5px;top:.5rem;width:9px;height:9px;border-radius:50%;
+    background:var(--accent);box-shadow:0 0 0 4px var(--surface);
+  }
+  .job time{font-family:var(--mono);font-size:.8125rem;color:var(--muted)}
+  .job h3{font-size:1.4rem;font-weight:700;margin-top:.25rem}
+  .job .org{color:var(--accent);font-weight:500;margin-bottom:1rem}
+  .job li{display:flex;gap:.75rem;color:#475569;margin-top:.5rem;max-width:60ch}
+  .job li::before{
+    content:"";flex:0 0 6px;width:6px;height:6px;border-radius:50%;
+    background:var(--accent);margin-top:.6rem;
+  }
 
-        /* Navegação Superior */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: var(--nav-bg);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-        }
+  /* ---------- COMPETÊNCIAS ---------- */
+  .skills{padding:7rem 0}
+  .skill-grid{display:grid;gap:1rem;margin-top:3.5rem}
+  @media (min-width:640px){.skill-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (min-width:980px){.skill-grid{grid-template-columns:repeat(3,1fr)}}
+  .skill{border:1px solid var(--line);border-radius:1rem;padding:1.25rem;transition:.25s}
+  .skill:hover{border-color:#38bdf8;box-shadow:0 12px 28px -12px rgba(2,132,199,.35)}
+  .skill-head{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}
+  .skill h3{font-size:1rem;font-weight:600}
+  .tag{font-family:var(--mono);font-size:.7rem;color:var(--amber);white-space:nowrap}
+  .bar{height:6px;border-radius:999px;background:#eef2f7;overflow:hidden;margin-top:1rem}
+  .bar i{
+    display:block;height:100%;width:0;border-radius:999px;background:var(--accent);
+    transition:width 1s cubic-bezier(.22,1,.36,1);
+  }
 
-        .logo {
-            font-weight: 700;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            color: var(--text-color);
-            text-decoration: none;
-        }
+  /* ---------- FORMAÇÃO ---------- */
+  .edu{display:grid;gap:3rem;padding:7rem 0}
+  @media (min-width:900px){.edu{grid-template-columns:5fr 7fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:1rem;padding:1.5rem;margin-top:1rem}
+  .card time{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+  .card h3{margin-top:.25rem;font-size:1.125rem;font-weight:700}
+  .cert-list{border-top:1px solid var(--line);border-bottom:1px solid var(--line);align-self:start}
+  .cert-list li{
+    display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--line);color:#334155;
+  }
+  .cert-list li:last-child{border-bottom:0}
+  .cert-list em{font-family:var(--mono);font-style:normal;font-size:.8125rem;color:#94a3b8}
 
-        .logo span {
-            color: var(--primary-color);
-        }
+  /* ---------- CONTATO ---------- */
+  .contact{padding:7rem 0 5rem}
+  .contact h2{font-size:clamp(2rem,6vw,3.75rem);font-weight:800;letter-spacing:-.03em;max-width:22ch}
+  .status{
+    display:inline-flex;align-items:center;gap:.6rem;margin-top:1.5rem;
+    font-family:var(--mono);font-size:.8125rem;color:#475569;
+  }
+  .dot{position:relative;width:10px;height:10px;border-radius:50%;background:var(--ok)}
+  .dot::after{
+    content:"";position:absolute;inset:0;border-radius:50%;background:var(--ok);
+    animation:ping 1.8s cubic-bezier(0,0,.2,1) infinite;
+  }
+  @keyframes ping{0%{transform:scale(1);opacity:.7}75%,100%{transform:scale(2.4);opacity:0}}
+  .contact-grid{display:grid;gap:1rem;margin-top:3rem}
+  @media (min-width:640px){.contact-grid{grid-template-columns:repeat(2,1fr)}}
+  .contact-link{
+    display:flex;align-items:center;gap:1rem;padding:1.5rem;border-radius:1rem;
+    border:1px solid var(--line);text-decoration:none;transition:.25s;word-break:break-word;
+  }
+  .contact-link:hover{border-color:var(--accent);background:#f0f9ff}
+  .contact-link svg{width:24px;height:24px;color:var(--accent);flex:0 0 24px}
+  .contact-link span{font-weight:500;color:#1e293b}
+  footer{
+    border-top:1px solid var(--line);margin-top:4rem;padding:1.5rem 0;
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    font-family:var(--mono);font-size:.8125rem;color:#94a3b8;
+  }
 
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        nav ul li a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        nav ul li a:hover, nav ul li a.active {
-            color: var(--primary-color);
-        }
-
-        .nav-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            cursor: pointer;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-        }
-
-        .theme-toggle:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-
-        /* Hero Section */
-        section {
-            position: relative;
-            z-index: 1;
-            padding: 7rem 10% 4rem 10%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .hero-badge {
-            background-color: var(--primary-color);
-            color: #181a1b;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 0.3rem 0.8rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 1.5rem;
-        }
-
-        h1 {
-            font-size: clamp(2.2rem, 4vw, 3.5rem);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
-        }
-
-        h1 span {
-            color: var(--primary-color);
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-            font-weight: 400;
-            letter-spacing: 1px;
-        }
-
-        .hero-highlights {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2.5rem;
-            flex-wrap: wrap;
-        }
-
-        .highlight-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            background: var(--card-bg);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .highlight-item i {
-            color: var(--primary-color);
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background-color: transparent;
-            color: var(--text-color);
-            border: 2px solid var(--primary-color);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-color);
-            color: #181a1b;
-        }
-
-        /* Seções de Conteúdo */
-        .content-section {
-            padding: 5rem 10%;
-            min-height: auto;
-            align-items: stretch;
-            text-align: left;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background-color: var(--primary-color);
-        }
-
-        .section-desc {
-            color: var(--text-muted);
-            margin-bottom: 3rem;
-            font-size: 1.05rem;
-        }
-
-        /* Grid Cards */
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            width: 100%;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background-color: var(--primary-color);
-        }
-
-        .card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .card .company {
-            font-size: 0.9rem;
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .card .date {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .card ul {
-            list-style-type: disc;
-            padding-left: 1.2rem;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        /* Skills Tags */
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            width: 100%;
-        }
-
-        .skill-tag {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 0.8rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            box-shadow: var(--shadow);
-        }
-
-        .skill-tag i {
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-
-        /* Assistente Robozinho Interativo */
-        #robot-assistant-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .robot-bubble {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 1rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            margin-bottom: 15px;
-            max-width: 280px;
-            font-size: 0.9rem;
-            position: relative;
-            animation: floatBubble 3s ease-in-out infinite;
-        }
-
-        .robot-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            right: 25px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid var(--border-color);
-        }
-
-        .robot-avatar {
-            width: 65px;
-            height: 65px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(243, 204, 64, 0.4);
-            transition: transform 0.3s ease;
-            position: relative;
-        }
-
-        .robot-avatar:hover {
-            transform: scale(1.1);
-        }
-
-        .robot-avatar i {
-            font-size: 1.8rem;
-            color: #181a1b;
-        }
-
-        /* Painel Dinâmico Puxado pelo Robô */
-        .robot-panel {
-            position: fixed;
-            bottom: 110px;
-            right: 30px;
-            width: 350px;
-            max-height: 450px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 1.5rem;
-            z-index: 1999;
-            overflow-y: auto;
-            transform: translateY(20px) scale(0.95);
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .robot-panel.active {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .robot-panel h4 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--primary-color);
-        }
-
-        .robot-panel h4 button {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .robot-options {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-top: 1rem;
-        }
-
-        .robot-option-btn {
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            padding: 0.8rem;
-            border-radius: 6px;
-            text-align: left;
-            cursor: pointer;
-            color: var(--text-color);
-            font-weight: 500;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            transition: all 0.2s ease;
-        }
-
-        .robot-option-btn:hover {
-            border-color: var(--primary-color);
-            background: rgba(243, 204, 64, 0.05);
-        }
-
-        .robot-result-content {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        @keyframes floatBubble {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        /* Responsividade */
-        @media(max-width: 768px) {
-            nav ul { display: none; }
-            section { padding: 6rem 5% 3rem 5%; }
-            .robot-panel { width: calc(100vw - 40px); right: 20px; }
-        }
-    </style>
+  /* ---------- ANIMAÇÕES DE ENTRADA ---------- */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    .dot::after,.scroll-hint svg{animation:none}
+  }
+</style>
 </head>
 <body>
 
-    <!-- Fundo Canvas com Gráficos Variando ao Longo do Fluxo -->
-    <canvas id="chart-canvas"></canvas>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#inicio">LFM<span>_</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#sobre">Sobre</a>
+      <a href="#experiencia">Experiência</a>
+      <a href="#competencias">Competências</a>
+      <a href="#formacao">Formação</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    </button>
+  </div>
+</header>
 
-    <!-- Cabeçalho -->
-    <header>
-        <a href="#home" class="logo">LUCAS FREIRE <span>MARTINS</span></a>
-        <nav>
-            <ul>
-                <li><a href="#home" class="active">Home</a></li>
-                <li><a href="#about">Resumo</a></li>
-                <li><a href="#experience">Experiência</a></li>
-                <li><a href="#skills">Competências</a></li>
-                <li><a href="#contact">Contato</a></li>
-            </ul>
-        </nav>
-        <div class="nav-controls">
-            <button class="theme-toggle" id="themeToggle" title="Alternar Tema"><i class="fa-solid fa-sun"></i></button>
-        </div>
-    </header>
-
-    <!-- Hero / Home -->
-    <section id="home">
-        <div class="hero-badge">Fraud Analytics & Data Science</div>
-        <h1>LUCAS FREIRE <span>MARTINS</span></h1>
-        <p class="subtitle">Analista de Dados | Prevenção a Fraudes e Gestão de Riscos</p>
-        
-        <div class="hero-highlights">
-            <div class="highlight-item"><i class="fa-solid fa-shield-halved"></i> Prevenção a Fraudes</div>
-            <div class="highlight-item"><i class="fa-solid fa-database"></i> SQL & Excel</div>
-            <div class="highlight-item"><i class="fa-solid fa-chart-line"></i> Indicadores & KPIs</div>
-        </div>
-
-        <div class="hero-buttons">
-            <a href="#experience" class="btn btn-primary">Ver Experiência</a>
-            <a href="#contact" class="btn btn-primary" style="background-color: var(--primary-color); color: #181a1b;">Entrar em Contato</a>
-        </div>
-    </section>
-
-    <!-- Resumo Profissional -->
-    <section id="about" class="content-section">
-        <h2 class="section-title">Resumo Profissional</h2>
-        <p class="section-desc">Visão geral da carreira e atuação no setor financeiro.</p>
-        <div class="card" style="width: 100%;">
-            <p style="font-size: 1.05rem; color: var(--text-color);">
-                Profissional com experiência sólida em Prevenção a Fraudes, Segurança do Cliente, Análise de Riscos e Análise de Dados no setor financeiro. Atuação destacada com SQL, Excel, indicadores e KPIs, manipulação de bases, monitoramento transacional, análise de perfis de risco e melhoria de processos. Experiência profunda com PIX, TED, boletos, links de pagamento, onboarding, validação cadastral e documental de clientes PJ. Atualmente em desenvolvimento técnico em Python e Power BI, complementado por sólida formação em IBM Cognos Analytics e Inteligência Artificial.
-            </p>
-        </div>
-    </section>
-
-    <!-- Experiência Profissional -->
-    <section id="experience" class="content-section">
-        <h2 class="section-title">Experiência Profissional</h2>
-        <p class="section-desc">Trajetória em empresas de tecnologia financeira e administração pública.</p>
-        
-        <div class="grid-cards">
-            <div class="card">
-                <h3>Assistente Administrativo</h3>
-                <span class="company">MGS - Minas Gerais Administração e Serviços S.A.</span>
-                <span class="date">jun/2026 - atual</span>
-                <ul>
-                    <li>Acompanhamento administrativo de contratos e processos de contratação pública com conferência documental.</li>
-                    <li>Apoio à gestão de fiscais e gestores, mantendo registros e informações atualizadas.</li>
-                    <li>Validação de dados cadastrais e documentações empresariais (CNPJ) com controle rigoroso em Excel.</li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <h3>Analista de Segurança Pleno</h3>
-                <span class="company">Cora</span>
-                <span class="date">mai/2023 - out/2024</span>
-                <ul>
-                    <li>Monitoramento transacional (PIX, TED, boletos e links) identificando comportamentos suspeitos e mitigando fraudes.</li>
-                    <li>Manipulação de bases com SQL para investigações aprofundadas e acompanhamento operacional.</li>
-                    <li>Avaliação de regras de monitoramento com foco em assertividade e redução de falsos positivos.</li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <h3>Analista de Segurança do Cliente Júnior</h3>
-                <span class="company">Cora</span>
-                <span class="date">dez/2021 - mai/2023</span>
-                <ul>
-                    <li>Análise de transações e perfis de risco em meios de pagamento digitais.</li>
-                    <li>Atuação em onboarding com análise documental e validação de informações de clientes PJ.</li>
-                    <li>Conciliação entre mitigação rigorosa de riscos e impacto positivo sobre a experiência de clientes legítimos.</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Competências Técnicas -->
-    <section id="skills" class="content-section">
-        <h2 class="section-title">Competências Técnicas</h2>
-        <p class="section-desc">Ferramentas, metodologias e tecnologias dominadas.</p>
-        
-        <div class="skills-container">
-            <div class="skill-tag"><i class="fa-solid fa-shield-virus"></i> Prevenção a Fraudes & Riscos</div>
-            <div class="skill-tag"><i class="fa-solid fa-database"></i> SQL (Consultas & Investigação)</div>
-            <div class="skill-tag"><i class="fa-solid fa-file-excel"></i> Excel Avançado & Indicadores</div>
-            <div class="skill-tag"><i class="fa-solid fa-chart-pie"></i> IBM Cognos Analytics & Dataviz</div>
-            <div class="skill-tag"><i class="fa-brands fa-python"></i> Python (Em desenvolvimento)</div>
-            <div class="skill-tag"><i class="fa-solid fa-chart-column"></i> Power BI (Em desenvolvimento)</div>
-            <div class="skill-tag"><i class="fa-solid fa-id-card"></i> Onboarding & Validação PJ</div>
-            <div class="skill-tag"><i class="fa-solid fa-brain"></i> Fundamentos de Inteligência Artificial</div>
-        </div>
-    </section>
-
-    <!-- Contato -->
-    <section id="contact" class="content-section">
-        <h2 class="section-title">Contato</h2>
-        <p class="section-desc">Vamos conversar sobre oportunidades em Data Analytics e Prevenção a Fraudes.</p>
-        
-        <div class="grid-cards">
-            <div class="card" style="text-align: center;">
-                <i class="fa-solid fa-envelope" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-                <h3>E-mail</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;">lucasfrmg25@gmail.com</p>
-            </div>
-            <div class="card" style="text-align: center;">
-                <i class="fa-solid fa-phone" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-                <h3>Telefone</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;">(27) 99294-7583</p>
-            </div>
-            <div class="card" style="text-align: center;">
-                <i class="fa-brands fa-linkedin" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-                <h3>LinkedIn</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;"><a href="https://linkedin.com/in/lucas-freire-727057273" target="_blank" style="color: var(--primary-color); text-decoration: none;">/lucas-freire</a></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Assistente Robozinho Interativo -->
-    <div id="robot-assistant-container">
-        <div class="robot-panel" id="robotPanel">
-            <h4>Assistente Virtual <button id="closePanel"><i class="fa-solid fa-xmark"></i></button></h4>
-            <div class="robot-result-content" id="robotContent">
-                Olá! Clique em uma das opções abaixo para puxar informações rápidas do Lucas:
-            </div>
-            <div class="robot-options" id="robotOptions">
-                <button class="robot-option-btn" data-action="contact"><i class="fa-solid fa-address-book"></i> Ver Contato Completo</button>
-                <button class="robot-option-btn" data-action="skills"><i class="fa-solid fa-code"></i> Principais Competências</button>
-                <button class="robot-option-btn" data-action="exp"><i class="fa-solid fa-briefcase"></i> Resumo de Experiência</button>
-            </div>
-        </div>
-
-        <div class="robot-bubble" id="robotBubble">
-            Precisa de ajuda para avaliar o perfil? Clique em mim! 🤖
-        </div>
-
-        <div class="robot-avatar" id="robotAvatar" title="Assistente Robozinho">
-            <i class="fa-solid fa-robot"></i>
-        </div>
+<main>
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <canvas id="graph" aria-hidden="true"></canvas>
+    <div class="hero-veil"></div>
+    <div class="wrap hero-inner">
+      <p class="eyebrow reveal">Analista de dados · Prevenção a fraudes e risco</p>
+      <h1 class="reveal">Lucas Freire<br />Martins<span>.</span></h1>
+      <p class="hero-sub reveal">
+        Transformo dados transacionais em decisões: detecto comportamentos suspeitos, refino regras
+        e reduzo falsos positivos para proteger o negócio sem atrapalhar clientes legítimos.
+      </p>
+      <div class="hero-actions reveal">
+        <a class="btn btn-primary" href="#contato">Vamos conversar</a>
+        <a class="btn btn-ghost" href="https://github.com/lucasfrmg25-del" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.6 4.1 18.6 4.4 18.6 4.4c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.7 5.6-5.3 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12A11.5 11.5 0 0 0 12 .5z"/></svg>
+          GitHub
+        </a>
+      </div>
     </div>
+    <a class="scroll-hint" href="#sobre" aria-label="Rolar para baixo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </a>
+  </section>
 
-    <!-- Scripts -->
-    <script>
-        // Canvas de Fundo (Gráficos Dinâmicos Variando ao Longo do Fluxo)
-        const canvas = document.getElementById('chart-canvas');
-        const ctx = canvas.getContext('2d');
+  <!-- SOBRE -->
+  <section class="wrap about" id="sobre">
+    <div class="reveal">
+      <p class="eyebrow">01 / Sobre</p>
+      <h2 class="title">Dados com olhar de investigador.</h2>
+    </div>
+    <div class="about-text reveal">
+      <p>
+        Profissional com experiência em Prevenção a Fraudes, Segurança do Cliente, Análise de Riscos e
+        Análise de Dados no setor financeiro. Atuação com SQL, Excel, indicadores e KPIs, manipulação de
+        bases, monitoramento transacional, análise de perfis de risco e melhoria de processos.
+      </p>
+      <p>
+        Experiência com onboarding, validação cadastral e documental de clientes PJ e avaliação de regras
+        com foco em assertividade e redução de falsos positivos. Em desenvolvimento técnico em Python e Power BI.
+      </p>
+      <div class="stats">
+        <div class="stat"><b class="count" data-to="4" data-suffix="+">0</b><p>anos em prevenção a fraudes</p></div>
+        <div class="stat"><b class="count" data-to="4">0</b><p>canais monitorados: PIX, TED, boletos e links</p></div>
+        <div class="stat"><b class="count" data-to="9">0</b><p>cursos e certificações em dados e IA</p></div>
+      </div>
+    </div>
+  </section>
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+  <!-- EXPERIÊNCIA -->
+  <section class="section-surface" id="experiencia">
+    <div class="wrap">
+      <p class="eyebrow reveal">02 / Experiência</p>
+      <h2 class="title reveal">Trajetória profissional</h2>
+      <div class="timeline">
+        <article class="job reveal">
+          <time>jun/2026 — atual</time>
+          <h3>Assistente Administrativo</h3>
+          <p class="org">MGS — Minas Gerais Administração e Serviços S.A.</p>
+          <ul>
+            <li>Acompanhamento administrativo de contratos e processos de contratação pública, com organização e conferência de documentos para formalização.</li>
+            <li>Apoio à gestão e ao acompanhamento de fiscais e gestores de contratos, mantendo registros e informações atualizados.</li>
+            <li>Validação de dados cadastrais e documentações de empresas, incluindo CNPJ, e uso de Excel para controle e acompanhamento de dados.</li>
+          </ul>
+        </article>
+        <article class="job reveal">
+          <time>mai/2023 — out/2024</time>
+          <h3>Analista de Segurança Pleno</h3>
+          <p class="org">Cora</p>
+          <ul>
+            <li>Análise e monitoramento de transações via PIX, TED, boletos e links de pagamento, identificando comportamentos suspeitos e mitigando riscos de fraude.</li>
+            <li>Análise e manipulação de bases com SQL para investigações, acompanhamento de indicadores e análises operacionais.</li>
+            <li>Avaliação de regras de monitoramento transacional com foco em maior assertividade e redução de falsos positivos.</li>
+            <li>Monitoramento de KPIs de qualidade, produtividade e desempenho; melhorias, automações, treinamento de equipes e interface entre áreas.</li>
+          </ul>
+        </article>
+        <article class="job reveal">
+          <time>dez/2021 — mai/2023</time>
+          <h3>Analista de Segurança do Cliente Júnior</h3>
+          <p class="org">Cora</p>
+          <ul>
+            <li>Análise de transações, perfis de risco e prevenção a fraudes em PIX, TED, boletos e links de pagamento.</li>
+            <li>Onboarding com análise documental, documentos comprobatórios e validação de informações de clientes Pessoa Jurídica (PJ).</li>
+            <li>Acompanhamento de métricas, produtividade, qualidade e metas, conciliando mitigação de riscos e impacto sobre clientes legítimos.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
 
-        const streams = [];
-        const streamCount = 5;
+  <!-- COMPETÊNCIAS -->
+  <section class="wrap skills" id="competencias">
+    <p class="eyebrow reveal">03 / Competências</p>
+    <h2 class="title reveal">Caixa de ferramentas</h2>
+    <div class="skill-grid" id="skillGrid">
+      <div class="skill reveal" data-level="85"><div class="skill-head"><h3>SQL</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="92"><div class="skill-head"><h3>Prevenção a Fraudes</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="85"><div class="skill-head"><h3>Excel</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="88"><div class="skill-head"><h3>Análise de Riscos</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="85"><div class="skill-head"><h3>Indicadores e KPIs</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="92"><div class="skill-head"><h3>Monitoramento Transacional</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="65"><div class="skill-head"><h3>IBM Cognos Analytics</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="88"><div class="skill-head"><h3>Onboarding e Validação Documental</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="78"><div class="skill-head"><h3>Melhoria de Processos</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="55"><div class="skill-head"><h3>Fundamentos de IA</h3></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="40"><div class="skill-head"><h3>Python</h3><em class="tag">em desenvolvimento</em></div><div class="bar"><i></i></div></div>
+      <div class="skill reveal" data-level="40"><div class="skill-head"><h3>Power BI</h3><em class="tag">em desenvolvimento</em></div><div class="bar"><i></i></div></div>
+    </div>
+  </section>
 
-        for (let i = 0; i < streamCount; i++) {
-            streams.push({
-                yOffset: (canvas.height / (streamCount + 1)) * (i + 1),
-                frequency: 0.008 + Math.random() * 0.005,
-                amplitude: 30 + Math.random() * 40,
-                speed: 0.015 + Math.random() * 0.01,
-                phase: Math.random() * Math.PI * 2
-            });
-        }
+  <!-- FORMAÇÃO -->
+  <section class="section-surface" id="formacao">
+    <div class="wrap edu">
+      <div class="reveal">
+        <p class="eyebrow">04 / Formação</p>
+        <h2 class="title">Sempre aprendendo.</h2>
+        <div class="card">
+          <time>2015 — 2021</time>
+          <h3>Bacharelado em Engenharia de Alimentos</h3>
+          <p>Universidade Federal do Espírito Santo (UFES)</p>
+        </div>
+        <div class="card">
+          <time>Idiomas</time>
+          <p>Inglês — Intermediário · Espanhol — Básico</p>
+        </div>
+      </div>
+      <ul class="cert-list reveal">
+        <li><em>01</em>IBM Data Analyst Professional Certificate — em andamento</li>
+        <li><em>02</em>Data Visualization and Dashboards with Excel and Cognos — IBM</li>
+        <li><em>03</em>Excel Basics for Data Analysis — IBM</li>
+        <li><em>04</em>Introduction to Data Analytics — IBM</li>
+        <li><em>05</em>Introduction to SQL — Simplilearn</li>
+        <li><em>06</em>Introduction to AI — Google</li>
+        <li><em>07</em>AI Fundamentals</li>
+        <li><em>08</em>Introdução ao R (Estatística e Análise de Dados) — DataCamp</li>
+        <li><em>09</em>Data Warehouses</li>
+      </ul>
+    </div>
+  </section>
 
-        const bars = [];
-        for (let i = 0; i < 20; i++) {
-            bars.push({
-                x: Math.random() * canvas.width,
-                baseY: Math.random() * canvas.height,
-                height: 20 + Math.random() * 60,
-                width: 8 + Math.random() * 12,
-                speed: 0.2 + Math.random() * 0.5
-            });
-        }
+  <!-- CONTATO -->
+  <section class="wrap contact" id="contato">
+    <p class="eyebrow reveal">05 / Contato</p>
+    <h2 class="reveal">Vamos construir algo mais seguro juntos?</h2>
+    <p class="status reveal"><span class="dot"></span>Status: aberto a colaborações · Vitória - ES</p>
+    <div class="contact-grid">
+      <a class="contact-link reveal" href="mailto:lucasfrmg25@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        <span>lucasfrmg25@gmail.com</span>
+      </a>
+      <a class="contact-link reveal" href="tel:+5527992947583">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+        <span>(27) 99294-7583</span>
+      </a>
+      <a class="contact-link reveal" href="https://linkedin.com/in/lucas-freire-727057273" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05A4.2 4.2 0 0 1 17.6 8.6c3 0 3.9 2 3.9 4.7V21h-4v-6.6c0-1.6-.6-2.7-2.1-2.7-1.2 0-1.9.8-2.2 1.6-.1.3-.1.7-.1 1.1V21h-4z"/></svg>
+        <span>linkedin.com/in/lucas-freire-727057273</span>
+      </a>
+      <a class="contact-link reveal" href="https://github.com/lucasfrmg25-del" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.6 4.1 18.6 4.4 18.6 4.4c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.7 5.6-5.3 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12A11.5 11.5 0 0 0 12 .5z"/></svg>
+        <span>github.com/lucasfrmg25-del</span>
+      </a>
+    </div>
+    <footer>
+      <span>© <span id="year">2026</span> Lucas Freire Martins</span>
+      <span>Vitória - ES · Brasil</span>
+    </footer>
+  </section>
+</main>
 
-        function animateCharts() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const isLight = document.body.classList.contains('light-mode');
-            
-            // Barras de gráficos flutuantes em tom ouro/suave
-            ctx.fillStyle = isLight ? 'rgba(212, 175, 55, 0.08)' : 'rgba(243, 204, 64, 0.06)';
-            bars.forEach(bar => {
-                bar.baseY -= bar.speed;
-                if (bar.baseY < -50) bar.baseY = canvas.height + 50;
-                ctx.fillRect(bar.x, bar.baseY, bar.width, bar.height);
-            });
+<script>
+(function () {
+  "use strict";
 
-            // Linhas de tendência variáveis simulando fluxo de dados analíticos
-            streams.forEach((stream) => {
-                stream.phase += stream.speed;
-                ctx.beginPath();
-                ctx.lineWidth = 1.5;
-                ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.07)';
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-                for (let x = 0; x < canvas.width; x += 10) {
-                    const y = stream.yOffset + Math.sin(x * stream.frequency + stream.phase) * stream.amplitude;
-                    if (x === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
-                ctx.stroke();
-            });
+  /* ---------- Menu mobile ---------- */
+  var menuBtn = document.getElementById("menuBtn");
+  var navLinks = document.getElementById("navLinks");
+  menuBtn.addEventListener("click", function () {
+    var open = navLinks.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  navLinks.addEventListener("click", function (e) {
+    if (e.target.tagName === "A") navLinks.classList.remove("open");
+  });
 
-            requestAnimationFrame(animateCharts);
-        }
-        animateCharts();
+  /* ---------- Entrada das seções ---------- */
+  var reveals = document.querySelectorAll(".reveal");
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry, i) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      el.style.transitionDelay = Math.min(i * 60, 240) + "ms";
+      el.classList.add("in");
+      io.unobserve(el);
+    });
+  }, { rootMargin: "-60px 0px -40px" });
 
-        // Dark/Light Mode Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            themeToggle.innerHTML = isLight ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
-        });
+  reveals.forEach(function (el) { io.observe(el); });
 
-        // Assistente Robozinho Interativo
-        const robotAvatar = document.getElementById('robotAvatar');
-        const robotPanel = document.getElementById('robotPanel');
-        const closePanel = document.getElementById('closePanel');
-        const robotContent = document.getElementById('robotContent');
-        const robotOptions = document.getElementById('robotOptions');
+  /* ---------- Contadores ---------- */
+  document.querySelectorAll(".count").forEach(function (el) {
+    var to = parseInt(el.dataset.to, 10);
+    var suffix = el.dataset.suffix || "";
+    var obs = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      obs.disconnect();
+      if (reduced) { el.textContent = to + suffix; return; }
+      var start = performance.now();
+      function tick(now) {
+        var p = Math.min((now - start) / 1400, 1);
+        el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }, { threshold: 0.4 });
+    obs.observe(el);
+  });
 
-        robotAvatar.addEventListener('click', () => {
-            robotPanel.classList.toggle('active');
-        });
+  /* ---------- Barras de competências ---------- */
+  document.querySelectorAll(".skill").forEach(function (card) {
+    var obs = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      obs.disconnect();
+      var level = card.dataset.level || 0;
+      card.querySelector(".bar i").style.width = level + "%";
+    }, { threshold: 0.3 });
+    obs.observe(card);
+  });
 
-        closePanel.addEventListener('click', () => {
-            robotPanel.classList.remove('active');
-        });
+  /* ---------- Gráfico animado de fraude / analytics ---------- */
+  var canvas = document.getElementById("graph");
+  var ctx = canvas.getContext("2d");
+  var w = 0, h = 0, t = 0, raf = null, spikes = [];
+  var mouse = { x: -999, y: -999 };
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var isMobile = function () { return window.innerWidth < 768; };
 
-        const responses = {
-            contact: `
-                <strong>Contatos Diretos:</strong><br><br>
-                📧 E-mail: lucasfrmg25@gmail.com<br>
-                📞 Tel: (27) 99294-7583<br>
-                📍 Vitória - ES<br>
-                🔗 LinkedIn: /lucas-freire-727057273
-            `,
-            skills: `
-                <strong>Principais Competências:</strong><br><br>
-                • Prevenção a Fraudes e Gestão de Riscos<br>
-                • Análise de Dados com SQL e Excel<br>
-                • Monitoramento Transacional (PIX, TED, Boletos)<br>
-                • IBM Cognos Analytics & Indicadores (KPIs)<br>
-                • Validação Cadastral e Onboarding PJ
-            `,
-            exp: `
-                <strong>Resumo de Experiência:</strong><br><br>
-                • <strong>MGS:</strong> Assistente Administrativo em contratos públicos e validação cadastral.<br>
-                • <strong>Cora:</strong> Analista de Segurança Pleno e Júnior, atuando com mitigação de fraudes, SQL, indicadores e redução de falsos positivos.
-            `
-        };
+  function resize() {
+    w = canvas.clientWidth;
+    h = canvas.clientHeight;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
 
-        robotOptions.addEventListener('click', (e) => {
-            const btn = e.target.closest('button');
-            if (!btn) return;
-            const action = btn.getAttribute('data-action');
-            if (responses[action]) {
-                robotContent.innerHTML = responses[action];
-            }
-        });
-    </script>
+  function spikeAt(x, now) {
+    return spikes.reduce(function (sum, s) {
+      var decay = Math.max(0, 1 - (now - s.t0) / 4);
+      var d = (x - s.x) / 40;
+      return sum + s.amp * decay * Math.exp(-d * d);
+    }, 0);
+  }
+
+  function series(offset, base, amp, now) {
+    var step = isMobile() ? 12 : 6;
+    ctx.beginPath();
+    for (var x = 0; x <= w; x += step) {
+      var y = base * h
+        + Math.sin(x * 0.006 + now * 0.6 + offset) * amp
+        + Math.sin(x * 0.017 - now * 0.9 + offset * 2) * amp * 0.35
+        - spikeAt(x, now);
+      var dx = x - mouse.x, dy = y - mouse.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) y -= (1 - dist / 120) * 26;
+      if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  function draw() {
+    t += 0.016;
+    ctx.clearRect(0, 0, w, h);
+
+    // grade
+    ctx.strokeStyle = "rgba(15,23,42,0.045)";
+    ctx.lineWidth = 1;
+    for (var x = 0; x < w; x += 80) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+    for (var y = 0; y < h; y += 80) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
+    // linha de varredura
+    var sx = ((t * 90) % (w + 200)) - 100;
+    var grad = ctx.createLinearGradient(sx - 60, 0, sx + 60, 0);
+    grad.addColorStop(0, "rgba(2,132,199,0)");
+    grad.addColorStop(0.5, "rgba(2,132,199,0.12)");
+    grad.addColorStop(1, "rgba(2,132,199,0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(sx - 60, 0, 120, h);
+
+    // nova anomalia ocasional
+    if (!reduced && Math.random() < 0.006 && spikes.length < 3) {
+      spikes.push({ x: Math.random() * w, amp: 90 + Math.random() * 80, t0: t });
+    }
+    spikes = spikes.filter(function (s) { return t - s.t0 < 4; });
+
+    // séries
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(2,132,199,0.55)";
+    series(0, 0.62, 30, t);
+    if (!isMobile()) {
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = "rgba(100,116,139,0.35)";
+      series(2, 0.74, 22, t);
+    }
+
+    // marcadores de anomalia
+    spikes.forEach(function (s) {
+      var age = t - s.t0;
+      var ay = 0.62 * h + Math.sin(s.x * 0.006 + t * 0.6) * 30 - spikeAt(s.x, t);
+      var alpha = Math.max(0, 1 - age / 4);
+      ctx.strokeStyle = "rgba(220,38,38," + alpha + ")";
+      ctx.fillStyle = "rgba(220,38,38," + alpha + ")";
+      ctx.beginPath(); ctx.arc(s.x, ay, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(s.x, ay, 8 + age * 10, 0, Math.PI * 2); ctx.stroke();
+      ctx.font = "11px ui-monospace, SFMono-Regular, Menlo, monospace";
+      ctx.fillText(age < 2 ? "ANOMALIA" : "CORRIGIDO", s.x + 14, ay - 8);
+    });
+
+    if (!reduced) raf = requestAnimationFrame(draw);
+  }
+
+  function start() {
+    resize();
+    t = 0;
+    if (reduced) { draw(); return; }        // um quadro estático
+    if (raf === null) raf = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener("resize", function () { resize(); });
+  window.addEventListener("mousemove", function (e) {
+    var r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  });
+  window.addEventListener("mouseleave", function () { mouse.x = mouse.y = -999; });
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
+    } else if (!reduced && raf === null) {
+      raf = requestAnimationFrame(draw);
+    }
+  });
+
+  start();
+})();
+</script>
 </body>
 </html>
