@@ -50,7 +50,7 @@
             position: relative;
         }
 
-        /* Fundo com canvas animado (gráficos variando e fluxo de dados) */
+        /* Fundo com canvas animado (Gráficos variando ao longo do fluxo) */
         #chart-canvas {
             position: fixed;
             top: 0;
@@ -59,7 +59,7 @@
             height: 100vh;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.35;
+            opacity: 0.45;
         }
 
         /* Navegação Superior */
@@ -692,6 +692,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const isLight = document.body.classList.contains('light-mode');
             
+            // Barras de gráficos flutuantes em tom ouro/suave
             ctx.fillStyle = isLight ? 'rgba(212, 175, 55, 0.08)' : 'rgba(243, 204, 64, 0.06)';
             bars.forEach(bar => {
                 bar.baseY -= bar.speed;
@@ -699,6 +700,7 @@
                 ctx.fillRect(bar.x, bar.baseY, bar.width, bar.height);
             });
 
+            // Linhas de tendência variáveis simulando fluxo de dados analíticos
             streams.forEach((stream) => {
                 stream.phase += stream.speed;
                 ctx.beginPath();
