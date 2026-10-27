@@ -204,7 +204,9 @@
   }
 
   /* ---------- NARRATIVA VISUAL ---------- */
-  .section-visual{min-height:160px;display:flex;align-items:center;justify-content:center}
+  .section-visual{min-height:180px;display:flex;align-items:center;justify-content:center}
+  .section-illustration{width:min(280px,100%);height:auto;display:block;filter:drop-shadow(0 14px 18px rgba(15,23,42,.08));transition:transform .3s ease}
+  .section-illustration:hover{transform:translateY(-4px) scale(1.02)}
   .scene{width:min(290px,100%);height:160px}
   .scene .line{fill:none;stroke:var(--text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .scene .accent{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -321,7 +323,7 @@
       <p class="eyebrow">01 / Sobre</p>
       <h2 class="title">Dados com olhar de investigador.</h2>
     </div>
-    <div class="section-visual reveal"><svg class="scene" viewBox="0 0 290 160"><g class="motion-b"><rect class="soft" x="20" y="28" width="100" height="82" rx="8"/><path class="accent" d="M34 92 52 72 69 84 87 51 106 67"/></g><circle class="avatar-head" cx="190" cy="54" r="16"/><path class="avatar-body" d="M175 74h30l8 45h-46z"/><path class="line" d="m178 85-37-13"/><circle class="accent motion-a" cx="132" cy="70" r="14"/><path class="accent" d="m142 80 13 13"/></svg></div><div class="about-text reveal">
+    <div class="section-visual reveal"><img class="section-illustration" src="assets/investigador.png" alt="investigador"></div><div class="about-text reveal">
       <p>
         Profissional com experiência em Prevenção a Fraudes, Segurança do Cliente, Análise de Riscos e
         Análise de Dados no setor financeiro. Atuação com SQL, Excel, indicadores e KPIs, manipulação de
@@ -344,7 +346,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">02 / Experiência</p>
       <h2 class="title reveal">Trajetória profissional</h2>
-<div class="section-visual reveal"><svg class="scene" viewBox="0 0 290 160"><rect class="soft" x="35" y="120" width="65" height="20" rx="3"/><rect class="soft" x="88" y="95" width="70" height="20" rx="3"/><rect class="soft" x="140" y="70" width="75" height="20" rx="3"/><g class="motion-a"><circle class="avatar-head" cx="125" cy="55" r="14"/><path class="avatar-body" d="M113 72h24l5 32h-34z"/></g><path class="accent" d="M235 70V30m0 0-10 12m10-12 10 12"/></svg></div>      <div class="timeline">
+<div class="section-visual reveal"><img class="section-illustration" src="assets/trajetoria.png" alt="trajetoria"></div>      <div class="timeline">
         <article class="job reveal">
           <time>jun/2026 — atual</time>
           <h3>Assistente Administrativo</h3>
@@ -384,7 +386,7 @@
   <section class="wrap skills" id="competencias">
     <p class="eyebrow reveal">03 / Competências</p>
     <h2 class="title reveal">Caixa de ferramentas</h2>
-<div class="section-visual reveal"><svg class="scene" viewBox="0 0 290 160"><rect class="soft" x="92" y="103" width="125" height="42" rx="8"/><path class="accent" d="M92 103h125l-16-28h-93z"/><g class="motion-a"><circle class="soft" cx="120" cy="62" r="19"/><text x="120" y="68" text-anchor="middle" font-family="monospace" font-size="13" fill="#0284c7">PY</text><circle class="soft" cx="160" cy="49" r="19"/><text x="160" y="55" text-anchor="middle" font-family="monospace" font-size="11" fill="#0284c7">SQL</text><circle class="soft" cx="200" cy="63" r="19"/><text x="200" y="69" text-anchor="middle" font-family="monospace" font-size="9" fill="#0284c7">PBI</text></g><circle class="avatar-head" cx="50" cy="78" r="14"/><path class="avatar-body" d="M38 95h25l6 39H32z"/><path class="line" d="m61 103 32 13"/></svg></div>    <div class="skill-grid" id="skillGrid">
+<div class="section-visual reveal"><img class="section-illustration" src="assets/ferramentas.png" alt="ferramentas"></div>    <div class="skill-grid" id="skillGrid">
       <div class="skill reveal" data-level="85"><div class="skill-head"><h3>SQL</h3></div><div class="bar"><i></i></div></div>
       <div class="skill reveal" data-level="92"><div class="skill-head"><h3>Prevenção a Fraudes</h3></div><div class="bar"><i></i></div></div>
       <div class="skill reveal" data-level="85"><div class="skill-head"><h3>Excel</h3></div><div class="bar"><i></i></div></div>
@@ -404,7 +406,7 @@
   <section class="wrap projects" id="projetos">
     <p class="eyebrow reveal">04 / Projetos</p>
     <h2 class="title reveal">Dados transformados em decisões.</h2>
-<div class="section-visual reveal"><svg class="scene" viewBox="0 0 290 160"><path class="line" d="M145 20v120"/><g class="motion-a"><rect class="soft" x="38" y="100" width="18" height="35"/><rect class="soft" x="66" y="78" width="18" height="57"/><rect class="soft" x="94" y="50" width="18" height="85"/></g><circle class="line" cx="220" cy="82" r="50"/><path class="accent" d="m184 84 25 25 45-58"/></svg></div>    <div class="project-grid">
+<div class="section-visual reveal"><img class="section-illustration" src="assets/decisoes.png" alt="decisoes"></div>    <div class="project-grid">
       <article class="project-card reveal">
         <div>
           <p class="eyebrow">SQL · Fraud Analytics</p>
@@ -453,7 +455,7 @@
     <div class="wrap edu">
       <div class="reveal">
         <p class="eyebrow">05 / Formação</p>
-        <h2 class="title">Sempre aprendendo.</h2><div class="section-visual reveal"><svg class="scene" viewBox="0 0 290 160"><g class="motion-a"><path class="soft" d="M92 48h58v72H92zM150 48h58v72h-58z"/><path class="line" d="M150 48v72M103 65h35m-35 14h29m29-14h35m-35 14h29"/><circle class="soft" cx="150" cy="31" r="11"/><path class="accent" d="M150 20V8m-14 18-9-9m37 9 9-9"/></g><circle class="avatar-head" cx="48" cy="80" r="14"/><path class="avatar-body" d="M36 97h25l6 39H30z"/><path class="line" d="m60 105 31-17"/></svg></div>
+        <h2 class="title">Sempre aprendendo.</h2><div class="section-visual reveal"><img class="section-illustration" src="assets/aprendizado.png" alt="aprendizado"></div>
         <div class="card">
           <time>2015 — 2021</time>
           <h3>Bacharelado em Engenharia de Alimentos</h3>
