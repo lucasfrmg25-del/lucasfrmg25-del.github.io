@@ -204,11 +204,7 @@
   }
 
   /* ---------- NARRATIVA VISUAL ---------- */
-  .section-visual{min-height:180px;display:flex;align-items:center;justify-content:center}
-  .section-illustration{width:min(280px,100%);height:auto;display:block;filter:drop-shadow(0 14px 18px rgba(15,23,42,.08));transition:transform .3s ease}
-  .section-illustration:hover{transform:translateY(-4px) scale(1.02)}
-
-  /* ---------- ANIMAÇÕES DE ENTRADA ---------- */
+/* ---------- ANIMAÇÕES DE ENTRADA ---------- */
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
   .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){
@@ -314,7 +310,7 @@
       <p class="eyebrow">01 / Sobre</p>
       <h2 class="title">Dados com olhar de investigador.</h2>
     </div>
-    <div class="section-visual reveal"><img class="section-illustration" src="assets/investigador.png" alt="investigador"></div><div class="about-text reveal">
+<div class="about-text reveal">
       <p>
         Profissional com experiência em Prevenção a Fraudes, Segurança do Cliente, Análise de Riscos e
         Análise de Dados no setor financeiro. Atuação com SQL, Excel, indicadores e KPIs, manipulação de
@@ -337,7 +333,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">02 / Experiência</p>
       <h2 class="title reveal">Trajetória profissional</h2>
-<div class="section-visual reveal"><img class="section-illustration" src="assets/trajetoria.png" alt="trajetoria"></div>      <div class="timeline">
+<div class="timeline">
         <article class="job reveal">
           <time>jun/2026 — atual</time>
           <h3>Assistente Administrativo</h3>
@@ -377,7 +373,7 @@
   <section class="wrap skills" id="competencias">
     <p class="eyebrow reveal">03 / Competências</p>
     <h2 class="title reveal">Caixa de ferramentas</h2>
-<div class="section-visual reveal"><img class="section-illustration" src="assets/ferramentas.png" alt="ferramentas"></div>    <div class="skill-grid" id="skillGrid">
+<div class="skill-grid" id="skillGrid">
       <div class="skill reveal" data-level="85"><div class="skill-head"><h3>SQL</h3></div><div class="bar"><i></i></div></div>
       <div class="skill reveal" data-level="92"><div class="skill-head"><h3>Prevenção a Fraudes</h3></div><div class="bar"><i></i></div></div>
       <div class="skill reveal" data-level="85"><div class="skill-head"><h3>Excel</h3></div><div class="bar"><i></i></div></div>
@@ -397,7 +393,7 @@
   <section class="wrap projects" id="projetos">
     <p class="eyebrow reveal">04 / Projetos</p>
     <h2 class="title reveal">Dados transformados em decisões.</h2>
-<div class="section-visual reveal"><img class="section-illustration" src="assets/decisoes.png" alt="decisoes"></div>    <div class="project-grid">
+<div class="project-grid">
       <article class="project-card reveal">
         <div>
           <p class="eyebrow">SQL · Fraud Analytics</p>
@@ -446,8 +442,8 @@
     <div class="wrap edu">
       <div class="reveal">
         <p class="eyebrow">05 / Formação</p>
-        <h2 class="title">Sempre aprendendo.</h2><div class="section-visual reveal"><img class="section-illustration" src="assets/aprendizado.png" alt="aprendizado"></div>
-        <div class="card">
+        <h2 class="title">Sempre aprendendo.</h2>
+<div class="card">
           <time>2015 — 2021</time>
           <h3>Bacharelado em Engenharia de Alimentos</h3>
           <p>Universidade Federal do Espírito Santo (UFES)</p>
