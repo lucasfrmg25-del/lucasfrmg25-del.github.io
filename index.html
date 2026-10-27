@@ -148,6 +148,20 @@
     transition:width 1s cubic-bezier(.22,1,.36,1);
   }
 
+  /* ---------- PROJETOS ---------- */
+  .projects{padding:7rem 0}
+  .project-grid{display:grid;gap:1.25rem;margin-top:3.5rem}
+  .project-card{border:1px solid var(--line);border-radius:1rem;padding:1.6rem;background:#fff;display:grid;gap:1.5rem;transition:.25s}
+  .project-card:hover{border-color:#38bdf8;box-shadow:0 14px 32px -16px rgba(2,132,199,.3)}
+  @media(min-width:850px){.project-card{grid-template-columns:1.2fr .8fr;align-items:center}}
+  .project-card h3{font-size:1.45rem;margin:.35rem 0 .75rem}.project-card p{color:#475569}
+  .project-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:1.25rem 0}
+  .project-kpis div{background:var(--surface);border-radius:.65rem;padding:.8rem;text-align:center;font-size:.75rem;color:var(--muted)}
+  .project-kpis b{display:block;color:var(--accent);font-size:1.05rem}
+  .project-flow{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:center;font-family:var(--mono);font-size:.75rem}
+  .project-flow span{border:1px solid var(--line);border-radius:.5rem;padding:.55rem .7rem}.project-flow i{color:var(--accent);font-style:normal}
+  @media(max-width:600px){.project-kpis{grid-template-columns:1fr}}
+
   /* ---------- FORMAÇÃO ---------- */
   .edu{display:grid;gap:3rem;padding:7rem 0}
   @media (min-width:900px){.edu{grid-template-columns:5fr 7fr}}
@@ -241,6 +255,7 @@
       <a href="#experiencia">Experiência</a>
       <a href="#competencias">Competências</a>
       <a href="#formacao">Formação</a>
+      <a href="#projetos">Projetos</a>
       <a href="#contato">Contato</a>
     </nav>
     <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false">
@@ -263,6 +278,10 @@
       <div class="tech-float tech-fraud" style="--x:90%;--y:42%;--size:70px;--duration:19s;--delay:-11s;--alpha:.4"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M40 7 65 18v20c0 16-12 27-25 34C27 65 15 54 15 38V18Z"/><path d="m28 39 8 8 17-18"/></svg><span>FRAUDES</span></div>
       <div class="tech-float tech-secondary" style="--x:80%;--y:66%;--size:48px;--duration:21s;--delay:-5s;--alpha:.22"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.4"><ellipse cx="40" cy="15" rx="27" ry="10"/><path d="M13 15v45c0 6 12 10 27 10s27-4 27-10V15M13 30c0 6 12 10 27 10s27-4 27-10M13 45c0 6 12 10 27 10s27-4 27-10"/></svg><span>SQL</span></div>
       <div class="tech-float tech-secondary" style="--x:94%;--y:79%;--size:46px;--duration:20s;--delay:-14s;--alpha:.16"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M40 7 65 18v20c0 16-12 27-25 34C27 65 15 54 15 38V18Z"/><path d="m28 39 8 8 17-18"/></svg></div>
+      <div class="tech-float tech-secondary" style="--x:14%;--y:67%;--size:58px;--duration:17s;--delay:-7s;--alpha:.24"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 60h52M20 54V32M34 54V18M48 54V39M62 54V25"/></svg><span>PANDAS</span></div>
+      <div class="tech-float tech-secondary" style="--x:27%;--y:18%;--size:54px;--duration:19s;--delay:-10s;--alpha:.22"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 61c12-30 20-9 30-27s18 8 30-17"/></svg><span>SEABORN</span></div>
+      <div class="tech-float tech-secondary" style="--x:55%;--y:72%;--size:56px;--duration:20s;--delay:-4s;--alpha:.23"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 62V16M12 62h56M18 52l14-17 13 9 19-25"/></svg><span>MATPLOTLIB</span></div>
+      <div class="tech-float tech-secondary" style="--x:70%;--y:14%;--size:55px;--duration:18s;--delay:-12s;--alpha:.22"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="40" r="7"/><circle cx="40" cy="18" r="7"/><circle cx="62" cy="40" r="7"/><circle cx="40" cy="62" r="7"/><path d="m23 35 12-12m10 0 12 12m0 10-12 12m-10 0L23 45"/></svg><span>SCIKIT</span></div>
     </div>
     <div class="wrap hero-inner">
       <p class="eyebrow reveal">Analista de dados · Prevenção a fraudes e risco</p>
@@ -369,11 +388,29 @@
     </div>
   </section>
 
+  <!-- PROJETOS -->
+  <section class="wrap projects" id="projetos">
+    <p class="eyebrow reveal">04 / Projetos</p>
+    <h2 class="title reveal">Dados transformados em decisões.</h2>
+    <div class="project-grid">
+      <article class="project-card reveal">
+        <div>
+          <p class="eyebrow">Machine Learning · Fraud Analytics</p>
+          <h3>Fraud Analytics ML</h3>
+          <p>Case sobre desbalanceamento de classes e como uma decisão estatística altera a capacidade de um modelo de identificar fraudes.</p>
+          <div class="project-kpis"><div><b>555.719</b>transações</div><div><b>0,39%</b>taxa de fraude</div><div><b>74,13%</b>recall balanceado</div></div>
+          <a class="btn btn-primary" href="fraud-analytics-ml.html">Explorar projeto</a>
+        </div>
+        <div class="project-flow"><span>Dataset</span><i>→</i><span>EDA</span><i>→</i><span>KPIs</span><i>→</i><span>Split</span><i>→</i><span>LogReg</span><i>→</i><span>Balanceamento</span><i>→</i><span>Decisão</span></div>
+      </article>
+    </div>
+  </section>
+
   <!-- FORMAÇÃO -->
   <section class="section-surface" id="formacao">
     <div class="wrap edu">
       <div class="reveal">
-        <p class="eyebrow">04 / Formação</p>
+        <p class="eyebrow">05 / Formação</p>
         <h2 class="title">Sempre aprendendo.</h2>
         <div class="card">
           <time>2015 — 2021</time>
@@ -401,7 +438,7 @@
 
   <!-- CONTATO -->
   <section class="wrap contact" id="contato">
-    <p class="eyebrow reveal">05 / Contato</p>
+    <p class="eyebrow reveal">06 / Contato</p>
     <h2 class="reveal">Vamos construir algo mais seguro juntos?</h2>
     <p class="status reveal"><span class="dot"></span>Status: aberto a colaborações · Vitória - ES</p>
     <div class="contact-grid">
