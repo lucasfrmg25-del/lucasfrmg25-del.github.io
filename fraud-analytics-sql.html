@@ -12,4 +12,14 @@
 SELECT COUNT(*) AS total_transactions,
        SUM(CASE WHEN priority_level IN ('P1 - IMEDIATA','P2 - ALTA')
            THEN 1 ELSE 0 END) AS p1_p2_alerts
-FROM public.vw_fraud_alert_queue;</pre><p>A view transforma a análise em indicadores consumíveis por uma camada de dashboard.</p></section><section class="sec"><h2>Código-fonte</h2><p>O case acima apresenta a lógica e os principais aprendizados. O repositório preserva a documentação e os arquivos do projeto.</p><a class="repo" href="https://github.com/lucasfrmg25-del/fraud-analytics-sql" target="_blank" rel="noopener">Ver repositório no GitHub ↗</a></section></main><footer><div class="w">LUCAS FREIRE MARTINS · FRAUD ANALYTICS · Dados → análise → decisão</div></footer></body></html>
+FROM public.vw_fraud_alert_queue;</pre><p>A view transforma a análise em indicadores consumíveis por uma camada de dashboard.</p></section><section class="sec"><h2>Código-fonte</h2><p>O case acima apresenta a lógica e os principais aprendizados. O repositório preserva a documentação e os arquivos do projeto.</p><a class="repo" href="https://github.com/lucasfrmg25-del/fraud-analytics-sql" target="_blank" rel="noopener">Ver repositório no GitHub ↗</a></section><section class="sec"><h2>Como o SQL investiga comportamento</h2><div class="box"><h3>Outlier vs. histórico recente</h3><pre>AVG(t.amount) OVER (
+  PARTITION BY t.account_id
+  ORDER BY t.transaction_date, t.transaction_id
+  ROWS BETWEEN 5 PRECEDING AND 1 PRECEDING
+) AS previous_5_avg</pre><p>O projeto compara cada operação com a média das cinco anteriores da mesma conta e sinaliza valores a partir de 3× esse histórico.</p></div><div class="box"><h3>Velocity</h3><pre>LAG(transaction_date) OVER (
+  PARTITION BY account_id
+  ORDER BY transaction_date, transaction_id
+) AS previous_time</pre><p>Outro sinal considera intervalo de até 5 minutos entre operações e valor a partir de R$ 2.000.</p></div></section><section class="sec"><h2>Score e decisão</h2><pre>(risk_score >= 90)          +3
+(amount >= previous_avg*3)  +2
+(intervalo <= 5 min)        +2
+(horário entre 0h e 4h)     +1</pre><div class="box"><p>A combinação vira uma prioridade P1–P4. O resultado principal foi 46 operações P1/P2 — 0,92% da base — concentrando R$ 490.281,62 para análise prioritária.</p></div><p><strong>Insight:</strong> alerta de risco não significa fraude confirmada. O objetivo é ordenar sinais e concentrar capacidade investigativa.</p></section></main><footer><div class="w">LUCAS FREIRE MARTINS · FRAUD ANALYTICS · Dados → análise → decisão</div></footer></body></html>
