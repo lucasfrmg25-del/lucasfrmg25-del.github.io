@@ -207,15 +207,6 @@
   .section-visual{min-height:180px;display:flex;align-items:center;justify-content:center}
   .section-illustration{width:min(280px,100%);height:auto;display:block;filter:drop-shadow(0 14px 18px rgba(15,23,42,.08));transition:transform .3s ease}
   .section-illustration:hover{transform:translateY(-4px) scale(1.02)}
-  .scene{width:min(290px,100%);height:160px}
-  .scene .line{fill:none;stroke:var(--text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .scene .accent{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-  .scene .soft{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
-  .avatar-head{fill:#fff;stroke:var(--text);stroke-width:2}.avatar-body{fill:var(--text)}
-  .motion-a{animation:motionA 2.5s ease-in-out infinite}.motion-b{animation:motionB 3s ease-in-out infinite}
-  @keyframes motionA{0%,100%{transform:translateY(5px)}50%{transform:translateY(-8px)}}
-  @keyframes motionB{0%,100%{transform:translateX(-6px)}50%{transform:translateX(8px)}}
-  @media(prefers-reduced-motion:reduce){.motion-a,.motion-b{animation:none}}
 
   /* ---------- ANIMAÇÕES DE ENTRADA ---------- */
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
