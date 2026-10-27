@@ -203,6 +203,18 @@
     font-family:var(--mono);font-size:.8125rem;color:#94a3b8;
   }
 
+  /* ---------- NARRATIVA VISUAL ---------- */
+  .section-visual{min-height:160px;display:flex;align-items:center;justify-content:center}
+  .scene{width:min(290px,100%);height:160px}
+  .scene .line{fill:none;stroke:var(--text);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .scene .accent{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .scene .soft{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+  .avatar-head{fill:#fff;stroke:var(--text);stroke-width:2}.avatar-body{fill:var(--text)}
+  .motion-a{animation:motionA 2.5s ease-in-out infinite}.motion-b{animation:motionB 3s ease-in-out infinite}
+  @keyframes motionA{0%,100%{transform:translateY(5px)}50%{transform:translateY(-8px)}}
+  @keyframes motionB{0%,100%{transform:translateX(-6px)}50%{transform:translateX(8px)}}
+  @media(prefers-reduced-motion:reduce){.motion-a,.motion-b{animation:none}}
+
   /* ---------- ANIMAÇÕES DE ENTRADA ---------- */
   .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
   .reveal.in{opacity:1;transform:none}
@@ -309,7 +321,7 @@
       <p class="eyebrow">01 / Sobre</p>
       <h2 class="title">Dados com olhar de investigador.</h2>
     </div>
-    <div class="about-text reveal">
+    <div class="section-visual reveal"><svg class="scene" viewBox="0 0 290 160"><g class="motion-b"><rect class="soft" x="20" y="28" width="100" height="82" rx="8"/><path class="accent" d="M34 92 52 72 69 84 87 51 106 67"/></g><circle class="avatar-head" cx="190" cy="54" r="16"/><path class="avatar-body" d="M175 74h30l8 45h-46z"/><path class="line" d="m178 85-37-13"/><circle class="accent motion-a" cx="132" cy="70" r="14"/><path class="accent" d="m142 80 13 13"/></svg></div><div class="about-text reveal">
       <p>
         Profissional com experiência em Prevenção a Fraudes, Segurança do Cliente, Análise de Riscos e
         Análise de Dados no setor financeiro. Atuação com SQL, Excel, indicadores e KPIs, manipulação de
@@ -332,7 +344,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">02 / Experiência</p>
       <h2 class="title reveal">Trajetória profissional</h2>
-      <div class="timeline">
+<div class="section-visual reveal"><svg class="scene" viewBox="0 0 290 160"><rect class="soft" x="35" y="120" width="65" height="20" rx="3"/><rect class="soft" x="88" y="95" width="70" height="20" rx="3"/><rect class="soft" x="140" y="70" width="75" height="20" rx="3"/><g class="motion-a"><circle class="avatar-head" cx="125" cy="55" r="14"/><path class="avatar-body" d="M113 72h24l5 32h-34z"/></g><path class="accent" d="M235 70V30m0 0-10 12m10-12 10 12"/></svg></div>      <div class="timeline">
         <article class="job reveal">
           <time>jun/2026 — atual</time>
           <h3>Assistente Administrativo</h3>
@@ -372,7 +384,7 @@
   <section class="wrap skills" id="competencias">
     <p class="eyebrow reveal">03 / Competências</p>
     <h2 class="title reveal">Caixa de ferramentas</h2>
-    <div class="skill-grid" id="skillGrid">
+<div class="section-visual reveal"><svg class="scene" viewBox="0 0 290 160"><rect class="soft" x="92" y="103" width="125" height="42" rx="8"/><path class="accent" d="M92 103h125l-16-28h-93z"/><g class="motion-a"><circle class="soft" cx="120" cy="62" r="19"/><text x="120" y="68" text-anchor="middle" font-family="monospace" font-size="13" fill="#0284c7">PY</text><circle class="soft" cx="160" cy="49" r="19"/><text x="160" y="55" text-anchor="middle" font-family="monospace" font-size="11" fill="#0284c7">SQL</text><circle class="soft" cx="200" cy="63" r="19"/><text x="200" y="69" text-anchor="middle" font-family="monospace" font-size="9" fill="#0284c7">PBI</text></g><circle class="avatar-head" cx="50" cy="78" r="14"/><path class="avatar-body" d="M38 95h25l6 39H32z"/><path class="line" d="m61 103 32 13"/></svg></div>    <div class="skill-grid" id="skillGrid">
       <div class="skill reveal" data-level="85"><div class="skill-head"><h3>SQL</h3></div><div class="bar"><i></i></div></div>
       <div class="skill reveal" data-level="92"><div class="skill-head"><h3>Prevenção a Fraudes</h3></div><div class="bar"><i></i></div></div>
       <div class="skill reveal" data-level="85"><div class="skill-head"><h3>Excel</h3></div><div class="bar"><i></i></div></div>
