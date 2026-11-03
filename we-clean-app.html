@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>We Clean .CSV — App</title>
+<meta name="description" content="Limpe arquivos CSV diretamente no navegador com o We Clean .CSV.">
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+:root{
+  --yellow:#ffdd00;--pink:#ff4f8b;--ink:#111;--paper:#fffdf7;--white:#fff;
+  --green:#24c16a;--red:#ef4444;--muted:#6b7280;--line:#d1d5db;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);
+  background:var(--yellow);
+  background-image:
+    radial-gradient(circle at 20px 20px,rgba(17,17,17,.08) 2px,transparent 2px),
+    linear-gradient(45deg,transparent 48%,rgba(17,17,17,.035) 49%,rgba(17,17,17,.035) 51%,transparent 52%);
+  background-size:48px 48px,120px 120px;
+}
+.wrap{width:min(1180px,92%);margin:auto}
+.top{
+  margin:18px auto 0;background:#fff;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);
+  border-radius:14px;padding:14px 18px;display:flex;justify-content:space-between;gap:16px;align-items:center
+}
+.brand{font-weight:1000;letter-spacing:-.03em}
+.top a{color:var(--ink);font-weight:800;text-decoration:none}
+.hero{text-align:center;padding:48px 0 26px}
+.logo{font-size:4.2rem}
+.hero h1{display:inline-block;background:#fff;border:4px solid #111;box-shadow:8px 8px 0 #111;padding:14px 24px;margin:8px 0 0;transform:rotate(-1deg);font-size:clamp(2.4rem,7vw,5rem);line-height:.95}
+.hero h1 span{color:var(--pink)}
+.hero p{font-weight:850;margin:24px auto 0;max-width:650px}
+.steps{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0 24px}
+.step{background:#fff;border:2px solid #111;border-radius:999px;padding:7px 13px;font-weight:900;font-size:.85rem}
+.step.active{background:var(--pink);color:#fff}
+.panel{background:var(--paper);border:3px solid #111;box-shadow:7px 7px 0 #111;border-radius:16px;padding:24px;margin:22px 0}
+.panel-title{display:inline-block;background:#ff9fbe;border:3px solid #111;box-shadow:4px 4px 0 #111;border-radius:10px;padding:8px 14px;font-weight:1000;margin-bottom:16px}
+.drop{
+  background:#fff;border:3px dashed #111;border-radius:14px;padding:34px;text-align:center;cursor:pointer
+}
+.drop.drag{background:#fff6b3}
+.drop input{display:none}
+.btn{
+  border:3px solid #111;box-shadow:4px 4px 0 #111;background:var(--pink);color:#fff;border-radius:10px;
+  padding:12px 18px;font-weight:1000;cursor:pointer;font-size:.95rem
+}
+.btn.secondary{background:#fff;color:#111}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #111}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.metric{background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;border-radius:12px;padding:16px}
+.metric small{display:block;font-weight:900;text-transform:uppercase;color:#374151}
+.metric b{display:block;font-size:2rem;margin-top:8px}
+.controls{display:grid;gap:16px}
+.control{background:#fff;border:2px solid #111;border-radius:12px;padding:16px}
+.control h3{margin:0 0 10px}
+select,input[type="number"]{
+  width:100%;padding:11px;border:2px solid #111;border-radius:9px;background:#fff;font:inherit
+}
+.preview{overflow:auto;border:2px solid #111;border-radius:10px;background:#fff}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:9px 10px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:.9rem}
+th{background:#f3f4f6;position:sticky;top:0}
+.notice{background:#fff3f6;border:3px solid #111;border-left:10px solid var(--pink);border-radius:10px;padding:14px;margin-top:16px}
+.success{background:#d9ffdf;border:3px solid #111;box-shadow:6px 6px 0 #111;border-radius:14px;padding:18px}
+.actions{background:#fff;border:2px solid #111;border-radius:10px;padding:14px}
+.actions div{margin:7px 0}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.hidden{display:none!important}
+.muted{color:var(--muted);font-size:.9rem}
+footer{text-align:center;padding:36px 0 50px;font-weight:800}
+@media(max-width:800px){.grid4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.grid4{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">📄🧹 WE CLEAN .CSV</div>
+    <div class="row">
+      <a href="we-clean-csv.html">Sobre o projeto</a>
+      <a href="https://github.com/lucasfrmg25-del/we_clean_CSV" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.buymeacoffee.com/lucasfrmg25" target="_blank" rel="noopener">☕ Apoiar</a>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="logo">📄🧹✨</div>
+    <h1>WE CLEAN <span>.CSV</span></h1>
+    <p>Limpe seus dados de forma simples, rápida e visual — diretamente no seu navegador.</p>
+  </section>
+
+  <div class="steps">
+    <div class="step active" id="s1">1 Upload</div>
+    <div class="step" id="s2">2 Diagnóstico</div>
+    <div class="step" id="s3">3 Tratamento</div>
+    <div class="step" id="s4">4 Resultado</div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-title">📤 SELECIONE SEU ARQUIVO .CSV</div>
+    <div class="drop" id="drop">
+      <input type="file" id="file" accept=".csv,text/csv">
+      <h3>Arraste e solte seu CSV aqui</h3>
+      <p class="muted">ou clique para escolher o arquivo</p>
+      <button class="btn" id="pick" type="button">ESCOLHER ARQUIVO .CSV</button>
+    </div>
+    <p class="muted">Privacidade: o arquivo é processado localmente no seu navegador. Nenhum CSV é enviado para um servidor do We Clean.</p>
+  </section>
+
+  <section class="panel hidden" id="diagnostic">
+    <div class="panel-title">📊 DIAGNÓSTICO DO ARQUIVO</div>
+    <div class="grid4">
+      <div class="metric"><small>Linhas</small><b id="mRows">0</b></div>
+      <div class="metric"><small>Colunas</small><b id="mCols">0</b></div>
+      <div class="metric"><small>Valores nulos</small><b id="mNulls">0</b></div>
+      <div class="metric"><small>Duplicatas</small><b id="mDup">0</b></div>
+    </div>
+    <div class="notice" id="issues"></div>
+    <h3>Prévia</h3>
+    <div class="preview" id="previewBefore"></div>
+  </section>
+
+  <section class="panel hidden" id="treatment">
+    <div class="panel-title">🧹 CONFIGURE A LIMPEZA</div>
+    <div class="controls">
+      <div class="control">
+        <h3>Colunas totalmente vazias</h3>
+        <p class="muted" id="emptyColsText"></p>
+        <select id="emptyCols">
+          <option value="keep">Manter</option>
+          <option value="remove">Remover colunas vazias</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <h3>Linhas duplicadas</h3>
+        <select id="dupAction">
+          <option value="keep">Manter</option>
+          <option value="remove">Remover duplicatas</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <h3>Valores nulos</h3>
+        <select id="nullAction">
+          <option value="keep">Manter como estão</option>
+          <option value="drop">Remover linhas com nulos</option>
+          <option value="number">Substituir nulos numéricos por um valor</option>
+          <option value="mean">Substituir nulos numéricos pela média</option>
+          <option value="median">Substituir nulos numéricos pela mediana</option>
+          <option value="mode">Substituir nulos pela moda</option>
+        </select>
+        <div id="customWrap" class="hidden" style="margin-top:10px">
+          <input type="number" id="customNumber" value="0" step="any">
+        </div>
+      </div>
+
+      <div class="control">
+        <h3>Padronização de texto</h3>
+        <select id="textAction">
+          <option value="keep">Não alterar</option>
+          <option value="trim">Remover espaços no início e no fim</option>
+          <option value="lower">Converter para minúsculas</option>
+          <option value="upper">Converter para maiúsculas</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:18px">
+      <button class="btn" id="apply" type="button">✨ APLICAR LIMPEZA</button>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="result">
+    <div class="success">
+      <h2 style="margin:0 0 6px">✅ LIMPEZA CONCLUÍDA!</h2>
+      <div>Seu arquivo está pronto para revisão e download.</div>
+    </div>
+
+    <div class="grid4" style="margin-top:18px">
+      <div class="metric"><small>Linhas</small><b id="rRows">0</b></div>
+      <div class="metric"><small>Colunas</small><b id="rCols">0</b></div>
+      <div class="metric"><small>Nulos</small><b id="rNulls">0</b></div>
+      <div class="metric"><small>Duplicatas</small><b id="rDup">0</b></div>
+    </div>
+
+    <h3>O que foi feito</h3>
+    <div class="actions" id="actionLog"></div>
+
+    <h3>Prévia do resultado</h3>
+    <div class="preview" id="previewAfter"></div>
+
+    <div class="row" style="margin-top:18px">
+      <button class="btn" id="download" type="button">⬇️ BAIXAR CSV TRATADO</button>
+      <button class="btn secondary" id="reset" type="button">LIMPAR OUTRO .CSV</button>
+    </div>
+  </section>
+</div>
+
+<footer>WE CLEAN .CSV · Lucas Freire Martins</footer>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let originalRows = [], rows = [], headers = [], fileName = "arquivo.csv";
+
+  const drop = $("drop"), input = $("file");
+  $("pick").onclick = () => input.click();
+  drop.onclick = e => { if (e.target.id !== "pick") input.click(); };
+  input.onchange = () => input.files[0] && loadFile(input.files[0]);
+
+  ["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.classList.add("drag");
+  }));
+  ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.classList.remove("drag");
+  }));
+  drop.addEventListener("drop", e => {
+    const f = e.dataTransfer.files[0];
+    if (f) loadFile(f);
+  });
+
+  $("nullAction").onchange = () => {
+    $("customWrap").classList.toggle("hidden", $("nullAction").value !== "number");
+  };
+
+  function isNull(v){
+    return v === null || v === undefined || String(v).trim() === "";
+  }
+
+  function normalizeForDup(obj){
+    return JSON.stringify(headers.map(h => isNull(obj[h]) ? "" : String(obj[h])));
+  }
+
+  function diagnostics(data){
+    const nulls = data.reduce((acc,row) => acc + headers.reduce((n,h) => n + (isNull(row[h]) ? 1 : 0),0),0);
+    const seen = new Set(); let dup = 0;
+    data.forEach(r => { const k = normalizeForDup(r); if (seen.has(k)) dup++; else seen.add(k); });
+    const emptyCols = headers.filter(h => data.every(r => isNull(r[h])));
+    return {rows:data.length, cols:headers.length, nulls, dup, emptyCols};
+  }
+
+  function renderTable(data, target){
+    const sample = data.slice(0,20);
+    let out = "<table><thead><tr>" + headers.map(h => "<th>"+escapeHtml(h)+"</th>").join("") + "</tr></thead><tbody>";
+    sample.forEach(r => {
+      out += "<tr>" + headers.map(h => "<td>"+escapeHtml(isNull(r[h]) ? "" : String(r[h]))+"</td>").join("") + "</tr>";
+    });
+    out += "</tbody></table>";
+    target.innerHTML = out;
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  }
+
+  function setStep(n){
+    [1,2,3,4].forEach(i => $("s"+i).classList.toggle("active", i===n));
+  }
+
+  function loadFile(file){
+    fileName = file.name;
+    Papa.parse(file, {
+      header:true,
+      skipEmptyLines:false,
+      dynamicTyping:false,
+      complete: res => {
+        headers = res.meta.fields || [];
+        originalRows = (res.data || []).filter(r => headers.some(h => !isNull(r[h])));
+        rows = originalRows.map(r => ({...r}));
+        if (!headers.length) return alert("Não foi possível identificar as colunas do CSV.");
+        showDiagnostics();
+      },
+      error: err => alert("Erro ao ler o CSV: " + err.message)
+    });
+  }
+
+  function showDiagnostics(){
+    const d = diagnostics(rows);
+    $("mRows").textContent = d.rows;
+    $("mCols").textContent = d.cols;
+    $("mNulls").textContent = d.nulls;
+    $("mDup").textContent = d.dup;
+    $("emptyColsText").textContent = d.emptyCols.length ? "Encontradas: " + d.emptyCols.join(", ") : "Nenhuma coluna totalmente vazia encontrada.";
+
+    const items = [];
+    if (d.nulls) items.push("• " + d.nulls + " valor(es) nulo(s)");
+    if (d.dup) items.push("• " + d.dup + " linha(s) duplicada(s)");
+    if (d.emptyCols.length) items.push("• " + d.emptyCols.length + " coluna(s) totalmente vazia(s)");
+    items.push("• " + headers.length + " coluna(s) disponíveis para análise");
+    $("issues").innerHTML = "<b>⚠ DIAGNÓSTICO</b><br><br>" + items.join("<br>");
+
+    renderTable(rows,$("previewBefore"));
+    $("diagnostic").classList.remove("hidden");
+    $("treatment").classList.remove("hidden");
+    $("result").classList.add("hidden");
+    setStep(2);
+    $("diagnostic").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  function numericValues(data,h){
+    return data.map(r => r[h]).filter(v => !isNull(v) && !Number.isNaN(Number(v))).map(Number);
+  }
+
+  function columnMode(data,h){
+    const counts = new Map();
+    data.forEach(r => {
+      if (!isNull(r[h])) {
+        const k = String(r[h]);
+        counts.set(k,(counts.get(k)||0)+1);
+      }
+    });
+    let best = null, bestN = -1;
+    counts.forEach((n,k) => { if(n>bestN){bestN=n;best=k;} });
+    return best;
+  }
+
+  $("apply").onclick = () => {
+    rows = originalRows.map(r => ({...r}));
+    const actions = [];
+
+    if ($("emptyCols").value === "remove"){
+      const empty = diagnostics(rows).emptyCols;
+      if (empty.length){
+        headers = headers.filter(h => !empty.includes(h));
+        rows = rows.map(r => {
+          const nr = {...r}; empty.forEach(h => delete nr[h]); return nr;
+        });
+        actions.push("Colunas totalmente vazias removidas: " + empty.join(", "));
+      }
+    }
+
+    if ($("dupAction").value === "remove"){
+      const seen = new Set(), kept = []; let removed = 0;
+      rows.forEach(r => {
+        const k = normalizeForDup(r);
+        if (seen.has(k)) removed++;
+        else {seen.add(k);kept.push(r);}
+      });
+      rows = kept;
+      if (removed) actions.push(removed + " duplicata(s) removida(s).");
+    }
+
+    const nullAction = $("nullAction").value;
+    if (nullAction === "drop"){
+      const before = rows.length;
+      rows = rows.filter(r => headers.every(h => !isNull(r[h])));
+      const n = before-rows.length;
+      if(n) actions.push(n + " linha(s) removida(s) por valores nulos.");
+    } else if (["number","mean","median"].includes(nullAction)){
+      let treated = 0;
+      headers.forEach(h => {
+        const nums = numericValues(rows,h);
+        if(!nums.length) return;
+        let replacement;
+        if(nullAction==="number") replacement = Number($("customNumber").value || 0);
+        if(nullAction==="mean") replacement = nums.reduce((a,b)=>a+b,0)/nums.length;
+        if(nullAction==="median"){
+          const s=[...nums].sort((a,b)=>a-b), m=Math.floor(s.length/2);
+          replacement = s.length%2 ? s[m] : (s[m-1]+s[m])/2;
+        }
+        rows.forEach(r => { if(isNull(r[h])){r[h]=String(replacement);treated++;} });
+      });
+      if(treated) actions.push(treated + " nulo(s) numérico(s) tratado(s) por " + ({number:"valor personalizado",mean:"média",median:"mediana"}[nullAction]) + ".");
+    } else if (nullAction === "mode"){
+      let treated=0;
+      headers.forEach(h => {
+        const mode = columnMode(rows,h);
+        if(mode===null) return;
+        rows.forEach(r => { if(isNull(r[h])){r[h]=mode;treated++;} });
+      });
+      if(treated) actions.push(treated + " valor(es) nulo(s) substituído(s) pela moda.");
+    }
+
+    const textAction = $("textAction").value;
+    if(textAction !== "keep"){
+      rows.forEach(r => headers.forEach(h => {
+        if(isNull(r[h])) return;
+        const v = String(r[h]);
+        if(textAction==="trim") r[h]=v.trim();
+        if(textAction==="lower") r[h]=v.toLowerCase();
+        if(textAction==="upper") r[h]=v.toUpperCase();
+      }));
+      actions.push({
+        trim:"Espaços no início e no fim dos textos foram removidos.",
+        lower:"Textos convertidos para letras minúsculas.",
+        upper:"Textos convertidos para letras maiúsculas."
+      }[textAction]);
+    }
+
+    if ($("dupAction").value === "remove"){
+      const seen = new Set(), kept = []; let removed = 0;
+      rows.forEach(r => {
+        const k = normalizeForDup(r);
+        if (seen.has(k)) removed++;
+        else {seen.add(k);kept.push(r);}
+      });
+      rows = kept;
+      if (removed) actions.push(removed + " duplicata(s) adicional(is) removida(s) após os tratamentos.");
+    }
+
+    showResult(actions);
+  };
+
+  function showResult(actions){
+    const d = diagnostics(rows);
+    $("rRows").textContent=d.rows;
+    $("rCols").textContent=d.cols;
+    $("rNulls").textContent=d.nulls;
+    $("rDup").textContent=d.dup;
+    $("actionLog").innerHTML = actions.length ? actions.map(a=>"<div>✅ "+escapeHtml(a)+"</div>").join("") : "<div>Nenhuma alteração foi realizada.</div>";
+    renderTable(rows,$("previewAfter"));
+    $("result").classList.remove("hidden");
+    setStep(4);
+    $("result").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  $("download").onclick = () => {
+    const csv = Papa.unparse(rows,{columns:headers});
+    const blob = new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const base = fileName.replace(/\.csv$/i,"");
+    a.href=url;a.download=base+"_tratado.csv";
+    document.body.appendChild(a);a.click();a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  $("reset").onclick = () => {
+    input.value=""; originalRows=[];rows=[];headers=[];
+    $("diagnostic").classList.add("hidden");
+    $("treatment").classList.add("hidden");
+    $("result").classList.add("hidden");
+    setStep(1);
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+})();
+</script>
+</body>
+</html>
