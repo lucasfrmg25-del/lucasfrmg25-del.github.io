@@ -30,9 +30,9 @@ body{
   color:var(--ink);
   font-family:Inter,system-ui,sans-serif;
   background:
-    linear-gradient(rgba(255,223,22,.94),rgba(255,223,22,.94)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='none' stroke='%23000' stroke-width='2.5' opacity='.13'%3E%3Crect x='7' y='10' width='35' height='27' rx='2'/%3E%3Cpath d='M7 19h35M19 10v27M31 10v27'/%3E%3Cpath d='M75 18h31M75 27h20M75 36h28'/%3E%3Cpath d='M125 40l12-12 10 10 18-21'/%3E%3Cpath d='M13 94h38v30H13zM21 117v-12M31 117V99M41 117v-8'/%3E%3Cpath d='M75 95l10 10m0-10-10 10'/%3E%3Cpath d='M120 98c10-7 20-7 31 0'/%3E%3Cpath d='M21 154h31M21 162h21M115 143l8 8 15-19'/%3E%3C/g%3E%3C/svg%3E");
-  background-size:auto,180px 180px;
+    linear-gradient(rgba(255,223,22,.88),rgba(255,223,22,.88)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='210' height='210' viewBox='0 0 210 210'%3E%3Cg fill='none' stroke='%23111' stroke-width='2.3' opacity='.16' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='12' y='14' width='42' height='32' rx='3'/%3E%3Cpath d='M12 25h42M26 14v32M40 14v32'/%3E%3Cpath d='M78 20h30M78 29h22M78 38h28'/%3E%3Cpath d='M137 18l12 12 18-22'/%3E%3Cpath d='M171 23l7 7m0-7-7 7'/%3E%3Cpath d='M15 88h48v35H15zM25 114V99M39 114V91M53 114v-10'/%3E%3Cpath d='M79 94c10-9 20-9 31 0'/%3E%3Cpath d='M91 84v20'/%3E%3Cpath d='M133 82h49M133 94h34M133 106h42'/%3E%3Ccircle cx='31' cy='166' r='17'/%3E%3Cpath d='M31 149v34M14 166h34'/%3E%3Cpath d='M75 154l13-13 10 10 21-25'/%3E%3Cpath d='M137 146h42v32h-42zM147 170v-13M159 170v-23M171 170v-9'/%3E%3Cpath d='M13 201h33M65 196h28M105 199l8 8 15-19'/%3E%3Cpath d='M171 193c9-7 18-7 27 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:auto,210px 210px;
 }
 button,input,select{font:inherit}
 button{cursor:pointer}
@@ -57,8 +57,18 @@ a{color:inherit}
   letter-spacing:-.03em;
 }
 .brand-icon{font-size:1.25rem}
-.nav{display:flex;align-items:center;gap:22px;font-size:.78rem;font-weight:900}
-.nav a{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:2px}
+.nav{display:flex;align-items:center;gap:10px;font-size:.74rem;font-weight:900}
+.nav a{
+  text-decoration:none;
+  background:#fff;
+  border:2.5px solid #111;
+  border-radius:7px;
+  box-shadow:3px 3px 0 #111;
+  padding:6px 10px;
+  transition:transform .12s ease,box-shadow .12s ease,background .12s ease;
+}
+.nav a:hover{background:#ffd8e5;transform:translate(-1px,-1px);box-shadow:4px 4px 0 #111}
+.nav a:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #111}
 
 .screen{display:none}
 .screen.active{display:block}
@@ -88,7 +98,7 @@ a{color:inherit}
 .style-btn.active{background:var(--pink);color:#fff}
 
 .logo-wrap{display:grid;place-items:center;margin:5px auto 4px}
-.logo-svg{width:min(390px,88vw);height:auto;filter:drop-shadow(4px 5px 0 rgba(0,0,0,.12))}
+.logo-svg{width:min(410px,90vw);height:auto;filter:drop-shadow(4px 5px 0 rgba(0,0,0,.14))}
 .logo-title{
   display:inline-block;
   background:#fff;
@@ -301,7 +311,7 @@ a{color:inherit}
 <body>
 <div class="shell">
   <header class="topbar">
-    <div class="brand"><span class="brand-icon">📄✨</span> WE CLEAN .CSV</div>
+    <div class="brand"><span class="brand-icon">📄🧹</span> WE CLEAN .CSV</div>
     <nav class="nav">
       <a href="https://linkedin.com/in/lucas-freire-727057273" target="_blank" rel="noopener">LinkedIn</a>
       <a href="index.html">Portfólio</a>
@@ -324,19 +334,32 @@ a{color:inherit}
       <div class="logo-wrap">
         <svg class="logo-svg" viewBox="0 0 420 250" aria-label="Arquivo CSV com vassoura">
           <g stroke="#111" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
-            <path d="M135 20h105l48 48v135H135z" fill="#fff"/>
-            <path d="M240 20v50h48" fill="#e6e6ff"/>
-            <path d="M164 75h70M164 100h92M164 148h72M164 174h54" fill="none"/>
-            <rect x="128" y="108" width="130" height="52" rx="4" fill="#2de548"/>
-            <path d="M317 50l30 15-52 107-30-15z" fill="#f44f8b"/>
-            <path d="M292 169l-35 57 26 7 18-18 12 17 24-62z" fill="#ffd52b"/>
-            <path d="M297 168l40 2" fill="none"/>
+            <!-- arquivo -->
+            <path d="M128 24h112l48 48v134H128z" fill="#fff"/>
+            <path d="M240 24v50h48" fill="#ecebff"/>
+            <path d="M158 74h66M158 98h92M158 154h72M158 180h54" fill="none"/>
+            <rect x="120" y="108" width="134" height="52" rx="5" fill="#2de548"/>
+            
+            <!-- cabo da vassoura -->
+            <path d="M316 48l25 13-54 104-25-13z" fill="#f74f89"/>
+            <path d="M313 46l29 15" fill="none"/>
+            
+            <!-- cerdas da vassoura -->
+            <path d="M283 158
+                     C270 171 258 187 251 205
+                     C267 211 286 217 309 224
+                     C315 203 320 183 321 165
+                     Z" fill="#ffd52b"/>
+            <path d="M271 176l35 11M263 190l40 13M258 204l37 12" fill="none"/>
+            <path d="M285 160l36 6" fill="none"/>
           </g>
-          <text x="193" y="144" text-anchor="middle" font-family="Archivo Black, sans-serif" font-size="28" fill="#111">CSV</text>
+          <text x="187" y="144" text-anchor="middle" font-family="Archivo Black, sans-serif" font-size="28" fill="#111">CSV</text>
+
+          <!-- brilhos -->
           <g fill="#ffd52b" stroke="#111" stroke-width="5">
-            <path d="M88 58l7 17 17 7-17 7-7 17-7-17-17-7 17-7z"/>
-            <path d="M335 105l5 12 12 5-12 5-5 12-5-12-12-5 12-5z"/>
-            <path d="M80 130l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/>
+            <path d="M84 61l7 17 17 7-17 7-7 17-7-17-17-7 17-7z"/>
+            <path d="M346 101l6 14 14 6-14 6-6 14-6-14-14-6 14-6z"/>
+            <path d="M78 136l4 10 10 4-10 4-4 10-4-10-10-4 10-4z"/>
           </g>
         </svg>
         <div class="logo-title">WE CLEAN <span class="csv">.CSV</span></div>
