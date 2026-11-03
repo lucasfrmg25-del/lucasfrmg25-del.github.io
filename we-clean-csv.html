@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>We Clean .CSV | Lucas Freire Martins</title>
+<meta name="description" content="Projeto We Clean .CSV: diagnóstico e limpeza assistida de arquivos CSV com Python e Pandas.">
+<style>
+:root{--a:#0284c7;--t:#0f172a;--m:#64748b;--l:#e2e8f0;--s:#f8fafc;--y:#ffdd00;--p:#ff4f8b}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--t);line-height:1.65;background:#fff}
+.w{width:min(1000px,90%);margin:auto}
+.top{padding:22px 0;border-bottom:1px solid var(--l)}
+a{color:var(--a)}
+.back{text-decoration:none;font-weight:600}
+.hero{padding:80px 0 45px}
+.k{font-family:monospace;color:var(--a);letter-spacing:.15em;text-transform:uppercase}
+.hero h1{font-size:clamp(2.4rem,7vw,4.8rem);line-height:1;margin:.5rem 0 1.3rem}
+.lead{font-size:1.1rem;color:var(--m);max-width:820px}
+.sec{padding:38px 0}
+.sec h2{font-size:1.7rem}
+.box{background:var(--s);border:1px solid var(--l);border-radius:14px;padding:22px;margin:18px 0}
+.flow{display:flex;flex-wrap:wrap;gap:8px}
+.flow span{padding:8px 11px;border:1px solid var(--l);border-radius:8px}
+.flow i{color:var(--a);font-style:normal;padding:8px 0}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kpi{background:var(--s);padding:18px;border-radius:12px;text-align:center}
+.kpi b{display:block;color:var(--a);font-size:1.3rem}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn{display:inline-block;text-decoration:none;padding:12px 18px;border-radius:999px;font-weight:700;border:1px solid var(--l)}
+.btn.primary{background:var(--t);color:white;border-color:var(--t)}
+.visual{background:var(--y);border:3px solid #111;border-radius:18px;padding:24px;box-shadow:7px 7px 0 #111}
+.visual h3{margin-top:0;font-size:1.6rem}
+.visual .tag{display:inline-block;background:#fff;border:2px solid #111;border-radius:999px;padding:6px 10px;margin:4px;font-family:monospace;font-size:.8rem}
+.checks{display:grid;gap:10px;margin-top:14px}
+.checks div{background:#fff;border:2px solid #111;border-radius:10px;padding:12px}
+footer{border-top:1px solid var(--l);padding:30px 0;margin-top:45px;font-family:monospace}
+@media(max-width:650px){.kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="top"><div class="w"><a class="back" href="index.html#projetos">← Voltar aos projetos</a></div></div>
+
+<main class="w">
+<section class="hero">
+  <div class="k">Python · Pandas · Data Quality</div>
+  <h1>We Clean .CSV</h1>
+  <p class="lead">Ferramenta interativa em Python para diagnóstico e limpeza assistida de arquivos CSV. O usuário escolhe como tratar inconsistências e recebe um relatório das ações realizadas antes de exportar o arquivo final.</p>
+  <div class="actions">
+    <a class="btn primary" href="https://github.com/lucasfrmg25-del/we_clean_CSV" target="_blank" rel="noopener">Ver repositório no GitHub</a>
+    <a class="btn" href="https://www.buymeacoffee.com/lucasfrmg25" target="_blank" rel="noopener">☕ Buy Me a Coffee</a>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="kpis">
+    <div class="kpi"><b>v1.0</b>versão funcional</div>
+    <div class="kpi"><b>6</b>opções para nulos</div>
+    <div class="kpi"><b>2x</b>checagem de duplicatas</div>
+  </div>
+</section>
+
+<section class="sec">
+  <h2>Problema</h2>
+  <p>Arquivos CSV usados em análises frequentemente chegam com valores nulos, duplicatas, colunas vazias e textos inconsistentes. O objetivo do projeto é organizar esse processo em um fluxo simples, guiado e reproduzível.</p>
+</section>
+
+<section class="sec">
+  <h2>Fluxo da solução</h2>
+  <div class="flow">
+    <span>Importação</span><i>→</i>
+    <span>Diagnóstico</span><i>→</i>
+    <span>Colunas vazias</span><i>→</i>
+    <span>Duplicatas</span><i>→</i>
+    <span>Nulos</span><i>→</i>
+    <span>Textos</span><i>→</i>
+    <span>Relatório</span><i>→</i>
+    <span>Exportação</span>
+  </div>
+</section>
+
+<section class="sec">
+  <h2>O que a v1.0 faz</h2>
+  <div class="box">
+    <p>✓ Diagnóstico de linhas, colunas, tipos de dados, nulos e duplicatas.</p>
+    <p>✓ Detecção e remoção opcional de colunas totalmente vazias.</p>
+    <p>✓ Tratamento de nulos por remoção, valor informado, média, mediana ou moda.</p>
+    <p>✓ Padronização de textos com remoção de espaços e conversão de caixa.</p>
+    <p>✓ Nova checagem de duplicatas após o tratamento textual.</p>
+    <p>✓ Histórico das alterações e relatório comparativo antes/depois.</p>
+    <p>✓ Exportação do arquivo CSV tratado.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <h2>Conceito visual</h2>
+  <div class="visual">
+    <h3>WE CLEAN .CSV 🧹</h3>
+    <p>A identidade planejada para uma futura interface usa fundo amarelo, doodles de dados, bordas pretas e destaques em rosa/coral.</p>
+    <div>
+      <span class="tag">CSV</span>
+      <span class="tag">Pandas</span>
+      <span class="tag">Data Quality</span>
+      <span class="tag">Automação</span>
+      <span class="tag">Python</span>
+    </div>
+    <div class="checks">
+      <div>✓ Diagnóstico automático</div>
+      <div>✓ Tratamento assistido</div>
+      <div>✓ Relatório de limpeza</div>
+      <div>✓ Exportação final</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <h2>Aprendizados</h2>
+  <p>O projeto consolida fundamentos de Pandas, tratamento de dados, validação de entrada, funções reutilizáveis, controle de fluxo e construção de uma experiência de limpeza guiada pelo usuário.</p>
+</section>
+</main>
+
+<footer><div class="w">LUCAS FREIRE MARTINS · DATA ANALYTICS</div></footer>
+</body>
+</html>
