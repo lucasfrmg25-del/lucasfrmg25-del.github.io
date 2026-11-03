@@ -535,6 +535,7 @@ a{color:inherit}
   let sourceRows = [], rows = [], headers = [], originalHeaders = [];
   let fileName = "arquivo.csv", actions = [];
   let initialDup = 0, initialNulls = 0, emptyCols = [];
+  let skippedEmptyRows = 0, duplicatesBeforeText = 0;
   let textChoice = "keep", nullChoice = "keep", removeInitialDup = false;
 
   const screens = [
@@ -579,14 +580,21 @@ a{color:inherit}
 
   function loadFile(file){
     fileName=file.name;
+    actions=[]; skippedEmptyRows=0; duplicatesBeforeText=0;
+    textChoice="keep"; nullChoice="keep"; removeInitialDup=false;
     Papa.parse(file,{
       header:true,skipEmptyLines:false,dynamicTyping:false,
       complete:res=>{
         originalHeaders=(res.meta.fields||[]).filter(Boolean);
         headers=[...originalHeaders];
-        sourceRows=(res.data||[]).filter(r=>headers.some(h=>!isNull(r[h])));
-        rows=sourceRows.map(r=>({...r}));
         if(!headers.length){alert("Não foi possível identificar as colunas.");return;}
+        sourceRows=(res.data||[]).filter(r=>{
+          const hasData=headers.some(h=>!isNull(r[h]));
+          if(!hasData) skippedEmptyRows++;
+          return hasData;
+        });
+        rows=sourceRows.map(r=>({...r}));
+        if(skippedEmptyRows) actions.push(skippedEmptyRows+" linha(s) totalmente vazia(s) ignorada(s) na importação");
         const d=diagnostics(rows);
         initialDup=d.dup; initialNulls=d.nulls; emptyCols=d.empties;
         $("fileName").textContent=fileName;
@@ -611,6 +619,7 @@ a{color:inherit}
     if(d.nulls) items.push(d.nulls+" valor(es) nulo(s)");
     if(d.empties.length) items.push(d.empties.length+" coluna(s) totalmente vazia(s)");
     if(d.textCols.length) items.push(d.textCols.length+" coluna(s) de texto disponíveis para padronização");
+    if(skippedEmptyRows) items.push(skippedEmptyRows+" linha(s) totalmente vazia(s) ignorada(s) automaticamente na importação");
     if(!items.length) items.push("Nenhum problema básico encontrado");
     $("issueList").innerHTML=items.map(t=>'<div class="issue-line"><span class="bullet"></span>'+escapeHtml(t)+'</div>').join("");
   }
@@ -651,7 +660,10 @@ a{color:inherit}
   }
 
   function numericValues(h){
-    return rows.map(r=>r[h]).filter(v=>!isNull(v)&&!Number.isNaN(Number(v))).map(Number);
+    const values=rows.map(r=>r[h]).filter(v=>!isNull(v));
+    // Uma coluna mista (ex.: 100, "FOO", vazio) não deve receber média/mediana.
+    if(!values.length || values.some(v=>!Number.isFinite(Number(String(v).trim())))) return null;
+    return values.map(v=>Number(String(v).trim()));
   }
   function mode(h){
     const map=new Map();
@@ -665,14 +677,19 @@ a{color:inherit}
       const before=rows.length; rows=rows.filter(r=>headers.every(h=>!isNull(r[h]))); treated=before-rows.length;
       if(treated) actions.push(treated+" linha(s) removida(s) por valores nulos");
     } else if(["number","mean","median"].includes(choice)){
+      let skippedColumns=0;
       headers.forEach(h=>{
-        const nums=numericValues(h); if(!nums.length)return;
+        if(!rows.some(r=>isNull(r[h])))return;
+        const nums=numericValues(h);
+        if(nums===null){skippedColumns++;return;}
         let rep=custom;
         if(choice==="mean") rep=nums.reduce((a,b)=>a+b,0)/nums.length;
         if(choice==="median"){const s=[...nums].sort((a,b)=>a-b),m=Math.floor(s.length/2);rep=s.length%2?s[m]:(s[m-1]+s[m])/2;}
+        if(!Number.isFinite(rep))return;
         rows.forEach(r=>{if(isNull(r[h])){r[h]=String(rep);treated++;}});
       });
       if(treated) actions.push(treated+" valor(es) nulo(s) tratados por "+({number:"valor personalizado",mean:"média",median:"mediana"}[choice]));
+      if(skippedColumns) actions.push(skippedColumns+" coluna(s) com texto, dados mistos ou totalmente vazias preservada(s) sem preenchimento numérico");
     } else if(choice==="mode"){
       headers.forEach(h=>{const m=mode(h);if(m===null)return;rows.forEach(r=>{if(isNull(r[h])){r[h]=m;treated++;}});});
       if(treated) actions.push(treated+" valor(es) nulo(s) tratados pela moda");
@@ -682,6 +699,7 @@ a{color:inherit}
 
   function goText(){
     const d=diagnostics(rows);
+    duplicatesBeforeText=d.dup;
     if(!d.textCols.length){goNewDup();return;}
     $("textTags").innerHTML=d.textCols.map(c=>'<span class="text-tag">'+escapeHtml(c)+'</span>').join("");
     showAppScreen("textScreen");
@@ -704,9 +722,14 @@ a{color:inherit}
 
   function goNewDup(){
     const d=diagnostics(rows);
-    $("newDupMessage").textContent=d.dup
-      ? "Após a padronização dos textos, "+d.dup+" registro(s) passaram a possuir conteúdo idêntico."
-      : "Nenhuma nova duplicata foi identificada após os tratamentos.";
+    const newDuplicates=Math.max(0,d.dup-duplicatesBeforeText);
+    if(newDuplicates){
+      $("newDupMessage").textContent="A padronização identificou "+newDuplicates+" nova(s) duplicata(s). Total atual: "+d.dup+".";
+    } else if(d.dup){
+      $("newDupMessage").textContent="Ainda existem "+d.dup+" duplicata(s) que já estavam presentes antes da etapa de texto. Nenhuma nova duplicata foi criada.";
+    } else {
+      $("newDupMessage").textContent="Nenhuma duplicata encontrada após os tratamentos.";
+    }
     $("newDupActions").style.display=d.dup?"flex":"none";
     showAppScreen("newDupScreen");
     if(!d.dup) runCleaning();
@@ -780,7 +803,14 @@ a{color:inherit}
     if(c==="number")$("customBox").classList.add("show");
     else{$("customBox").classList.remove("show");applyNull(c);}
   });
-  $("confirmCustom").onclick=()=>applyNull("number",Number($("customValue").value||0));
+  $("confirmCustom").onclick=()=>{
+    const raw=$("customValue").value;
+    const value=Number(raw);
+    if(String(raw).trim()==="" || !Number.isFinite(value)){
+      alert("Informe um número válido para preencher os valores ausentes.");return;
+    }
+    applyNull("number",value);
+  };
   $("keepNull").onclick=()=>goText();
 
   document.querySelectorAll("[data-text]").forEach(card=>card.onclick=()=>{
@@ -804,6 +834,7 @@ a{color:inherit}
 
   $("resetBtn").onclick=()=>{
     sourceRows=[];rows=[];headers=[];originalHeaders=[];actions=[];
+    skippedEmptyRows=0;duplicatesBeforeText=0;
     $("fileInput").value="";
     $("flowScreen").classList.remove("active");
     $("homeScreen").classList.add("active");
