@@ -3,682 +3,815 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>We Clean .CSV — App</title>
-<meta name="description" content="Limpe arquivos CSV diretamente no navegador com o We Clean .CSV.">
+<title>We Clean .CSV</title>
+<meta name="description" content="Limpeza guiada de arquivos CSV diretamente no navegador.">
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;700;800;900&display=swap');
+
 :root{
-  --yellow:#ffd91a;
-  --yellow-soft:#ffe85f;
-  --pink:#ff5c8a;
-  --pink-soft:#ff9fbe;
-  --coral:#ff7a59;
-  --ink:#111111;
-  --paper:#fffdf7;
-  --white:#ffffff;
-  --green:#65d46e;
-  --muted:#5f6368;
+  --yellow:#ffdf16;
+  --yellow2:#ffe92e;
+  --pink:#f74f89;
+  --pink2:#ff86ad;
+  --green:#2fd34f;
+  --lime:#caff86;
+  --lav:#e7ddff;
+  --ink:#101010;
+  --paper:#fffdfa;
+  --white:#fff;
+  --muted:#676767;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   margin:0;
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  min-height:100vh;
   color:var(--ink);
-  background:var(--yellow);
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='none' stroke='%23111' stroke-width='3' opacity='.08'%3E%3Crect x='20' y='20' width='48' height='34' rx='4'/%3E%3Cpath d='M20 32h48M34 20v34M50 20v34'/%3E%3Cpath d='M126 28h46M126 44h30M126 60h38'/%3E%3Cpath d='M30 120l20-20 15 15 25-28'/%3E%3Cpath d='M118 112h54v44h-54zM128 145v-17M145 145v-28M162 145v-12'/%3E%3Cpath d='M32 178l18-18M50 178l-18-18'/%3E%3Cpath d='M112 184c18-12 34-10 52 0'/%3E%3Cpath d='M183 104l10 10 18-22'/%3E%3C/g%3E%3C/svg%3E");
-  background-size:220px 220px;
-}
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
+  font-family:Inter,system-ui,sans-serif;
   background:
-    radial-gradient(circle at 10% 12%,rgba(255,255,255,.25),transparent 25%),
-    radial-gradient(circle at 90% 8%,rgba(255,255,255,.18),transparent 20%);
+    linear-gradient(rgba(255,223,22,.94),rgba(255,223,22,.94)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cg fill='none' stroke='%23000' stroke-width='2.5' opacity='.13'%3E%3Crect x='7' y='10' width='35' height='27' rx='2'/%3E%3Cpath d='M7 19h35M19 10v27M31 10v27'/%3E%3Cpath d='M75 18h31M75 27h20M75 36h28'/%3E%3Cpath d='M125 40l12-12 10 10 18-21'/%3E%3Cpath d='M13 94h38v30H13zM21 117v-12M31 117V99M41 117v-8'/%3E%3Cpath d='M75 95l10 10m0-10-10 10'/%3E%3Cpath d='M120 98c10-7 20-7 31 0'/%3E%3Cpath d='M21 154h31M21 162h21M115 143l8 8 15-19'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:auto,180px 180px;
 }
-.wrap{width:min(1180px,92%);margin:auto;position:relative;z-index:1}
-.top{
-  margin:18px auto 0;
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.shell{width:min(1150px,94vw);margin:0 auto;padding:18px 0 40px}
+.topbar{
   background:#fff;
-  border:4px solid var(--ink);
-  box-shadow:8px 8px 0 var(--ink);
-  border-radius:0;
-  padding:15px 18px;
+  border:3px solid var(--ink);
+  border-radius:11px;
+  box-shadow:5px 5px 0 var(--ink);
+  min-height:54px;
+  padding:9px 17px;
   display:flex;
+  align-items:center;
   justify-content:space-between;
   gap:18px;
-  align-items:center;
 }
 .brand{
-  font-weight:1000;
-  letter-spacing:-.04em;
+  display:flex;align-items:center;gap:8px;
+  font-family:"Archivo Black",sans-serif;
   font-size:1.08rem;
-  display:flex;
-  align-items:center;
-  gap:8px;
+  letter-spacing:-.03em;
 }
-.top a{
-  color:var(--ink);
-  font-weight:900;
-  text-decoration:none;
-  padding:6px 0;
-  border-bottom:3px solid transparent;
-}
-.top a:hover{border-bottom-color:var(--pink)}
-.hero{
+.brand-icon{font-size:1.25rem}
+.nav{display:flex;align-items:center;gap:22px;font-size:.78rem;font-weight:900}
+.nav a{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:2px}
+
+.screen{display:none}
+.screen.active{display:block}
+
+.home{
   text-align:center;
-  padding:56px 0 30px;
+  padding:14px 0 0;
 }
-.logo{font-size:4.8rem;filter:drop-shadow(5px 5px 0 rgba(17,17,17,.15))}
-.hero-badge{
-  display:inline-block;
-  background:var(--pink-soft);
-  border:3px solid var(--ink);
-  box-shadow:4px 4px 0 var(--ink);
-  font-weight:1000;
-  padding:7px 12px;
-  margin-bottom:14px;
-  transform:rotate(-1deg);
-}
-.hero h1{
-  display:inline-block;
-  background:#fff;
-  border:5px solid var(--ink);
-  box-shadow:10px 10px 0 var(--ink);
-  padding:16px 28px 18px;
-  margin:6px 0 0;
-  transform:rotate(-1deg);
-  font-size:clamp(2.8rem,8vw,5.8rem);
-  line-height:.9;
-  letter-spacing:-.055em;
-  font-weight:1000;
-}
-.hero h1 span{color:var(--pink)}
-.hero p{
-  font-weight:900;
-  margin:28px auto 0;
-  max-width:700px;
+.style-label{
+  font-family:"Archivo Black",sans-serif;
   font-size:1.05rem;
+  margin:10px 0 9px;
 }
-.hero-subline{
-  margin:10px auto 0;
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
+.style-picker{
+  display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-bottom:18px;
 }
-.hero-chip{
+.style-btn{
+  min-width:80px;
   background:#fff;
-  border:3px solid var(--ink);
-  box-shadow:4px 4px 0 var(--ink);
-  padding:7px 10px;
-  font-size:.82rem;
-  font-weight:1000;
+  border:3px solid #111;
+  border-radius:7px;
+  box-shadow:3px 3px 0 #111;
+  padding:7px 14px;
+  font-size:.72rem;
+  font-weight:900;
 }
-.steps{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin:22px 0 28px;
-}
-.step{
-  background:#fff;
-  border:3px solid var(--ink);
-  box-shadow:5px 5px 0 var(--ink);
-  padding:10px 12px;
-  font-weight:1000;
-  font-size:.86rem;
-  text-align:center;
-}
-.step.active{background:var(--pink);color:#fff}
-.panel{
-  background:var(--paper);
-  border:4px solid var(--ink);
-  box-shadow:10px 10px 0 var(--ink);
-  border-radius:0;
-  padding:26px;
-  margin:28px 0;
-  position:relative;
-}
-.panel::before{
-  content:"";
-  position:absolute;
-  top:-11px;
-  right:24px;
-  width:72px;
-  height:20px;
-  background:var(--coral);
-  border:3px solid var(--ink);
-  transform:rotate(2deg);
-}
-.panel-title{
+.style-btn.active{background:var(--pink);color:#fff}
+
+.logo-wrap{display:grid;place-items:center;margin:5px auto 4px}
+.logo-svg{width:min(390px,88vw);height:auto;filter:drop-shadow(4px 5px 0 rgba(0,0,0,.12))}
+.logo-title{
   display:inline-block;
-  background:var(--pink-soft);
-  border:3px solid var(--ink);
-  box-shadow:5px 5px 0 var(--ink);
-  padding:9px 14px;
-  font-weight:1000;
-  margin-bottom:18px;
-  font-size:1rem;
-  transform:rotate(-.6deg);
-}
-.drop{
   background:#fff;
-  border:4px dashed var(--ink);
-  padding:42px 30px;
-  text-align:center;
-  cursor:pointer;
-  min-height:230px;
-  display:grid;
-  place-items:center;
-}
-.drop.drag{background:#fff4a8}
-.drop input{display:none}
-.drop-inner{max-width:560px}
-.drop h3{font-size:1.5rem;margin:8px 0 4px;font-weight:1000}
-.drop-icon{font-size:3.2rem}
-.btn{
-  border:4px solid var(--ink);
-  box-shadow:6px 6px 0 var(--ink);
-  background:var(--pink);
-  color:#fff;
-  padding:13px 18px;
-  font-weight:1000;
-  cursor:pointer;
-  font-size:.95rem;
-  border-radius:0;
-  text-transform:uppercase;
-  letter-spacing:.01em;
-}
-.btn.secondary{background:#fff;color:#111}
-.btn.alt{background:var(--yellow-soft);color:#111}
-.btn:active{transform:translate(3px,3px);box-shadow:3px 3px 0 var(--ink)}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.metric{
-  background:#fff;
-  border:4px solid var(--ink);
-  box-shadow:6px 6px 0 var(--ink);
-  padding:18px;
-  min-height:120px;
-}
-.metric:nth-child(2){background:#fff7c9}
-.metric:nth-child(3){background:#ffd6e2}
-.metric:nth-child(4){background:#eef7ff}
-.metric small{
-  display:block;
-  font-weight:1000;
-  text-transform:uppercase;
-  font-size:.75rem;
-  letter-spacing:.05em;
-}
-.metric b{
-  display:block;
-  font-size:2.2rem;
-  margin-top:10px;
+  border:4px solid #111;
+  box-shadow:6px 6px 0 #111;
+  transform:rotate(-2deg);
+  padding:7px 16px 10px;
+  margin-top:-8px;
+  font-family:"Archivo Black",sans-serif;
+  font-size:clamp(2.1rem,6vw,4rem);
   line-height:1;
 }
-.controls{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.control{
-  background:#fff;
-  border:4px solid var(--ink);
-  box-shadow:6px 6px 0 var(--ink);
-  padding:18px;
-}
-.control h3{margin:0 0 6px;font-size:1.05rem}
-.control .mini{font-size:.78rem;font-weight:800;color:var(--muted);margin-bottom:10px}
-select,input[type="number"]{
-  width:100%;
-  padding:12px;
-  border:3px solid var(--ink);
-  background:#fff;
-  font:inherit;
-  font-weight:800;
-  border-radius:0;
-}
-.preview{
-  overflow:auto;
-  border:4px solid var(--ink);
-  background:#fff;
-  box-shadow:6px 6px 0 var(--ink);
-}
-table{border-collapse:collapse;width:100%;min-width:680px}
-th,td{padding:10px 11px;border-bottom:2px solid #e5e7eb;text-align:left;font-size:.9rem}
-th{
-  background:#111;
-  color:#fff;
-  position:sticky;
-  top:0;
-  font-size:.78rem;
-  letter-spacing:.04em;
-}
-.notice{
-  background:#fff;
-  border:4px solid var(--ink);
-  box-shadow:6px 6px 0 var(--ink);
-  border-left:12px solid var(--pink);
-  padding:16px;
-  margin-top:18px;
-  font-weight:800;
-}
-.success{
-  background:#dfffe7;
-  border:4px solid var(--ink);
-  box-shadow:8px 8px 0 var(--ink);
-  padding:20px;
-}
-.actions{
-  background:#fff;
-  border:4px solid var(--ink);
-  box-shadow:6px 6px 0 var(--ink);
-  padding:16px;
-}
-.actions div{margin:8px 0;font-weight:800}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.hidden{display:none!important}
-.muted{color:var(--muted);font-size:.9rem}
-.section-note{
-  background:#111;
-  color:#fff;
-  border:4px solid var(--ink);
-  box-shadow:6px 6px 0 var(--pink);
-  padding:14px 16px;
-  margin-top:16px;
+.logo-title .csv{color:var(--pink)}
+.slogan{
+  display:inline-block;
+  margin:8px 0 14px;
+  background:#fff8d8;
+  border:2px solid #111;
+  box-shadow:3px 3px 0 #111;
+  padding:7px 15px;
+  font-weight:900;
   font-size:.88rem;
-  font-weight:800;
 }
-footer{text-align:center;padding:42px 0 56px;font-weight:1000}
-@media(max-width:900px){
-  .controls{grid-template-columns:1fr}
+.upload-box{
+  width:min(650px,96%);
+  margin:0 auto;
+  background:#fff;
+  border:3px dashed #111;
+  border-radius:12px;
+  padding:18px 18px 16px;
 }
-@media(max-width:800px){
-  .grid4{grid-template-columns:repeat(2,1fr)}
-  .steps{grid-template-columns:repeat(2,1fr)}
+.upload-cloud{font-size:2rem;line-height:1}
+.upload-title{font-family:"Archivo Black",sans-serif;font-size:1rem;margin-top:6px}
+.upload-sub{font-size:.82rem;font-weight:700;margin-bottom:10px}
+.main-btn{
+  border:3px solid #111;
+  background:var(--pink);
+  color:#fff;
+  box-shadow:4px 4px 0 #111;
+  border-radius:8px;
+  padding:10px 17px;
+  font-family:"Archivo Black",sans-serif;
+  font-size:.78rem;
 }
-@media(max-width:560px){
-  .grid4{grid-template-columns:1fr}
-  .steps{grid-template-columns:1fr}
-  .top{align-items:flex-start;flex-direction:column}
-  .hero h1{font-size:2.7rem}
-  .panel{padding:18px}
+.main-btn:active,.secondary-btn:active,.choice-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #111}
+.features{
+  display:flex;justify-content:center;gap:13px;flex-wrap:wrap;
+  margin:13px auto 0;
+  font-size:.69rem;
+  font-weight:900;
+}
+.features span::before{content:"✓ ";font-size:1rem}
+
+.flow-wrap{margin:15px auto 12px;width:min(760px,96%)}
+.progress{
+  display:grid;grid-template-columns:repeat(4,1fr);position:relative;align-items:start;
+}
+.progress::before{
+  content:"";position:absolute;left:12.5%;right:12.5%;top:15px;height:3px;background:#111;z-index:0;
+}
+.pstep{position:relative;z-index:1;text-align:center;font-weight:900;font-size:.72rem}
+.dot{
+  width:31px;height:31px;border:3px solid #111;border-radius:50%;
+  margin:0 auto 4px;background:#fff;display:grid;place-items:center;font-family:"Archivo Black";
+  box-shadow:1px 1px 0 #111;
+}
+.pstep.done .dot{background:var(--green);color:#fff}
+.pstep.current .dot{background:var(--pink);color:#fff}
+
+.stage{
+  width:min(760px,96%);
+  margin:0 auto;
+}
+.card{
+  background:var(--paper);
+  border:3px solid #111;
+  border-radius:12px;
+  box-shadow:6px 7px 0 #111;
+  overflow:hidden;
+}
+.card-head{
+  background:linear-gradient(90deg,var(--pink),#ff9abe);
+  border-bottom:3px solid #111;
+  padding:10px 16px;
+  font-family:"Archivo Black",sans-serif;
+  font-size:1.18rem;
+  display:flex;align-items:center;gap:10px;
+}
+.card-body{padding:20px}
+.loaded-grid{
+  display:grid;grid-template-columns:115px 1fr;gap:18px;align-items:center;
+}
+.file-ico{
+  width:86px;height:100px;margin:auto;position:relative;background:#fff;border:3px solid #111;border-radius:3px;
+}
+.file-ico:after{
+  content:"CSV";position:absolute;left:9px;right:9px;top:43px;background:#23db39;border:3px solid #111;
+  font-family:"Archivo Black";font-size:1rem;padding:3px;
+}
+.file-ico:before{
+  content:"";position:absolute;right:-3px;top:-3px;border-left:25px solid transparent;border-bottom:25px solid #111;
+}
+.filename{font-family:"Archivo Black";font-size:1.4rem;margin-bottom:12px}
+.stat-list{border:1.5px solid #bbb;border-radius:7px;padding:8px 12px;background:#fff}
+.stat-row{display:flex;gap:11px;align-items:center;padding:7px 0;border-bottom:1px solid #bbb;font-weight:800}
+.stat-row:last-child{border-bottom:0}
+.big-action{display:flex;justify-content:center;margin-top:16px}
+.big-action .main-btn{font-size:1rem;padding:11px 26px}
+
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.metric{
+  background:#fff;border:3px solid #111;border-radius:9px;box-shadow:4px 4px 0 #111;padding:12px 16px;
+  display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;
+}
+.metric-icon{font-size:1.5rem}
+.metric-label{font-family:"Archivo Black";font-size:.86rem}
+.metric-value{grid-column:2;font-family:"Archivo Black";font-size:2rem;line-height:1.1}
+.issue-box{
+  margin-top:15px;background:#fff1f3;border:3px solid #111;border-radius:9px;box-shadow:3px 3px 0 #111;padding:12px 16px;
+}
+.issue-title{font-family:"Archivo Black";font-size:1.05rem;margin-bottom:6px}
+.issue-line{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.87rem;margin:5px 0}
+.bullet{width:9px;height:9px;border:2px solid #111;background:var(--pink);border-radius:50%;flex:0 0 auto}
+
+.question{font-weight:800;font-size:1.02rem;margin:8px 0 16px}
+.empty-pill{
+  border:2px solid #111;border-radius:7px;background:#f0ebff;padding:8px 12px;display:inline-flex;align-items:center;gap:8px;font-weight:900;margin-bottom:14px
+}
+.choice-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.choice-btn{
+  border:3px solid #111;border-radius:8px;background:#fff;box-shadow:3px 3px 0 #111;
+  padding:9px 16px;font-family:"Archivo Black";font-size:.78rem;
+}
+.choice-btn.primary{background:var(--pink);color:#fff}
+
+.option-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.option-card{
+  border:2.5px solid #111;border-radius:8px;background:#fff;min-height:135px;padding:10px 6px;text-align:center;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+}
+.option-card.selected{background:#ffadc8}
+.option-icon{font-size:1.35rem}
+.option-title{font-family:"Archivo Black";font-size:.68rem;line-height:1.05;margin:7px 0 5px}
+.option-desc{font-size:.62rem;line-height:1.15;font-weight:700}
+.radio{width:13px;height:13px;border:2px solid #111;border-radius:50%;margin-top:auto;background:#fff}
+.option-card.selected .radio{background:var(--pink);box-shadow:inset 0 0 0 2px #fff}
+.nochange{margin:12px auto 0;display:block;width:max-content}
+
+.text-tags{display:flex;gap:8px;flex-wrap:wrap;margin:7px 0 12px}
+.text-tag{border:2px solid #111;border-radius:7px;background:#eee9ff;padding:4px 10px;font-weight:900;font-size:.72rem}
+.text-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.text-card{min-height:150px}
+.example{font-weight:900;font-size:.75rem;line-height:1.35;margin-top:6px}
+.example b{font-size:1rem}
+
+.custom-box{display:none;margin:13px auto 0;max-width:360px}
+.custom-box.show{display:flex;gap:8px}
+.custom-box input{flex:1;border:3px solid #111;border-radius:7px;padding:8px;font-weight:800}
+
+.alert-card .card-body{padding-bottom:14px}
+.cleaning{
+  margin-top:16px;background:var(--lav);border:3px solid #111;border-radius:10px;box-shadow:4px 4px 0 #111;padding:14px 16px;
+  display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center;
+}
+.broom{font-size:2.6rem}
+.clean-title{font-family:"Archivo Black";font-size:1.05rem}
+.bar{height:18px;border:3px solid #111;border-radius:999px;background:#fff;overflow:hidden;margin:7px 0 3px}
+.bar > i{display:block;width:0;height:100%;background:repeating-linear-gradient(-45deg,#f84b86 0 10px,#ff82aa 10px 20px);transition:width .9s ease}
+.clean-percent{font-family:"Archivo Black";float:right}
+
+.result-title{
+  text-align:center;font-family:"Archivo Black";font-size:1.7rem;margin:0 0 13px;
+}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px}
+.result-metrics{grid-column:1/3;display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.done-box{
+  background:#ffd5e3;border:3px solid #111;border-radius:9px;padding:10px 12px;
+}
+.done-title{font-family:"Archivo Black";font-size:.95rem}
+.done-line{font-size:.7rem;font-weight:800;margin:5px 0}
+.ready{
+  margin-top:13px;background:var(--lime);border:3px solid #111;border-radius:10px;box-shadow:4px 4px 0 #111;padding:13px;text-align:center
+}
+.ready-title{font-family:"Archivo Black";font-size:1.15rem;margin-bottom:9px}
+.secondary-btn{
+  border:3px solid #111;background:#fff;border-radius:8px;box-shadow:3px 3px 0 #111;padding:9px 14px;font-family:"Archivo Black";font-size:.75rem
+}
+
+.preview-mini{display:none}
+.footer-note{text-align:center;font-size:.7rem;font-weight:800;margin-top:14px}
+
+@media(max-width:720px){
+  .nav{gap:10px;font-size:.68rem}
+  .loaded-grid{grid-template-columns:1fr;text-align:center}
+  .option-grid{grid-template-columns:repeat(2,1fr)}
+  .text-options{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr}
+  .result-metrics{grid-column:auto}
+}
+@media(max-width:500px){
+  .topbar{align-items:flex-start;flex-direction:column}
+  .nav{flex-wrap:wrap}
+  .metric-grid,.result-metrics{grid-template-columns:1fr}
+  .option-grid{grid-template-columns:1fr}
+  .progress{gap:3px}
+  .pstep{font-size:.62rem}
 }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="top">
-    <div class="brand">📄🧹 WE CLEAN .CSV</div>
-    <div class="row">
-      <a href="we-clean-csv.html">Sobre o projeto</a>
-      <a href="https://github.com/lucasfrmg25-del/we_clean_CSV" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.buymeacoffee.com/lucasfrmg25" target="_blank" rel="noopener">☕ Apoiar</a>
-    </div>
-  </div>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon">📄✨</span> WE CLEAN .CSV</div>
+    <nav class="nav">
+      <a href="https://linkedin.com/in/lucas-freire-727057273" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="index.html">Portfólio</a>
+      <a href="https://www.buymeacoffee.com/lucasfrmg25" target="_blank" rel="noopener">☕ Buy Me a Coffee</a>
+    </nav>
+  </header>
 
-  <section class="hero">
-    <div class="hero-badge">DATA CLEANING · FEITO PARA SER SIMPLES</div><br>
-    <div class="logo">📄🧹✨</div>
-    <h1>WE CLEAN <span>.CSV</span></h1>
-    <p>Limpe seus dados de forma simples, rápida e visual — diretamente no seu navegador.</p>
-    <div class="hero-subline">
-      <span class="hero-chip">{ } PYTHON INSPIRED</span>
-      <span class="hero-chip">CSV</span>
-      <span class="hero-chip">DATA QUALITY</span>
-      <span class="hero-chip">100% NO NAVEGADOR</span>
-    </div>
-  </section>
-
-  <div class="steps">
-    <div class="step active" id="s1">1 Upload</div>
-    <div class="step" id="s2">2 Diagnóstico</div>
-    <div class="step" id="s3">3 Tratamento</div>
-    <div class="step" id="s4">4 Resultado</div>
-  </div>
-
-  <section class="panel">
-    <div class="panel-title">📤 SELECIONE SEU ARQUIVO .CSV</div>
-    <div class="drop" id="drop">
-      <input type="file" id="file" accept=".csv,text/csv">
-      <div class="drop-inner">
-        <div class="drop-icon">⬆️📄</div>
-        <h3>ARRASTE E SOLTE SEU CSV AQUI</h3>
-        <p class="muted">ou clique para escolher o arquivo manualmente</p>
-        <button class="btn" id="pick" type="button">ESCOLHER ARQUIVO .CSV</button>
-      </div>
-    </div>
-    <div class="section-note">🔒 PRIVACIDADE: o arquivo é processado localmente no navegador. O We Clean não envia seu CSV para um servidor próprio.</div>
-  </section>
-
-  <section class="panel hidden" id="diagnostic">
-    <div class="panel-title">📊 DIAGNÓSTICO DO ARQUIVO</div>
-    <div class="grid4">
-      <div class="metric"><small>Linhas</small><b id="mRows">0</b></div>
-      <div class="metric"><small>Colunas</small><b id="mCols">0</b></div>
-      <div class="metric"><small>Valores nulos</small><b id="mNulls">0</b></div>
-      <div class="metric"><small>Duplicatas</small><b id="mDup">0</b></div>
-    </div>
-    <div class="notice" id="issues"></div>
-    <h3>Prévia</h3>
-    <div class="preview" id="previewBefore"></div>
-  </section>
-
-  <section class="panel hidden" id="treatment">
-    <div class="panel-title">🧹 CONFIGURE A LIMPEZA</div>
-    <div class="controls">
-      <div class="control">
-        <h3>Colunas totalmente vazias</h3>
-        <div class="mini">Decida se campos completamente sem dados devem permanecer.</div>
-        <p class="muted" id="emptyColsText"></p>
-        <select id="emptyCols">
-          <option value="keep">Manter</option>
-          <option value="remove">Remover colunas vazias</option>
-        </select>
+  <main>
+    <!-- HOME -->
+    <section class="screen active home" id="homeScreen">
+      <div class="style-label">SELECIONE SEU ESTILO</div>
+      <div class="style-picker">
+        <button class="style-btn" data-font="mono">MONO</button>
+        <button class="style-btn" data-font="grotesk">GROTESK</button>
+        <button class="style-btn active" data-font="inter">INTER</button>
+        <button class="style-btn" data-font="georgia">GEORGIA</button>
+        <button class="style-btn" data-font="code">CODE</button>
       </div>
 
-      <div class="control">
-        <h3>Linhas duplicadas</h3>
-        <div class="mini">Remove registros idênticos antes e depois da padronização textual.</div>
-        <select id="dupAction">
-          <option value="keep">Manter</option>
-          <option value="remove">Remover duplicatas</option>
-        </select>
+      <div class="logo-wrap">
+        <svg class="logo-svg" viewBox="0 0 420 250" aria-label="Arquivo CSV com vassoura">
+          <g stroke="#111" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M135 20h105l48 48v135H135z" fill="#fff"/>
+            <path d="M240 20v50h48" fill="#e6e6ff"/>
+            <path d="M164 75h70M164 100h92M164 148h72M164 174h54" fill="none"/>
+            <rect x="128" y="108" width="130" height="52" rx="4" fill="#2de548"/>
+            <path d="M317 50l30 15-52 107-30-15z" fill="#f44f8b"/>
+            <path d="M292 169l-35 57 26 7 18-18 12 17 24-62z" fill="#ffd52b"/>
+            <path d="M297 168l40 2" fill="none"/>
+          </g>
+          <text x="193" y="144" text-anchor="middle" font-family="Archivo Black, sans-serif" font-size="28" fill="#111">CSV</text>
+          <g fill="#ffd52b" stroke="#111" stroke-width="5">
+            <path d="M88 58l7 17 17 7-17 7-7 17-7-17-17-7 17-7z"/>
+            <path d="M335 105l5 12 12 5-12 5-5 12-5-12-12-5 12-5z"/>
+            <path d="M80 130l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/>
+          </g>
+        </svg>
+        <div class="logo-title">WE CLEAN <span class="csv">.CSV</span></div>
+        <div class="slogan">Limpe seus dados de forma simples,<br>rápida e visual.</div>
       </div>
 
-      <div class="control">
-        <h3>Valores nulos</h3>
-        <div class="mini">Escolha como preencher ou remover ausências sem alterar o restante do fluxo.</div>
-        <select id="nullAction">
-          <option value="keep">Manter como estão</option>
-          <option value="drop">Remover linhas com nulos</option>
-          <option value="number">Substituir nulos numéricos por um valor</option>
-          <option value="mean">Substituir nulos numéricos pela média</option>
-          <option value="median">Substituir nulos numéricos pela mediana</option>
-          <option value="mode">Substituir nulos pela moda</option>
-        </select>
-        <div id="customWrap" class="hidden" style="margin-top:10px">
-          <input type="number" id="customNumber" value="0" step="any">
+      <div class="upload-box" id="dropZone">
+        <input type="file" id="fileInput" accept=".csv,text/csv" hidden>
+        <div class="upload-cloud">☁️</div>
+        <div class="upload-title">SELECIONE SEU ARQUIVO .CSV</div>
+        <div class="upload-sub">ou arraste e solte aqui</div>
+        <button class="main-btn" id="pickFile">📄 ESCOLHER ARQUIVO .CSV</button>
+      </div>
+
+      <div class="features">
+        <span>Diagnóstico automático</span>
+        <span>Tratamento de nulos</span>
+        <span>Remoção de duplicatas</span>
+        <span>Padronização de textos</span>
+        <span>Relatório da limpeza</span>
+      </div>
+    </section>
+
+    <!-- APP FLOW -->
+    <section class="screen" id="flowScreen">
+      <div class="flow-wrap">
+        <div class="progress">
+          <div class="pstep current" id="p1"><div class="dot">1</div>Upload</div>
+          <div class="pstep" id="p2"><div class="dot">2</div>Diagnóstico</div>
+          <div class="pstep" id="p3"><div class="dot">3</div>Tratamento</div>
+          <div class="pstep" id="p4"><div class="dot">4</div>Resultado</div>
         </div>
       </div>
 
-      <div class="control">
-        <h3>Padronização de texto</h3>
-        <div class="mini">Normalize caixa e espaços para reduzir inconsistências simples.</div>
-        <select id="textAction">
-          <option value="keep">Não alterar</option>
-          <option value="trim">Remover espaços no início e no fim</option>
-          <option value="lower">Converter para minúsculas</option>
-          <option value="upper">Converter para maiúsculas</option>
-        </select>
+      <div class="stage">
+        <!-- file loaded -->
+        <section class="screen active" id="loadedScreen">
+          <div class="card">
+            <div class="card-head">ARQUIVO CARREGADO ✓</div>
+            <div class="card-body">
+              <div class="loaded-grid">
+                <div class="file-ico"></div>
+                <div>
+                  <div class="filename" id="fileName">arquivo.csv</div>
+                  <div class="stat-list">
+                    <div class="stat-row">▦ <span><b id="loadRows">0</b> linhas</span></div>
+                    <div class="stat-row">▥ <span><b id="loadCols">0</b> colunas</span></div>
+                    <div class="stat-row">∅ <span><b id="loadNulls">0</b> valores nulos</span></div>
+                    <div class="stat-row">▱ <span><b id="loadDup">0</b> duplicata(s)</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="big-action"><button class="main-btn" id="analyzeBtn">ANALISAR ARQUIVO →</button></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- diagnostic -->
+        <section class="screen" id="diagScreen">
+          <div class="card">
+            <div class="card-head">📊 DIAGNÓSTICO DO ARQUIVO</div>
+            <div class="card-body">
+              <div class="metric-grid">
+                <div class="metric"><div class="metric-icon">▦</div><div class="metric-label">LINHAS</div><div class="metric-value" id="dRows">0</div></div>
+                <div class="metric"><div class="metric-icon">▥</div><div class="metric-label">COLUNAS</div><div class="metric-value" id="dCols">0</div></div>
+                <div class="metric"><div class="metric-icon">∅</div><div class="metric-label">VALORES NULOS</div><div class="metric-value" id="dNulls">0</div></div>
+                <div class="metric"><div class="metric-icon">▱</div><div class="metric-label">DUPLICATAS</div><div class="metric-value" id="dDup">0</div></div>
+              </div>
+              <div class="issue-box">
+                <div class="issue-title">⚠️ PROBLEMAS ENCONTRADOS</div>
+                <div id="issueList"></div>
+              </div>
+              <div class="big-action"><button class="main-btn" id="startTreatment">INICIAR TRATAMENTO →</button></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- empty columns -->
+        <section class="screen" id="emptyScreen">
+          <div class="card">
+            <div class="card-head">🗑️ COLUNAS TOTALMENTE VAZIAS</div>
+            <div class="card-body">
+              <div class="question" id="emptyQuestion">Encontramos colunas sem nenhum valor preenchido:</div>
+              <div id="emptyList"></div>
+              <div class="question">Deseja removê-la(s)?</div>
+              <div class="choice-row">
+                <button class="choice-btn primary" id="removeEmpty">🗑 REMOVER</button>
+                <button class="choice-btn" id="keepEmpty">✕ MANTER</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- dup -->
+        <section class="screen" id="dupScreen">
+          <div class="card">
+            <div class="card-head">▱ LINHAS DUPLICADAS</div>
+            <div class="card-body">
+              <div class="question"><b id="dupCountText">0 duplicatas encontradas.</b></div>
+              <div class="question">Deseja remover registros duplicados?</div>
+              <div class="choice-row">
+                <button class="choice-btn primary" id="removeDup">🗑 REMOVER DUPLICATAS</button>
+                <button class="choice-btn" id="keepDup">✕ MANTER</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- nulls -->
+        <section class="screen" id="nullScreen">
+          <div class="card">
+            <div class="card-head">∅ VALORES NULOS</div>
+            <div class="card-body">
+              <div class="question">Foram encontrados <b id="nullCountText">0</b> valores nulos.<br>Como deseja tratá-los?</div>
+              <div class="option-grid" id="nullOptions">
+                <div class="option-card" data-null="drop"><div class="option-icon">🗑</div><div class="option-title">REMOVER<br>LINHAS</div><div class="option-desc">Exclui registros contendo nulos.</div><div class="radio"></div></div>
+                <div class="option-card" data-null="number"><div class="option-icon">✎</div><div class="option-title">VALOR<br>PERSONALIZADO</div><div class="option-desc">Informe um número.</div><div class="radio"></div></div>
+                <div class="option-card" data-null="mean"><div class="option-icon">▥</div><div class="option-title">MÉDIA</div><div class="option-desc">Preenche campos numéricos pela média.</div><div class="radio"></div></div>
+                <div class="option-card" data-null="median"><div class="option-icon">▥</div><div class="option-title">MEDIANA</div><div class="option-desc">Preenche utilizando a mediana.</div><div class="radio"></div></div>
+                <div class="option-card" data-null="mode"><div class="option-icon">☆</div><div class="option-title">MODA</div><div class="option-desc">Usa o valor mais frequente.</div><div class="radio"></div></div>
+              </div>
+              <div class="custom-box" id="customBox"><input type="number" id="customValue" step="any" value="0"><button class="choice-btn primary" id="confirmCustom">CONFIRMAR</button></div>
+              <button class="choice-btn nochange" id="keepNull">⊘ NÃO ALTERAR</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- text -->
+        <section class="screen" id="textScreen">
+          <div class="card">
+            <div class="card-head">Aa PADRONIZAÇÃO DE TEXTO</div>
+            <div class="card-body">
+              <div>Foram encontradas colunas de texto:</div>
+              <div class="text-tags" id="textTags"></div>
+              <div class="question">Escolha o tratamento:</div>
+              <div class="text-options">
+                <div class="option-card text-card" data-text="trim"><div class="option-icon">a▢</div><div class="option-title">LIMPAR<br>ESPAÇOS</div><div class="example">“ Vitória ”<br>↓<br><b>“Vitória”</b></div><div class="radio"></div></div>
+                <div class="option-card text-card" data-text="lower"><div class="option-icon">aᵃ</div><div class="option-title">MINÚSCULAS</div><div class="example">“VITÓRIA”<br>↓<br><b>“vitória”</b></div><div class="radio"></div></div>
+                <div class="option-card text-card" data-text="upper"><div class="option-icon">AA</div><div class="option-title">MAIÚSCULAS</div><div class="example">“Vitória”<br>↓<br><b>“VITÓRIA”</b></div><div class="radio"></div></div>
+              </div>
+              <button class="choice-btn nochange" id="keepText">⊘ NÃO ALTERAR</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- new dup + progress -->
+        <section class="screen" id="newDupScreen">
+          <div class="card alert-card">
+            <div class="card-head">⚠ NOVA DUPLICATA IDENTIFICADA</div>
+            <div class="card-body">
+              <div class="question" id="newDupMessage">Após a padronização dos textos, registros passaram a possuir conteúdo idêntico.</div>
+              <div class="choice-row" id="newDupActions">
+                <button class="choice-btn primary" id="removeNewDup">🗑 REMOVER DUPLICATAS</button>
+                <button class="choice-btn" id="keepNewDup">✕ MANTER</button>
+              </div>
+              <div class="cleaning">
+                <div class="broom">🧹✨</div>
+                <div>
+                  <div class="clean-title">REALIZANDO A LIMPEZA <span class="clean-percent" id="cleanPercent">0%</span></div>
+                  <div class="bar"><i id="cleanBar"></i></div>
+                  <div style="font-size:.72rem;font-weight:800">Organizando seu .CSV...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- result -->
+        <section class="screen" id="resultScreen">
+          <div class="result-title">✅ LIMPEZA CONCLUÍDA! ✨</div>
+          <div class="result-grid">
+            <div class="result-metrics">
+              <div class="metric"><div class="metric-icon">▦</div><div class="metric-label">LINHAS</div><div class="metric-value" id="rRows">0</div></div>
+              <div class="metric"><div class="metric-icon">▥</div><div class="metric-label">COLUNAS</div><div class="metric-value" id="rCols">0</div></div>
+              <div class="metric"><div class="metric-icon">∅</div><div class="metric-label">NULOS</div><div class="metric-value" id="rNulls">0</div></div>
+              <div class="metric"><div class="metric-icon">▱</div><div class="metric-label">DUPLICATAS</div><div class="metric-value" id="rDup">0</div></div>
+            </div>
+            <div class="done-box">
+              <div class="done-title">● O QUE FOI FEITO</div>
+              <div id="actionLog"></div>
+            </div>
+          </div>
+          <div class="ready">
+            <div class="ready-title">⇩ SEU ARQUIVO ESTÁ PRONTO</div>
+            <div class="choice-row">
+              <button class="choice-btn primary" id="downloadBtn">⇩ BAIXAR ARQUIVO TRATADO .CSV</button>
+              <button class="choice-btn" id="resetBtn">↻ LIMPAR OUTRO .CSV</button>
+            </div>
+          </div>
+        </section>
       </div>
-    </div>
-    <div style="margin-top:18px">
-      <button class="btn" id="apply" type="button">✨ APLICAR LIMPEZA</button>
-    </div>
-  </section>
-
-  <section class="panel hidden" id="result">
-    <div class="success">
-      <h2 style="margin:0 0 6px">✅ LIMPEZA CONCLUÍDA!</h2>
-      <div>Seu arquivo está pronto para revisão e download.</div>
-    </div>
-
-    <div class="grid4" style="margin-top:18px">
-      <div class="metric"><small>Linhas</small><b id="rRows">0</b></div>
-      <div class="metric"><small>Colunas</small><b id="rCols">0</b></div>
-      <div class="metric"><small>Nulos</small><b id="rNulls">0</b></div>
-      <div class="metric"><small>Duplicatas</small><b id="rDup">0</b></div>
-    </div>
-
-    <h3>O que foi feito</h3>
-    <div class="actions" id="actionLog"></div>
-
-    <h3>Prévia do resultado</h3>
-    <div class="preview" id="previewAfter"></div>
-
-    <div class="row" style="margin-top:18px">
-      <button class="btn" id="download" type="button">⬇️ BAIXAR CSV TRATADO</button>
-      <button class="btn alt" id="reset" type="button">LIMPAR OUTRO .CSV</button>
-    </div>
-  </section>
+    </section>
+  </main>
+  <div class="footer-note">O arquivo é processado localmente no navegador e não é enviado para um servidor do We Clean.</div>
 </div>
-
-<footer>WE CLEAN .CSV · Lucas Freire Martins</footer>
 
 <script>
 (() => {
   const $ = id => document.getElementById(id);
-  let originalRows = [], rows = [], headers = [], fileName = "arquivo.csv";
+  let sourceRows = [], rows = [], headers = [], originalHeaders = [];
+  let fileName = "arquivo.csv", actions = [];
+  let initialDup = 0, initialNulls = 0, emptyCols = [];
+  let textChoice = "keep", nullChoice = "keep", removeInitialDup = false;
 
-  const drop = $("drop"), input = $("file");
-  $("pick").onclick = () => input.click();
-  drop.onclick = e => { if (e.target.id !== "pick") input.click(); };
-  input.onchange = () => input.files[0] && loadFile(input.files[0]);
+  const screens = [
+    "loadedScreen","diagScreen","emptyScreen","dupScreen","nullScreen","textScreen","newDupScreen","resultScreen"
+  ];
 
-  ["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => {
-    e.preventDefault(); drop.classList.add("drag");
-  }));
-  ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => {
-    e.preventDefault(); drop.classList.remove("drag");
-  }));
-  drop.addEventListener("drop", e => {
-    const f = e.dataTransfer.files[0];
-    if (f) loadFile(f);
-  });
+  function showAppScreen(id){
+    screens.forEach(s => $(s).classList.toggle("active", s === id));
+    $("homeScreen").classList.remove("active");
+    $("flowScreen").classList.add("active");
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
 
-  $("nullAction").onchange = () => {
-    $("customWrap").classList.toggle("hidden", $("nullAction").value !== "number");
-  };
+  function setProgress(step){
+    [1,2,3,4].forEach(i => {
+      const el = $("p"+i);
+      el.classList.toggle("current", i===step);
+      el.classList.toggle("done", i<step);
+      el.querySelector(".dot").textContent = i<step ? "✓" : i;
+    });
+  }
 
   function isNull(v){
     return v === null || v === undefined || String(v).trim() === "";
   }
 
-  function normalizeForDup(obj){
-    return JSON.stringify(headers.map(h => isNull(obj[h]) ? "" : String(obj[h])));
+  function dupKey(r, hs=headers){
+    return JSON.stringify(hs.map(h => isNull(r[h]) ? "" : String(r[h])));
   }
 
-  function diagnostics(data){
-    const nulls = data.reduce((acc,row) => acc + headers.reduce((n,h) => n + (isNull(row[h]) ? 1 : 0),0),0);
-    const seen = new Set(); let dup = 0;
-    data.forEach(r => { const k = normalizeForDup(r); if (seen.has(k)) dup++; else seen.add(k); });
-    const emptyCols = headers.filter(h => data.every(r => isNull(r[h])));
-    return {rows:data.length, cols:headers.length, nulls, dup, emptyCols};
+  function diagnostics(data, hs=headers){
+    let nulls=0, dup=0;
+    data.forEach(r => hs.forEach(h => { if(isNull(r[h])) nulls++; }));
+    const seen = new Set();
+    data.forEach(r => { const k=dupKey(r,hs); if(seen.has(k)) dup++; else seen.add(k); });
+    const empties = hs.filter(h => data.every(r => isNull(r[h])));
+    const textCols = hs.filter(h => data.some(r => !isNull(r[h]) && Number.isNaN(Number(r[h]))));
+    return {rows:data.length,cols:hs.length,nulls,dup,empties,textCols};
   }
 
-  function renderTable(data, target){
-    const sample = data.slice(0,20);
-    let out = "<table><thead><tr>" + headers.map(h => "<th>"+escapeHtml(h)+"</th>").join("") + "</tr></thead><tbody>";
-    sample.forEach(r => {
-      out += "<tr>" + headers.map(h => "<td>"+escapeHtml(isNull(r[h]) ? "" : String(r[h]))+"</td>").join("") + "</tr>";
+  function formatN(n){ return Number(n).toLocaleString("pt-BR"); }
+
+  function loadFile(file){
+    fileName=file.name;
+    Papa.parse(file,{
+      header:true,skipEmptyLines:false,dynamicTyping:false,
+      complete:res=>{
+        originalHeaders=(res.meta.fields||[]).filter(Boolean);
+        headers=[...originalHeaders];
+        sourceRows=(res.data||[]).filter(r=>headers.some(h=>!isNull(r[h])));
+        rows=sourceRows.map(r=>({...r}));
+        if(!headers.length){alert("Não foi possível identificar as colunas.");return;}
+        const d=diagnostics(rows);
+        initialDup=d.dup; initialNulls=d.nulls; emptyCols=d.empties;
+        $("fileName").textContent=fileName;
+        $("loadRows").textContent=formatN(d.rows);
+        $("loadCols").textContent=formatN(d.cols);
+        $("loadNulls").textContent=formatN(d.nulls);
+        $("loadDup").textContent=formatN(d.dup);
+        setProgress(1); showAppScreen("loadedScreen");
+      },
+      error:e=>alert("Erro ao ler CSV: "+e.message)
     });
-    out += "</tbody></table>";
-    target.innerHTML = out;
+  }
+
+  function buildDiagnostic(){
+    const d=diagnostics(rows);
+    $("dRows").textContent=formatN(d.rows);
+    $("dCols").textContent=formatN(d.cols);
+    $("dNulls").textContent=formatN(d.nulls);
+    $("dDup").textContent=formatN(d.dup);
+    const items=[];
+    if(d.dup) items.push(d.dup+" linha(s) duplicada(s)");
+    if(d.nulls) items.push(d.nulls+" valor(es) nulo(s)");
+    if(d.empties.length) items.push(d.empties.length+" coluna(s) totalmente vazia(s)");
+    if(d.textCols.length) items.push(d.textCols.length+" coluna(s) de texto disponíveis para padronização");
+    if(!items.length) items.push("Nenhum problema básico encontrado");
+    $("issueList").innerHTML=items.map(t=>'<div class="issue-line"><span class="bullet"></span>'+escapeHtml(t)+'</div>').join("");
   }
 
   function escapeHtml(s){
-    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   }
 
-  function setStep(n){
-    [1,2,3,4].forEach(i => $("s"+i).classList.toggle("active", i===n));
+  function goEmpty(){
+    setProgress(3);
+    const d=diagnostics(rows);
+    emptyCols=d.empties;
+    if(!emptyCols.length){goDup();return;}
+    $("emptyList").innerHTML=emptyCols.map(c=>'<div class="empty-pill">▦ '+escapeHtml(c)+'</div>').join(" ");
+    showAppScreen("emptyScreen");
   }
 
-  function loadFile(file){
-    fileName = file.name;
-    Papa.parse(file, {
-      header:true,
-      skipEmptyLines:false,
-      dynamicTyping:false,
-      complete: res => {
-        headers = res.meta.fields || [];
-        originalRows = (res.data || []).filter(r => headers.some(h => !isNull(r[h])));
-        rows = originalRows.map(r => ({...r}));
-        if (!headers.length) return alert("Não foi possível identificar as colunas do CSV.");
-        showDiagnostics();
-      },
-      error: err => alert("Erro ao ler o CSV: " + err.message)
-    });
+  function goDup(){
+    const d=diagnostics(rows);
+    $("dupCountText").textContent=d.dup+" duplicata(s) encontrada(s).";
+    if(!d.dup){goNull();return;}
+    showAppScreen("dupScreen");
   }
 
-  function showDiagnostics(){
-    const d = diagnostics(rows);
-    $("mRows").textContent = d.rows;
-    $("mCols").textContent = d.cols;
-    $("mNulls").textContent = d.nulls;
-    $("mDup").textContent = d.dup;
-    $("emptyColsText").textContent = d.emptyCols.length ? "Encontradas: " + d.emptyCols.join(", ") : "Nenhuma coluna totalmente vazia encontrada.";
-
-    const items = [];
-    if (d.nulls) items.push("• " + d.nulls + " valor(es) nulo(s)");
-    if (d.dup) items.push("• " + d.dup + " linha(s) duplicada(s)");
-    if (d.emptyCols.length) items.push("• " + d.emptyCols.length + " coluna(s) totalmente vazia(s)");
-    items.push("• " + headers.length + " coluna(s) disponíveis para análise");
-    $("issues").innerHTML = "<b>⚠ DIAGNÓSTICO</b><br><br>" + items.join("<br>");
-
-    renderTable(rows,$("previewBefore"));
-    $("diagnostic").classList.remove("hidden");
-    $("treatment").classList.remove("hidden");
-    $("result").classList.add("hidden");
-    setStep(2);
-    $("diagnostic").scrollIntoView({behavior:"smooth",block:"start"});
+  function removeDuplicatesNow(label){
+    const seen=new Set(), kept=[]; let removed=0;
+    rows.forEach(r=>{const k=dupKey(r);if(seen.has(k))removed++;else{seen.add(k);kept.push(r);}});
+    rows=kept;
+    if(removed) actions.push(label.replace("{n}",removed));
+    return removed;
   }
 
-  function numericValues(data,h){
-    return data.map(r => r[h]).filter(v => !isNull(v) && !Number.isNaN(Number(v))).map(Number);
+  function goNull(){
+    const d=diagnostics(rows);
+    $("nullCountText").textContent=formatN(d.nulls);
+    if(!d.nulls){goText();return;}
+    showAppScreen("nullScreen");
   }
 
-  function columnMode(data,h){
-    const counts = new Map();
-    data.forEach(r => {
-      if (!isNull(r[h])) {
-        const k = String(r[h]);
-        counts.set(k,(counts.get(k)||0)+1);
-      }
-    });
-    let best = null, bestN = -1;
-    counts.forEach((n,k) => { if(n>bestN){bestN=n;best=k;} });
-    return best;
+  function numericValues(h){
+    return rows.map(r=>r[h]).filter(v=>!isNull(v)&&!Number.isNaN(Number(v))).map(Number);
+  }
+  function mode(h){
+    const map=new Map();
+    rows.forEach(r=>{if(!isNull(r[h])){const k=String(r[h]);map.set(k,(map.get(k)||0)+1);}});
+    let best=null,n=-1;map.forEach((v,k)=>{if(v>n){n=v;best=k;}});return best;
   }
 
-  $("apply").onclick = () => {
-    rows = originalRows.map(r => ({...r}));
-    const actions = [];
-
-    if ($("emptyCols").value === "remove"){
-      const empty = diagnostics(rows).emptyCols;
-      if (empty.length){
-        headers = headers.filter(h => !empty.includes(h));
-        rows = rows.map(r => {
-          const nr = {...r}; empty.forEach(h => delete nr[h]); return nr;
-        });
-        actions.push("Colunas totalmente vazias removidas: " + empty.join(", "));
-      }
-    }
-
-    if ($("dupAction").value === "remove"){
-      const seen = new Set(), kept = []; let removed = 0;
-      rows.forEach(r => {
-        const k = normalizeForDup(r);
-        if (seen.has(k)) removed++;
-        else {seen.add(k);kept.push(r);}
+  function applyNull(choice,custom=0){
+    nullChoice=choice; let treated=0;
+    if(choice==="drop"){
+      const before=rows.length; rows=rows.filter(r=>headers.every(h=>!isNull(r[h]))); treated=before-rows.length;
+      if(treated) actions.push(treated+" linha(s) removida(s) por valores nulos");
+    } else if(["number","mean","median"].includes(choice)){
+      headers.forEach(h=>{
+        const nums=numericValues(h); if(!nums.length)return;
+        let rep=custom;
+        if(choice==="mean") rep=nums.reduce((a,b)=>a+b,0)/nums.length;
+        if(choice==="median"){const s=[...nums].sort((a,b)=>a-b),m=Math.floor(s.length/2);rep=s.length%2?s[m]:(s[m-1]+s[m])/2;}
+        rows.forEach(r=>{if(isNull(r[h])){r[h]=String(rep);treated++;}});
       });
-      rows = kept;
-      if (removed) actions.push(removed + " duplicata(s) removida(s).");
+      if(treated) actions.push(treated+" valor(es) nulo(s) tratados por "+({number:"valor personalizado",mean:"média",median:"mediana"}[choice]));
+    } else if(choice==="mode"){
+      headers.forEach(h=>{const m=mode(h);if(m===null)return;rows.forEach(r=>{if(isNull(r[h])){r[h]=m;treated++;}});});
+      if(treated) actions.push(treated+" valor(es) nulo(s) tratados pela moda");
     }
+    goText();
+  }
 
-    const nullAction = $("nullAction").value;
-    if (nullAction === "drop"){
-      const before = rows.length;
-      rows = rows.filter(r => headers.every(h => !isNull(r[h])));
-      const n = before-rows.length;
-      if(n) actions.push(n + " linha(s) removida(s) por valores nulos.");
-    } else if (["number","mean","median"].includes(nullAction)){
-      let treated = 0;
-      headers.forEach(h => {
-        const nums = numericValues(rows,h);
-        if(!nums.length) return;
-        let replacement;
-        if(nullAction==="number") replacement = Number($("customNumber").value || 0);
-        if(nullAction==="mean") replacement = nums.reduce((a,b)=>a+b,0)/nums.length;
-        if(nullAction==="median"){
-          const s=[...nums].sort((a,b)=>a-b), m=Math.floor(s.length/2);
-          replacement = s.length%2 ? s[m] : (s[m-1]+s[m])/2;
-        }
-        rows.forEach(r => { if(isNull(r[h])){r[h]=String(replacement);treated++;} });
-      });
-      if(treated) actions.push(treated + " nulo(s) numérico(s) tratado(s) por " + ({number:"valor personalizado",mean:"média",median:"mediana"}[nullAction]) + ".");
-    } else if (nullAction === "mode"){
-      let treated=0;
-      headers.forEach(h => {
-        const mode = columnMode(rows,h);
-        if(mode===null) return;
-        rows.forEach(r => { if(isNull(r[h])){r[h]=mode;treated++;} });
-      });
-      if(treated) actions.push(treated + " valor(es) nulo(s) substituído(s) pela moda.");
-    }
+  function goText(){
+    const d=diagnostics(rows);
+    if(!d.textCols.length){goNewDup();return;}
+    $("textTags").innerHTML=d.textCols.map(c=>'<span class="text-tag">'+escapeHtml(c)+'</span>').join("");
+    showAppScreen("textScreen");
+  }
 
-    const textAction = $("textAction").value;
-    if(textAction !== "keep"){
-      rows.forEach(r => headers.forEach(h => {
-        if(isNull(r[h])) return;
-        const v = String(r[h]);
-        if(textAction==="trim") r[h]=v.trim();
-        if(textAction==="lower") r[h]=v.toLowerCase();
-        if(textAction==="upper") r[h]=v.toUpperCase();
+  function applyText(choice){
+    textChoice=choice;
+    if(choice!=="keep"){
+      rows.forEach(r=>headers.forEach(h=>{
+        if(isNull(r[h])||!Number.isNaN(Number(r[h]))) return;
+        const v=String(r[h]);
+        if(choice==="trim")r[h]=v.trim();
+        if(choice==="lower")r[h]=v.toLowerCase();
+        if(choice==="upper")r[h]=v.toUpperCase();
       }));
-      actions.push({
-        trim:"Espaços no início e no fim dos textos foram removidos.",
-        lower:"Textos convertidos para letras minúsculas.",
-        upper:"Textos convertidos para letras maiúsculas."
-      }[textAction]);
+      actions.push({trim:"Espaços extras removidos das colunas de texto",lower:"Textos convertidos para minúsculas",upper:"Textos convertidos para maiúsculas"}[choice]);
     }
-
-    if ($("dupAction").value === "remove"){
-      const seen = new Set(), kept = []; let removed = 0;
-      rows.forEach(r => {
-        const k = normalizeForDup(r);
-        if (seen.has(k)) removed++;
-        else {seen.add(k);kept.push(r);}
-      });
-      rows = kept;
-      if (removed) actions.push(removed + " duplicata(s) adicional(is) removida(s) após os tratamentos.");
-    }
-
-    showResult(actions);
-  };
-
-  function showResult(actions){
-    const d = diagnostics(rows);
-    $("rRows").textContent=d.rows;
-    $("rCols").textContent=d.cols;
-    $("rNulls").textContent=d.nulls;
-    $("rDup").textContent=d.dup;
-    $("actionLog").innerHTML = actions.length ? actions.map(a=>"<div>✅ "+escapeHtml(a)+"</div>").join("") : "<div>Nenhuma alteração foi realizada.</div>";
-    renderTable(rows,$("previewAfter"));
-    $("result").classList.remove("hidden");
-    setStep(4);
-    $("result").scrollIntoView({behavior:"smooth",block:"start"});
+    goNewDup();
   }
 
-  $("download").onclick = () => {
-    const csv = Papa.unparse(rows,{columns:headers});
-    const blob = new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    const base = fileName.replace(/\.csv$/i,"");
-    a.href=url;a.download=base+"_tratado.csv";
-    document.body.appendChild(a);a.click();a.remove();
-    URL.revokeObjectURL(url);
+  function goNewDup(){
+    const d=diagnostics(rows);
+    $("newDupMessage").textContent=d.dup
+      ? "Após a padronização dos textos, "+d.dup+" registro(s) passaram a possuir conteúdo idêntico."
+      : "Nenhuma nova duplicata foi identificada após os tratamentos.";
+    $("newDupActions").style.display=d.dup?"flex":"none";
+    showAppScreen("newDupScreen");
+    if(!d.dup) runCleaning();
+  }
+
+  function runCleaning(){
+    let p=0;
+    $("cleanBar").style.width="0%";$("cleanPercent").textContent="0%";
+    const timer=setInterval(()=>{
+      p+=8+Math.floor(Math.random()*10);
+      if(p>=100){
+        p=100;clearInterval(timer);
+        setTimeout(showResult,250);
+      }
+      $("cleanBar").style.width=p+"%";$("cleanPercent").textContent=p+"%";
+    },90);
+  }
+
+  function showResult(){
+    const d=diagnostics(rows);
+    setProgress(4);
+    $("rRows").textContent=formatN(d.rows);
+    $("rCols").textContent=formatN(d.cols);
+    $("rNulls").textContent=formatN(d.nulls);
+    $("rDup").textContent=formatN(d.dup);
+    $("actionLog").innerHTML=actions.length
+      ? actions.map(a=>'<div class="done-line">✓ '+escapeHtml(a)+'</div>').join("")
+      : '<div class="done-line">✓ Nenhuma alteração necessária</div>';
+    showAppScreen("resultScreen");
+  }
+
+  // upload
+  $("pickFile").onclick=e=>{e.stopPropagation();$("fileInput").click();};
+  $("dropZone").onclick=()=>$("fileInput").click();
+  $("fileInput").onchange=()=>$("fileInput").files[0]&&loadFile($("fileInput").files[0]);
+  ["dragover","dragenter"].forEach(ev=>$("dropZone").addEventListener(ev,e=>{e.preventDefault();}));
+  $("dropZone").addEventListener("drop",e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f)loadFile(f);});
+
+  // style selector
+  document.querySelectorAll(".style-btn").forEach(btn=>btn.onclick=()=>{
+    document.querySelectorAll(".style-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const f=btn.dataset.font;
+    document.body.style.fontFamily=
+      f==="mono"?'ui-monospace,Consolas,monospace':
+      f==="grotesk"?'Arial Black,Arial,sans-serif':
+      f==="georgia"?'Georgia,serif':
+      f==="code"?'Consolas,monospace':
+      'Inter,system-ui,sans-serif';
+  });
+
+  $("analyzeBtn").onclick=()=>{buildDiagnostic();setProgress(2);showAppScreen("diagScreen");};
+  $("startTreatment").onclick=goEmpty;
+
+  $("removeEmpty").onclick=()=>{
+    const removed=[...emptyCols];
+    headers=headers.filter(h=>!removed.includes(h));
+    rows=rows.map(r=>{const x={...r};removed.forEach(h=>delete x[h]);return x;});
+    if(removed.length)actions.push(removed.length+" coluna(s) totalmente vazia(s) removida(s)");
+    goDup();
+  };
+  $("keepEmpty").onclick=goDup;
+
+  $("removeDup").onclick=()=>{removeInitialDup=true;removeDuplicatesNow("{n} duplicata(s) removida(s)");goNull();};
+  $("keepDup").onclick=goNull;
+
+  document.querySelectorAll("[data-null]").forEach(card=>card.onclick=()=>{
+    document.querySelectorAll("[data-null]").forEach(c=>c.classList.remove("selected"));
+    card.classList.add("selected");
+    const c=card.dataset.null;
+    if(c==="number")$("customBox").classList.add("show");
+    else{$("customBox").classList.remove("show");applyNull(c);}
+  });
+  $("confirmCustom").onclick=()=>applyNull("number",Number($("customValue").value||0));
+  $("keepNull").onclick=()=>goText();
+
+  document.querySelectorAll("[data-text]").forEach(card=>card.onclick=()=>{
+    document.querySelectorAll("[data-text]").forEach(c=>c.classList.remove("selected"));
+    card.classList.add("selected");
+    setTimeout(()=>applyText(card.dataset.text),180);
+  });
+  $("keepText").onclick=()=>applyText("keep");
+
+  $("removeNewDup").onclick=()=>{removeDuplicatesNow("{n} nova(s) duplicata(s) removida(s) após a padronização");runCleaning();};
+  $("keepNewDup").onclick=runCleaning;
+
+  $("downloadBtn").onclick=()=>{
+    const csv=Papa.unparse(rows,{columns:headers});
+    const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;a.download=fileName.replace(/\.csv$/i,"")+"_tratado.csv";
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
   };
 
-  $("reset").onclick = () => {
-    input.value=""; originalRows=[];rows=[];headers=[];
-    $("diagnostic").classList.add("hidden");
-    $("treatment").classList.add("hidden");
-    $("result").classList.add("hidden");
-    setStep(1);
+  $("resetBtn").onclick=()=>{
+    sourceRows=[];rows=[];headers=[];originalHeaders=[];actions=[];
+    $("fileInput").value="";
+    $("flowScreen").classList.remove("active");
+    $("homeScreen").classList.add("active");
+    setProgress(1);
     window.scrollTo({top:0,behavior:"smooth"});
   };
 })();
