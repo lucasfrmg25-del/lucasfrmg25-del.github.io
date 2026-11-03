@@ -8,71 +8,302 @@
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <style>
 :root{
-  --yellow:#ffdd00;--pink:#ff4f8b;--ink:#111;--paper:#fffdf7;--white:#fff;
-  --green:#24c16a;--red:#ef4444;--muted:#6b7280;--line:#d1d5db;
+  --yellow:#ffd91a;
+  --yellow-soft:#ffe85f;
+  --pink:#ff5c8a;
+  --pink-soft:#ff9fbe;
+  --coral:#ff7a59;
+  --ink:#111111;
+  --paper:#fffdf7;
+  --white:#ffffff;
+  --green:#65d46e;
+  --muted:#5f6368;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--ink);
   background:var(--yellow);
   background-image:
-    radial-gradient(circle at 20px 20px,rgba(17,17,17,.08) 2px,transparent 2px),
-    linear-gradient(45deg,transparent 48%,rgba(17,17,17,.035) 49%,rgba(17,17,17,.035) 51%,transparent 52%);
-  background-size:48px 48px,120px 120px;
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='none' stroke='%23111' stroke-width='3' opacity='.08'%3E%3Crect x='20' y='20' width='48' height='34' rx='4'/%3E%3Cpath d='M20 32h48M34 20v34M50 20v34'/%3E%3Cpath d='M126 28h46M126 44h30M126 60h38'/%3E%3Cpath d='M30 120l20-20 15 15 25-28'/%3E%3Cpath d='M118 112h54v44h-54zM128 145v-17M145 145v-28M162 145v-12'/%3E%3Cpath d='M32 178l18-18M50 178l-18-18'/%3E%3Cpath d='M112 184c18-12 34-10 52 0'/%3E%3Cpath d='M183 104l10 10 18-22'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:220px 220px;
 }
-.wrap{width:min(1180px,92%);margin:auto}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 10% 12%,rgba(255,255,255,.25),transparent 25%),
+    radial-gradient(circle at 90% 8%,rgba(255,255,255,.18),transparent 20%);
+}
+.wrap{width:min(1180px,92%);margin:auto;position:relative;z-index:1}
 .top{
-  margin:18px auto 0;background:#fff;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);
-  border-radius:14px;padding:14px 18px;display:flex;justify-content:space-between;gap:16px;align-items:center
+  margin:18px auto 0;
+  background:#fff;
+  border:4px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  border-radius:0;
+  padding:15px 18px;
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  align-items:center;
 }
-.brand{font-weight:1000;letter-spacing:-.03em}
-.top a{color:var(--ink);font-weight:800;text-decoration:none}
-.hero{text-align:center;padding:48px 0 26px}
-.logo{font-size:4.2rem}
-.hero h1{display:inline-block;background:#fff;border:4px solid #111;box-shadow:8px 8px 0 #111;padding:14px 24px;margin:8px 0 0;transform:rotate(-1deg);font-size:clamp(2.4rem,7vw,5rem);line-height:.95}
+.brand{
+  font-weight:1000;
+  letter-spacing:-.04em;
+  font-size:1.08rem;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.top a{
+  color:var(--ink);
+  font-weight:900;
+  text-decoration:none;
+  padding:6px 0;
+  border-bottom:3px solid transparent;
+}
+.top a:hover{border-bottom-color:var(--pink)}
+.hero{
+  text-align:center;
+  padding:56px 0 30px;
+}
+.logo{font-size:4.8rem;filter:drop-shadow(5px 5px 0 rgba(17,17,17,.15))}
+.hero-badge{
+  display:inline-block;
+  background:var(--pink-soft);
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+  font-weight:1000;
+  padding:7px 12px;
+  margin-bottom:14px;
+  transform:rotate(-1deg);
+}
+.hero h1{
+  display:inline-block;
+  background:#fff;
+  border:5px solid var(--ink);
+  box-shadow:10px 10px 0 var(--ink);
+  padding:16px 28px 18px;
+  margin:6px 0 0;
+  transform:rotate(-1deg);
+  font-size:clamp(2.8rem,8vw,5.8rem);
+  line-height:.9;
+  letter-spacing:-.055em;
+  font-weight:1000;
+}
 .hero h1 span{color:var(--pink)}
-.hero p{font-weight:850;margin:24px auto 0;max-width:650px}
-.steps{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0 24px}
-.step{background:#fff;border:2px solid #111;border-radius:999px;padding:7px 13px;font-weight:900;font-size:.85rem}
-.step.active{background:var(--pink);color:#fff}
-.panel{background:var(--paper);border:3px solid #111;box-shadow:7px 7px 0 #111;border-radius:16px;padding:24px;margin:22px 0}
-.panel-title{display:inline-block;background:#ff9fbe;border:3px solid #111;box-shadow:4px 4px 0 #111;border-radius:10px;padding:8px 14px;font-weight:1000;margin-bottom:16px}
-.drop{
-  background:#fff;border:3px dashed #111;border-radius:14px;padding:34px;text-align:center;cursor:pointer
+.hero p{
+  font-weight:900;
+  margin:28px auto 0;
+  max-width:700px;
+  font-size:1.05rem;
 }
-.drop.drag{background:#fff6b3}
+.hero-subline{
+  margin:10px auto 0;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.hero-chip{
+  background:#fff;
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+  padding:7px 10px;
+  font-size:.82rem;
+  font-weight:1000;
+}
+.steps{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:22px 0 28px;
+}
+.step{
+  background:#fff;
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);
+  padding:10px 12px;
+  font-weight:1000;
+  font-size:.86rem;
+  text-align:center;
+}
+.step.active{background:var(--pink);color:#fff}
+.panel{
+  background:var(--paper);
+  border:4px solid var(--ink);
+  box-shadow:10px 10px 0 var(--ink);
+  border-radius:0;
+  padding:26px;
+  margin:28px 0;
+  position:relative;
+}
+.panel::before{
+  content:"";
+  position:absolute;
+  top:-11px;
+  right:24px;
+  width:72px;
+  height:20px;
+  background:var(--coral);
+  border:3px solid var(--ink);
+  transform:rotate(2deg);
+}
+.panel-title{
+  display:inline-block;
+  background:var(--pink-soft);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);
+  padding:9px 14px;
+  font-weight:1000;
+  margin-bottom:18px;
+  font-size:1rem;
+  transform:rotate(-.6deg);
+}
+.drop{
+  background:#fff;
+  border:4px dashed var(--ink);
+  padding:42px 30px;
+  text-align:center;
+  cursor:pointer;
+  min-height:230px;
+  display:grid;
+  place-items:center;
+}
+.drop.drag{background:#fff4a8}
 .drop input{display:none}
+.drop-inner{max-width:560px}
+.drop h3{font-size:1.5rem;margin:8px 0 4px;font-weight:1000}
+.drop-icon{font-size:3.2rem}
 .btn{
-  border:3px solid #111;box-shadow:4px 4px 0 #111;background:var(--pink);color:#fff;border-radius:10px;
-  padding:12px 18px;font-weight:1000;cursor:pointer;font-size:.95rem
+  border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  background:var(--pink);
+  color:#fff;
+  padding:13px 18px;
+  font-weight:1000;
+  cursor:pointer;
+  font-size:.95rem;
+  border-radius:0;
+  text-transform:uppercase;
+  letter-spacing:.01em;
 }
 .btn.secondary{background:#fff;color:#111}
-.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 #111}
+.btn.alt{background:var(--yellow-soft);color:#111}
+.btn:active{transform:translate(3px,3px);box-shadow:3px 3px 0 var(--ink)}
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.metric{background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;border-radius:12px;padding:16px}
-.metric small{display:block;font-weight:900;text-transform:uppercase;color:#374151}
-.metric b{display:block;font-size:2rem;margin-top:8px}
-.controls{display:grid;gap:16px}
-.control{background:#fff;border:2px solid #111;border-radius:12px;padding:16px}
-.control h3{margin:0 0 10px}
-select,input[type="number"]{
-  width:100%;padding:11px;border:2px solid #111;border-radius:9px;background:#fff;font:inherit
+.metric{
+  background:#fff;
+  border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  padding:18px;
+  min-height:120px;
 }
-.preview{overflow:auto;border:2px solid #111;border-radius:10px;background:#fff}
-table{border-collapse:collapse;width:100%;min-width:640px}
-th,td{padding:9px 10px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:.9rem}
-th{background:#f3f4f6;position:sticky;top:0}
-.notice{background:#fff3f6;border:3px solid #111;border-left:10px solid var(--pink);border-radius:10px;padding:14px;margin-top:16px}
-.success{background:#d9ffdf;border:3px solid #111;box-shadow:6px 6px 0 #111;border-radius:14px;padding:18px}
-.actions{background:#fff;border:2px solid #111;border-radius:10px;padding:14px}
-.actions div{margin:7px 0}
+.metric:nth-child(2){background:#fff7c9}
+.metric:nth-child(3){background:#ffd6e2}
+.metric:nth-child(4){background:#eef7ff}
+.metric small{
+  display:block;
+  font-weight:1000;
+  text-transform:uppercase;
+  font-size:.75rem;
+  letter-spacing:.05em;
+}
+.metric b{
+  display:block;
+  font-size:2.2rem;
+  margin-top:10px;
+  line-height:1;
+}
+.controls{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.control{
+  background:#fff;
+  border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  padding:18px;
+}
+.control h3{margin:0 0 6px;font-size:1.05rem}
+.control .mini{font-size:.78rem;font-weight:800;color:var(--muted);margin-bottom:10px}
+select,input[type="number"]{
+  width:100%;
+  padding:12px;
+  border:3px solid var(--ink);
+  background:#fff;
+  font:inherit;
+  font-weight:800;
+  border-radius:0;
+}
+.preview{
+  overflow:auto;
+  border:4px solid var(--ink);
+  background:#fff;
+  box-shadow:6px 6px 0 var(--ink);
+}
+table{border-collapse:collapse;width:100%;min-width:680px}
+th,td{padding:10px 11px;border-bottom:2px solid #e5e7eb;text-align:left;font-size:.9rem}
+th{
+  background:#111;
+  color:#fff;
+  position:sticky;
+  top:0;
+  font-size:.78rem;
+  letter-spacing:.04em;
+}
+.notice{
+  background:#fff;
+  border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  border-left:12px solid var(--pink);
+  padding:16px;
+  margin-top:18px;
+  font-weight:800;
+}
+.success{
+  background:#dfffe7;
+  border:4px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  padding:20px;
+}
+.actions{
+  background:#fff;
+  border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  padding:16px;
+}
+.actions div{margin:8px 0;font-weight:800}
 .row{display:flex;gap:12px;flex-wrap:wrap}
 .hidden{display:none!important}
 .muted{color:var(--muted);font-size:.9rem}
-footer{text-align:center;padding:36px 0 50px;font-weight:800}
-@media(max-width:800px){.grid4{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:520px){.grid4{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}
+.section-note{
+  background:#111;
+  color:#fff;
+  border:4px solid var(--ink);
+  box-shadow:6px 6px 0 var(--pink);
+  padding:14px 16px;
+  margin-top:16px;
+  font-size:.88rem;
+  font-weight:800;
+}
+footer{text-align:center;padding:42px 0 56px;font-weight:1000}
+@media(max-width:900px){
+  .controls{grid-template-columns:1fr}
+}
+@media(max-width:800px){
+  .grid4{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+  .grid4{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .top{align-items:flex-start;flex-direction:column}
+  .hero h1{font-size:2.7rem}
+  .panel{padding:18px}
+}
 </style>
 </head>
 <body>
@@ -87,9 +318,16 @@ footer{text-align:center;padding:36px 0 50px;font-weight:800}
   </div>
 
   <section class="hero">
+    <div class="hero-badge">DATA CLEANING · FEITO PARA SER SIMPLES</div><br>
     <div class="logo">📄🧹✨</div>
     <h1>WE CLEAN <span>.CSV</span></h1>
     <p>Limpe seus dados de forma simples, rápida e visual — diretamente no seu navegador.</p>
+    <div class="hero-subline">
+      <span class="hero-chip">{ } PYTHON INSPIRED</span>
+      <span class="hero-chip">CSV</span>
+      <span class="hero-chip">DATA QUALITY</span>
+      <span class="hero-chip">100% NO NAVEGADOR</span>
+    </div>
   </section>
 
   <div class="steps">
@@ -103,11 +341,14 @@ footer{text-align:center;padding:36px 0 50px;font-weight:800}
     <div class="panel-title">📤 SELECIONE SEU ARQUIVO .CSV</div>
     <div class="drop" id="drop">
       <input type="file" id="file" accept=".csv,text/csv">
-      <h3>Arraste e solte seu CSV aqui</h3>
-      <p class="muted">ou clique para escolher o arquivo</p>
-      <button class="btn" id="pick" type="button">ESCOLHER ARQUIVO .CSV</button>
+      <div class="drop-inner">
+        <div class="drop-icon">⬆️📄</div>
+        <h3>ARRASTE E SOLTE SEU CSV AQUI</h3>
+        <p class="muted">ou clique para escolher o arquivo manualmente</p>
+        <button class="btn" id="pick" type="button">ESCOLHER ARQUIVO .CSV</button>
+      </div>
     </div>
-    <p class="muted">Privacidade: o arquivo é processado localmente no seu navegador. Nenhum CSV é enviado para um servidor do We Clean.</p>
+    <div class="section-note">🔒 PRIVACIDADE: o arquivo é processado localmente no navegador. O We Clean não envia seu CSV para um servidor próprio.</div>
   </section>
 
   <section class="panel hidden" id="diagnostic">
@@ -128,6 +369,7 @@ footer{text-align:center;padding:36px 0 50px;font-weight:800}
     <div class="controls">
       <div class="control">
         <h3>Colunas totalmente vazias</h3>
+        <div class="mini">Decida se campos completamente sem dados devem permanecer.</div>
         <p class="muted" id="emptyColsText"></p>
         <select id="emptyCols">
           <option value="keep">Manter</option>
@@ -137,6 +379,7 @@ footer{text-align:center;padding:36px 0 50px;font-weight:800}
 
       <div class="control">
         <h3>Linhas duplicadas</h3>
+        <div class="mini">Remove registros idênticos antes e depois da padronização textual.</div>
         <select id="dupAction">
           <option value="keep">Manter</option>
           <option value="remove">Remover duplicatas</option>
@@ -145,6 +388,7 @@ footer{text-align:center;padding:36px 0 50px;font-weight:800}
 
       <div class="control">
         <h3>Valores nulos</h3>
+        <div class="mini">Escolha como preencher ou remover ausências sem alterar o restante do fluxo.</div>
         <select id="nullAction">
           <option value="keep">Manter como estão</option>
           <option value="drop">Remover linhas com nulos</option>
@@ -160,6 +404,7 @@ footer{text-align:center;padding:36px 0 50px;font-weight:800}
 
       <div class="control">
         <h3>Padronização de texto</h3>
+        <div class="mini">Normalize caixa e espaços para reduzir inconsistências simples.</div>
         <select id="textAction">
           <option value="keep">Não alterar</option>
           <option value="trim">Remover espaços no início e no fim</option>
@@ -194,7 +439,7 @@ footer{text-align:center;padding:36px 0 50px;font-weight:800}
 
     <div class="row" style="margin-top:18px">
       <button class="btn" id="download" type="button">⬇️ BAIXAR CSV TRATADO</button>
-      <button class="btn secondary" id="reset" type="button">LIMPAR OUTRO .CSV</button>
+      <button class="btn alt" id="reset" type="button">LIMPAR OUTRO .CSV</button>
     </div>
   </section>
 </div>
