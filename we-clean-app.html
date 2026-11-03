@@ -30,9 +30,9 @@ body{
   color:var(--ink);
   font-family:Inter,system-ui,sans-serif;
   background:
-    linear-gradient(rgba(255,223,22,.88),rgba(255,223,22,.88)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='210' height='210' viewBox='0 0 210 210'%3E%3Cg fill='none' stroke='%23111' stroke-width='2.3' opacity='.16' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='12' y='14' width='42' height='32' rx='3'/%3E%3Cpath d='M12 25h42M26 14v32M40 14v32'/%3E%3Cpath d='M78 20h30M78 29h22M78 38h28'/%3E%3Cpath d='M137 18l12 12 18-22'/%3E%3Cpath d='M171 23l7 7m0-7-7 7'/%3E%3Cpath d='M15 88h48v35H15zM25 114V99M39 114V91M53 114v-10'/%3E%3Cpath d='M79 94c10-9 20-9 31 0'/%3E%3Cpath d='M91 84v20'/%3E%3Cpath d='M133 82h49M133 94h34M133 106h42'/%3E%3Ccircle cx='31' cy='166' r='17'/%3E%3Cpath d='M31 149v34M14 166h34'/%3E%3Cpath d='M75 154l13-13 10 10 21-25'/%3E%3Cpath d='M137 146h42v32h-42zM147 170v-13M159 170v-23M171 170v-9'/%3E%3Cpath d='M13 201h33M65 196h28M105 199l8 8 15-19'/%3E%3Cpath d='M171 193c9-7 18-7 27 0'/%3E%3C/g%3E%3C/svg%3E");
-  background-size:auto,210px 210px;
+    linear-gradient(rgba(255,223,22,.78),rgba(255,223,22,.78)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='210' height='210' viewBox='0 0 210 210'%3E%3Cg fill='none' stroke='%23111' stroke-width='2.3' opacity='.28' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='12' y='14' width='42' height='32' rx='3'/%3E%3Cpath d='M12 25h42M26 14v32M40 14v32'/%3E%3Cpath d='M78 20h30M78 29h22M78 38h28'/%3E%3Cpath d='M137 18l12 12 18-22'/%3E%3Cpath d='M171 23l7 7m0-7-7 7'/%3E%3Cpath d='M15 88h48v35H15zM25 114V99M39 114V91M53 114v-10'/%3E%3Cpath d='M79 94c10-9 20-9 31 0'/%3E%3Cpath d='M91 84v20'/%3E%3Cpath d='M133 82h49M133 94h34M133 106h42'/%3E%3Ccircle cx='31' cy='166' r='17'/%3E%3Cpath d='M31 149v34M14 166h34'/%3E%3Cpath d='M75 154l13-13 10 10 21-25'/%3E%3Cpath d='M137 146h42v32h-42zM147 170v-13M159 170v-23M171 170v-9'/%3E%3Cpath d='M13 201h33M65 196h28M105 199l8 8 15-19'/%3E%3Cpath d='M171 193c9-7 18-7 27 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:auto,190px 190px;
 }
 button,input,select{font:inherit}
 button{cursor:pointer}
@@ -98,7 +98,7 @@ a{color:inherit}
 .style-btn.active{background:var(--pink);color:#fff}
 
 .logo-wrap{display:grid;place-items:center;margin:5px auto 4px}
-.logo-svg{width:min(410px,90vw);height:auto;filter:drop-shadow(4px 5px 0 rgba(0,0,0,.14))}
+.logo-svg{width:min(430px,92vw);height:auto;filter:drop-shadow(4px 5px 0 rgba(0,0,0,.14))}
 .logo-title{
   display:inline-block;
   background:#fff;
@@ -333,32 +333,35 @@ a{color:inherit}
 
       <div class="logo-wrap">
         <svg class="logo-svg" viewBox="0 0 420 250" aria-label="Arquivo CSV com vassoura">
+          <!-- arquivo CSV -->
           <g stroke="#111" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
-            <!-- arquivo -->
-            <path d="M128 24h112l48 48v134H128z" fill="#fff"/>
-            <path d="M240 24v50h48" fill="#ecebff"/>
-            <path d="M158 74h66M158 98h92M158 154h72M158 180h54" fill="none"/>
-            <rect x="120" y="108" width="134" height="52" rx="5" fill="#2de548"/>
-            
-            <!-- cabo da vassoura -->
-            <path d="M316 48l25 13-54 104-25-13z" fill="#f74f89"/>
-            <path d="M313 46l29 15" fill="none"/>
-            
-            <!-- cerdas da vassoura -->
-            <path d="M283 158
-                     C270 171 258 187 251 205
-                     C267 211 286 217 309 224
-                     C315 203 320 183 321 165
-                     Z" fill="#ffd52b"/>
-            <path d="M271 176l35 11M263 190l40 13M258 204l37 12" fill="none"/>
-            <path d="M285 160l36 6" fill="none"/>
+            <path d="M126 24h118l44 44v138H126z" fill="#fff"/>
+            <path d="M244 24v47h44" fill="#ecebff"/>
+            <path d="M157 77h74M157 101h96M157 155h74M157 181h58" fill="none"/>
+            <rect x="119" y="108" width="140" height="52" rx="5" fill="#2de548"/>
           </g>
-          <text x="187" y="144" text-anchor="middle" font-family="Archivo Black, sans-serif" font-size="28" fill="#111">CSV</text>
+          <text x="189" y="144" text-anchor="middle" font-family="Archivo Black, sans-serif" font-size="28" fill="#111">CSV</text>
+
+          <!-- vassoura: cabo -->
+          <g stroke="#111" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M323 47l28 15-62 112-27-15z" fill="#f74f89"/>
+            <path d="M320 49l31 16" fill="none"/>
+          </g>
+
+          <!-- vassoura: base -->
+          <g stroke="#111" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M286 164
+                     L330 174
+                     L316 222
+                     Q287 215 254 201
+                     Z" fill="#ffd52b"/>
+            <path d="M274 178l47 11M267 191l49 13M261 202l47 13" fill="none"/>
+          </g>
 
           <!-- brilhos -->
           <g fill="#ffd52b" stroke="#111" stroke-width="5">
             <path d="M84 61l7 17 17 7-17 7-7 17-7-17-17-7 17-7z"/>
-            <path d="M346 101l6 14 14 6-14 6-6 14-6-14-14-6 14-6z"/>
+            <path d="M348 105l6 14 14 6-14 6-6 14-6-14-14-6 14-6z"/>
             <path d="M78 136l4 10 10 4-10 4-4 10-4-10-10-4 10-4z"/>
           </g>
         </svg>
