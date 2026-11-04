@@ -18,36 +18,22 @@ a{color:inherit}img{display:block;max-width:100%}.wrap{width:min(var(--max),calc
 .masthead h1{font-size:clamp(3rem,9vw,7.6rem);line-height:.8;margin:0;letter-spacing:-.055em;font-weight:900}.masthead .kicker{margin:10px 0 0;font:700 12px var(--sans);letter-spacing:.23em;text-transform:uppercase}
 .nav{position:sticky;top:0;z-index:20;background:rgba(241,234,219,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
 .nav .wrap{display:flex;justify-content:center;gap:26px;padding:12px 0;overflow:auto}.nav a{white-space:nowrap;text-decoration:none;font:700 12px var(--sans);text-transform:uppercase;letter-spacing:.08em}.nav a:hover{color:var(--red)}
-.front{padding:32px 0 64px;position:relative}.edition{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:24px;font:700 11px var(--sans);text-transform:uppercase;letter-spacing:.1em}.edition strong{color:var(--red)}
-.film-rail{position:absolute;top:0;bottom:0;width:88px;background:#211a14;border-left:1px solid #765e45;border-right:1px solid #765e45;overflow:hidden;z-index:1;box-shadow:0 0 0 1px #17110d}
-.film-rail.left{left:-112px}.film-rail.right{right:-112px}
-.film-rail:before,.film-rail:after{content:"";position:absolute;top:0;bottom:0;width:10px;background:repeating-linear-gradient(to bottom,#d7b17a 0 10px,transparent 10px 20px)}
-.film-rail:before{left:4px}.film-rail:after{right:4px}
-.film-track{position:absolute;inset:14px 17px;display:grid;align-content:start;gap:14px;animation:filmDrift 18s linear infinite alternate}
-.film-rail.right .film-track{animation-direction:alternate-reverse}
-.film-cell{height:76px;border:1px solid #a77f55;border-radius:8px;background:#ead7b8;display:grid;place-items:center;color:var(--red);font:900 11px/1 var(--sans);letter-spacing:.05em;text-align:center;box-shadow:inset 0 0 18px rgba(72,39,19,.16)}
-.film-cell.photo{background:linear-gradient(rgba(61,42,29,.2),rgba(61,42,29,.2)),linear-gradient(135deg,#d9c3a1,#8d6c4d);color:#2c1d14;font-family:var(--serif);font-style:italic}
-@keyframes filmDrift{from{transform:translateY(0)}to{transform:translateY(-36px)}}
+.front{padding:32px 0 64px}.edition{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:24px;font:700 11px var(--sans);text-transform:uppercase;letter-spacing:.1em}.edition strong{color:var(--red)}
 .hero-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:30px;align-items:start}.hero-copy{border-right:1px solid var(--rule);padding-right:30px}
 .superline{font:700 12px var(--sans);letter-spacing:.15em;text-transform:uppercase;color:var(--red);margin-bottom:12px}.hero-title{font-size:clamp(3.2rem,8vw,8.5rem);line-height:.82;letter-spacing:-.055em;margin:0 0 22px;font-weight:900}
 .dek{font-size:clamp(1.25rem,2.1vw,2rem);line-height:1.24;margin:0 0 26px;max-width:32ch}.byline{border-top:1px solid var(--rule);padding-top:12px;font:700 12px var(--sans);letter-spacing:.08em;text-transform:uppercase}
-.hero-photo{position:relative;min-height:620px;isolation:isolate;padding:20px 10px 0}
-.hero-photo:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;background:rgba(139,29,29,.18);left:0;top:18px;z-index:-2}
-.hero-photo:after{content:"";position:absolute;left:-8px;top:120px;width:145px;height:145px;z-index:-1;opacity:.28;background-image:linear-gradient(var(--red) 1px,transparent 1px),linear-gradient(90deg,var(--red) 1px,transparent 1px);background-size:16px 16px}
-.hero-photo img{width:108%;max-width:none;margin-left:-4%;aspect-ratio:4/5;object-fit:cover;object-position:center top;filter:grayscale(8%) contrast(1.03) sepia(.04);clip-path:polygon(8% 2%,28% 0,47% 4%,67% 1%,88% 8%,97% 22%,94% 43%,100% 64%,91% 83%,77% 96%,55% 100%,35% 96%,14% 100%,4% 83%,7% 63%,1% 43%,5% 22%)}
-.caption{font:11px/1.35 var(--sans);color:var(--muted);padding-top:8px;border-top:1px solid var(--rule);margin-top:8px}
-.stamp{position:absolute;left:18px;right:auto;top:auto;bottom:84px;border:2px solid var(--red);color:var(--red);padding:7px 11px;transform:rotate(-4deg);font:900 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;background:rgba(241,234,219,.92)}
+.hero-photo{position:relative}.hero-photo img{width:100%;aspect-ratio:4/5;object-fit:cover;filter:grayscale(18%) contrast(1.03) sepia(.07)}.caption{font:11px/1.35 var(--sans);color:var(--muted);padding-top:8px;border-top:1px solid var(--rule);margin-top:8px}.stamp{position:absolute;right:-8px;top:20px;border:2px solid var(--red);color:var(--red);padding:7px 11px;transform:rotate(5deg);font:900 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;background:rgba(241,234,219,.88)}
 .columns{columns:2;column-gap:34px;column-rule:1px solid #938a78;margin-top:30px;font-size:1.05rem;line-height:1.6}.columns p{margin-top:0}.columns p:first-child:first-letter{float:left;font-size:5rem;line-height:.73;padding-right:8px;font-weight:900;color:var(--red)}
 .section-head{padding:26px 0 14px;border-top:4px double var(--rule);border-bottom:1px solid var(--rule);margin-bottom:24px;display:flex;justify-content:space-between;align-items:end;gap:20px}.section-head h2{font-size:clamp(2.5rem,6vw,5.4rem);line-height:.9;margin:0;letter-spacing:-.045em}.section-head span{font:700 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
 .scrolly{display:grid;grid-template-columns:.8fr 1.2fr;gap:36px;padding-bottom:76px}.scrolly-nav{position:sticky;top:74px;align-self:start;border:1px solid var(--rule);padding:20px;background:rgba(230,220,200,.65)}.scrolly-nav h3{margin:0 0 16px;font-size:1.25rem}.story-index{display:grid;gap:7px}.story-index button{appearance:none;border:0;border-top:1px solid #817867;background:transparent;text-align:left;padding:12px 0;cursor:pointer;font:700 12px var(--sans);text-transform:uppercase}.story-index button.active{color:var(--red)}
 .story{min-height:78vh;border-bottom:4px double var(--rule);padding:10vh 0 12vh;display:flex;flex-direction:column;justify-content:center}.story-no{font:900 12px var(--sans);letter-spacing:.12em;color:var(--red)}.story h3{font-size:clamp(3rem,6vw,6.8rem);line-height:.86;margin:12px 0 18px;letter-spacing:-.045em}.story .lead{font-size:1.35rem;line-height:1.42;max-width:28ch}.metrics{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:26px 0}.metric{padding:14px 12px;border-right:1px solid var(--rule);font:11px var(--sans);text-transform:uppercase}.metric:last-child{border-right:0}.metric b{display:block;font:900 1.5rem var(--serif);margin-bottom:4px}.read{display:inline-block;align-self:flex-start;margin-top:14px;padding:11px 16px;background:var(--ink);color:var(--paper);text-decoration:none;font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase}.read:hover{background:var(--red)}
 .ticker{overflow:hidden;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:9px 0;background:var(--ink);color:var(--paper)}.ticker-track{display:flex;width:max-content;gap:44px;animation:ticker 28s linear infinite;font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase}@keyframes ticker{to{transform:translateX(-50%)}}
 .experience{padding:68px 0}.timeline{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--rule)}.job{padding:26px;border-right:1px solid var(--rule)}.job:last-child{border-right:0}.job time{font:700 11px var(--sans);text-transform:uppercase;color:var(--red)}.job h3{font-size:2rem;line-height:1;margin:12px 0 6px}.job .org{font-style:italic;margin-bottom:15px}.job p{line-height:1.5;color:#2f2a24}
-.skills{padding:58px 0}.skills-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--rule);border-left:1px solid var(--rule)}.skill{padding:22px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-height:150px;position:relative}.skill small{font:700 10px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--red)}.skill b{display:block;font-size:1.55rem;margin-top:10px;max-width:11ch}.skill-icon{width:46px;height:46px;border:1.5px solid var(--red);color:var(--red);display:grid;place-items:center;font:900 11px/1 var(--sans);letter-spacing:.03em;margin-bottom:14px;background:rgba(139,29,29,.045);box-shadow:4px 4px 0 rgba(139,29,29,.12)}.skill:hover .skill-icon{background:var(--red);color:var(--paper);transform:translate(-1px,-1px);transition:.18s ease}
+.skills{padding:58px 0}.skills-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--rule);border-left:1px solid var(--rule)}.skill{padding:22px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-height:135px}.skill small{font:700 10px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--red)}.skill b{display:block;font-size:1.65rem;margin-top:8px}
 .education{display:grid;grid-template-columns:1fr 1fr;gap:36px;padding:60px 0}.degree{border-top:4px double var(--rule);padding-top:18px}.degree h3{font-size:2.2rem;margin:8px 0}.certs{border-top:4px double var(--rule)}.cert{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid #938a78}.cert em{font:700 11px var(--sans);color:var(--red)}
 .contact{padding:72px 0 100px;text-align:center;border-top:4px double var(--rule)}.contact h2{font-size:clamp(3rem,7vw,7rem);line-height:.88;margin:0}.contact p{font-size:1.25rem}.contact-links{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:26px}.contact-links a{border:1px solid var(--rule);padding:11px 16px;text-decoration:none;font:700 11px var(--sans);text-transform:uppercase}.contact-links a:hover{background:var(--ink);color:var(--paper)}
 .progress{position:fixed;left:0;top:0;height:3px;background:var(--red);width:0;z-index:100}.reveal{opacity:0;transform:translateY(26px);transition:.75s ease}.reveal.in{opacity:1;transform:none}
-@media(max-width:900px){.hero-grid,.scrolly,.education{grid-template-columns:1fr}.hero-copy{border-right:0;padding-right:0}.hero-photo{max-width:560px;min-height:0;margin:auto}.film-rail{display:none}.scrolly-nav{position:relative;top:auto}.timeline{grid-template-columns:1fr}.job{border-right:0;border-bottom:1px solid var(--rule)}.skills-grid{grid-template-columns:repeat(2,1fr)}.columns{columns:1}}
+@media(max-width:900px){.hero-grid,.scrolly,.education{grid-template-columns:1fr}.hero-copy{border-right:0;padding-right:0}.hero-photo{max-width:520px}.scrolly-nav{position:relative;top:auto}.timeline{grid-template-columns:1fr}.job{border-right:0;border-bottom:1px solid var(--rule)}.skills-grid{grid-template-columns:repeat(2,1fr)}.columns{columns:1}}
 @media(max-width:560px){.masthead h1{font-size:3.4rem}.hero-title{font-size:4.1rem}.skills-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr}.metric{border-right:0;border-bottom:1px solid var(--rule)}.metric:last-child{border-bottom:0}.nav .wrap{justify-content:flex-start}.columns{font-size:1rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ticker-track{animation:none}.reveal{opacity:1;transform:none}}
 </style>
@@ -60,24 +46,6 @@ a{color:inherit}img{display:block;max-width:100%}.wrap{width:min(var(--max),calc
 
 <main>
 <section class="front wrap" id="capa">
-  <aside class="film-rail left" aria-hidden="true"><div class="film-track">
-    <div class="film-cell photo">arquivo<br>histórico</div>
-    <div class="film-cell">PY<br>Python</div>
-    <div class="film-cell">SQL<br>Dados</div>
-    <div class="film-cell">PBI<br>Power BI</div>
-    <div class="film-cell">KPI<br>Analytics</div>
-    <div class="film-cell">AI<br>IA</div>
-    <div class="film-cell photo">fraude<br>& risco</div>
-  </div></aside>
-  <aside class="film-rail right" aria-hidden="true"><div class="film-track">
-    <div class="film-cell photo">edição<br>digital</div>
-    <div class="film-cell">XL<br>Excel</div>
-    <div class="film-cell">GH<br>GitHub</div>
-    <div class="film-cell">&lt;/&gt;<br>Code</div>
-    <div class="film-cell">IBM<br>Cognos</div>
-    <div class="film-cell">AUT<br>Automação</div>
-    <div class="film-cell photo">dados<br>em foco</div>
-  </div></aside>
   <div class="edition"><span>Vol. 03 · Nº 11</span><strong>Especial: carreira em dados</strong><span>Quarta-feira · 04 nov. 2026</span></div>
   <div class="hero-grid">
     <div class="hero-copy reveal">
@@ -135,18 +103,9 @@ a{color:inherit}img{display:block;max-width:100%}.wrap{width:min(var(--max),calc
 <section class="skills wrap" id="competencias">
   <div class="section-head reveal"><div><span>03 / Caderno técnico</span><h2>Competências</h2></div><span>Ferramentas & domínio</span></div>
   <div class="skills-grid">
-    <div class="skill reveal"><span class="skill-icon">SQL</span><small>Dados</small><b>SQL</b></div>
-    <div class="skill reveal"><span class="skill-icon">FRA</span><small>Negócio</small><b>Prevenção a Fraudes</b></div>
-    <div class="skill reveal"><span class="skill-icon">KPI</span><small>Análise</small><b>Indicadores & KPIs</b></div>
-    <div class="skill reveal"><span class="skill-icon">MON</span><small>Operação</small><b>Monitoramento Transacional</b></div>
-    <div class="skill reveal"><span class="skill-icon">XL</span><small>Dados</small><b>Excel</b></div>
-    <div class="skill reveal"><span class="skill-icon">RSK</span><small>Risco</small><b>Análise de Riscos</b></div>
-    <div class="skill reveal"><span class="skill-icon">IBM</span><small>BI</small><b>IBM Cognos</b></div>
-    <div class="skill reveal"><span class="skill-icon">KYC</span><small>Cadastro</small><b>Onboarding & Validação</b></div>
-    <div class="skill reveal"><span class="skill-icon">PY</span><small>Automação</small><b>Python</b></div>
-    <div class="skill reveal"><span class="skill-icon">PBI</span><small>Visualização</small><b>Power BI</b></div>
-    <div class="skill reveal"><span class="skill-icon">CI</span><small>Processos</small><b>Melhoria Contínua</b></div>
-    <div class="skill reveal"><span class="skill-icon">AI</span><small>Fundamentos</small><b>IA aplicada</b></div>
+    <div class="skill reveal"><small>Dados</small><b>SQL</b></div><div class="skill reveal"><small>Negócio</small><b>Prevenção a Fraudes</b></div><div class="skill reveal"><small>Análise</small><b>Indicadores & KPIs</b></div><div class="skill reveal"><small>Operação</small><b>Monitoramento Transacional</b></div>
+    <div class="skill reveal"><small>Dados</small><b>Excel</b></div><div class="skill reveal"><small>Risco</small><b>Análise de Riscos</b></div><div class="skill reveal"><small>BI</small><b>IBM Cognos</b></div><div class="skill reveal"><small>Cadastro</small><b>Onboarding & Validação</b></div>
+    <div class="skill reveal"><small>Automação</small><b>Python</b></div><div class="skill reveal"><small>Visualização</small><b>Power BI</b></div><div class="skill reveal"><small>Processos</small><b>Melhoria Contínua</b></div><div class="skill reveal"><small>Fundamentos</small><b>IA aplicada</b></div>
   </div>
 </section>
 
