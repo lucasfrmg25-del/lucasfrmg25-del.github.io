@@ -295,15 +295,6 @@
 <span>03. Neo-Brutalism Arcade</span>
 </button>
 </div>
-<!-- Ações Rápidas: Copiar Código ou Baixar HTML -->
-<div class="flex items-center gap-2">
-<button class="px-3 py-1.5 rounded text-xs font-mono-code font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition flex items-center gap-1.5" onclick="openExportModal()">
-<i class="fa-solid fa-code"></i>
-<span>Usar / Baixar Modelo Atual</span>
-</button>
-</div>
-</div>
-</div>
 <!-- ==========================================================================
        NAVBAR DO PORTFÓLIO (ESTILO LUCAS FREIRE: LFM_ + LINKS NUMERADOS)
        ========================================================================== -->
@@ -1209,35 +1200,6 @@ Fotografia original incorporada diretamente no HTML
 </div>
 </div>
 </footer>
-<!-- ==========================================================================
-       MODAL PARA COPIAR / BAIXAR O HTML DO MODELO ESCOLHIDO
-       ========================================================================== -->
-<div class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" id="exportModal">
-<div class="bg-slate-900 border border-slate-700 rounded-xl max-w-lg w-full p-6 text-white space-y-4 shadow-2xl font-mono-code">
-<div class="flex items-center justify-between border-b border-slate-800 pb-3">
-<h3 class="font-bold text-sm text-emerald-400 flex items-center gap-2">
-<i class="fa-solid fa-file-code"></i>
-<span>Exportar Modelo para seu GitHub Pages</span>
-</h3>
-<button class="text-slate-400 hover:text-white" onclick="closeExportModal()">
-<i class="fa-solid fa-xmark"></i>
-</button>
-</div>
-<p class="text-xs text-slate-300 leading-relaxed font-sans">
-        Você está visualizando o <strong class="text-emerald-400" id="exportModalModelName">Modelo 01: Arcade RPG · Fraud Hunter (Lucas Freire)</strong>. Você pode copiar o código completo já configurado com este tema padrão ou baixar o arquivo <code>index.html</code> pronto para subir no seu repositório <code>lucasfrmg25-del.github.io</code>.
-      </p>
-<div class="flex flex-col sm:flex-row gap-2.5 pt-2">
-<button class="flex-1 py-2.5 px-4 rounded bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-xs flex items-center justify-center gap-2" onclick="copyCurrentModelHTML()">
-<i class="fa-regular fa-copy"></i>
-<span id="copyBtnLabel">Copiar HTML deste Modelo</span>
-</button>
-<button class="flex-1 py-2.5 px-4 rounded bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-xs flex items-center justify-center gap-2" onclick="downloadCurrentModelHTML()">
-<i class="fa-solid fa-download"></i>
-<span>Baixar index.html</span>
-</button>
-</div>
-</div>
-</div>
 <!-- Toast de Notificação -->
 <div class="fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-lg bg-emerald-400 text-slate-950 font-mono-code text-xs font-bold shadow-2xl flex items-center gap-2" id="toastNotification">
 <i class="fa-solid fa-circle-check"></i>
@@ -1806,14 +1768,7 @@ Fotografia original incorporada diretamente no HTML
     /* --------------------------------------------------------------------------
        7. EXPORTAÇÃO DO MODELO ESCOLHIDO & UTILITÁRIOS
        -------------------------------------------------------------------------- */
-    function openExportModal() {
-      document.getElementById("exportModalModelName").textContent = MODEL_CONFIG[currentModel].name;
-      document.getElementById("exportModal").classList.remove("hidden");
-    }
 
-    function closeExportModal() {
-      document.getElementById("exportModal").classList.add("hidden");
-    }
 
     function getCustomizedHtmlForCurrentModel() {
       let fullHtml = document.documentElement.outerHTML;
