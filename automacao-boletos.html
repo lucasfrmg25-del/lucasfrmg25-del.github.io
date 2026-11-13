@@ -42,6 +42,110 @@ table{display:block;max-width:100%;overflow-x:auto}
 th,td{border-color:rgba(0,255,157,.22)!important}
 hr{border-color:rgba(0,255,157,.2)}
 @media(max-width:700px){.top .w:after{display:none}.hero{padding:52px 0 35px!important}.grid,.kpis{grid-template-columns:1fr!important}.box{padding:17px}.sec{padding:30px 0!important}}
+</style>
+<style id="brutalist-project-theme">
+:root{
+  --lime:#dcff47!important;--black:#141414!important;--cream:#f7f6ef!important;
+  --pink:#f7a7d9!important;--blue:#b0ccff!important;--orange:#ff8b57!important;
+  --muted:#565656!important;--edge:3px solid var(--black)!important;
+  color-scheme:light!important;
+}
+html{background:var(--cream)!important}
+body{
+  margin:0!important;background:var(--cream)!important;color:var(--black)!important;
+  font-family:Arial,Helvetica,sans-serif!important;line-height:1.55!important;
+}
+body:before{display:none!important}
+a{color:var(--black)!important}
+.w,.wrap{width:min(1120px,calc(100% - 36px))!important;margin-inline:auto!important}
+.top,.topline{
+  position:sticky!important;top:0!important;z-index:30!important;
+  background:var(--lime)!important;border:0!important;border-bottom:3px solid var(--black)!important;
+  padding:16px 0!important;backdrop-filter:none!important;color:var(--black)!important;
+}
+.top .w,.topline .wrap{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important}
+.top .w:after{content:"LFM / PROJECT CASE"!important;font:900 11px 'Courier New',monospace!important;color:var(--black)!important;letter-spacing:.08em!important}
+.back,.topline span,.nav a{font:900 11px Arial,Helvetica,sans-serif!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+.back{text-decoration:none!important;border:2px solid var(--black)!important;background:var(--cream)!important;padding:9px 12px!important;box-shadow:4px 4px 0 var(--black)!important}
+.back:hover{transform:translate(3px,3px)!important;box-shadow:1px 1px 0 var(--black)!important}
+.masthead{background:var(--lime)!important;border-bottom:3px solid var(--black)!important;padding:30px 0!important}
+.masthead h1{font-family:Arial Black,Arial,sans-serif!important;color:var(--black)!important;letter-spacing:-.07em!important}
+.masthead .kicker{color:var(--black)!important;font-family:'Courier New',monospace!important}
+.nav{position:sticky!important;top:49px!important;z-index:20!important;background:var(--black)!important;border:0!important}
+.nav .wrap{padding:11px 0!important}
+.nav a{color:var(--cream)!important}.nav a:hover{color:var(--lime)!important}
+.hero{
+  padding:70px 0 55px!important;background:var(--lime)!important;
+  border-bottom:3px solid var(--black)!important;position:relative!important;
+}
+.hero:before{content:"PROJECT DOSSIER / CASE STUDY"!important;color:var(--black)!important;font:900 11px 'Courier New',monospace!important;letter-spacing:.09em!important;margin-bottom:18px!important}
+.hero h1,.hero-title{
+  font-family:Arial Black,Arial,sans-serif!important;color:var(--black)!important;
+  font-size:clamp(3rem,8vw,7rem)!important;line-height:.86!important;letter-spacing:-.07em!important;
+  text-shadow:none!important;overflow-wrap:anywhere!important;
+}
+.hero .k,.superline{color:var(--black)!important;font:900 12px 'Courier New',monospace!important;letter-spacing:.08em!important}
+.lead,.dek,.hero p{color:var(--black)!important;font-weight:700!important}
+.hero-grid{gap:28px!important}
+.hero-copy{border-right:3px solid var(--black)!important}
+.side-note{
+  background:var(--pink)!important;border:3px solid var(--black)!important;border-radius:0!important;
+  box-shadow:7px 7px 0 var(--black)!important;color:var(--black)!important
+}
+.side-note p,.side-note h3{color:var(--black)!important}
+.sec,.section{
+  padding:55px 0!important;border-top:3px solid var(--black)!important;background:var(--cream)!important;
+}
+.sec:nth-of-type(even),.section:nth-of-type(even){background:#fff!important}
+.sec h2,.section-head h2{
+  color:var(--black)!important;font-family:Arial Black,Arial,sans-serif!important;
+  font-size:clamp(2rem,5vw,4.6rem)!important;letter-spacing:-.055em!important;line-height:.92!important;
+}
+.sec h2:before{content:"→ "!important;color:var(--black)!important}
+.section-head{border-bottom:3px solid var(--black)!important}
+.section-head span{color:var(--black)!important}
+p,li{color:#2d2d2d!important}
+.box,.kpi,.card,.insight,.visual{
+  background:var(--blue)!important;border:3px solid var(--black)!important;border-radius:0!important;
+  box-shadow:6px 6px 0 var(--black)!important;color:var(--black)!important;
+}
+.box:nth-child(even),.card:nth-child(even),.insight:nth-child(even){background:var(--pink)!important}
+.kpi:nth-child(3n),.insight:nth-child(3n){background:var(--lime)!important}
+.kpi b,.box h3,.card h3,.insight h3{color:var(--black)!important;font-family:Arial Black,Arial,sans-serif!important}
+.kpi{padding:18px!important}.kpi b{font-size:1.45rem!important}
+.kpis{gap:14px!important}
+.grid,.grid2,.insights{gap:20px!important}
+.flow span{
+  background:#fff!important;border:2px solid var(--black)!important;border-radius:0!important;color:var(--black)!important;
+  box-shadow:3px 3px 0 var(--black)!important;font-weight:800!important;
+}
+.flow i{color:var(--black)!important;font-weight:900!important}
+pre,.code,code{
+  background:var(--black)!important;color:var(--lime)!important;border:3px solid var(--black)!important;
+  border-radius:0!important;font-family:'Courier New',monospace!important;
+}
+pre,.code{padding:20px!important;box-shadow:6px 6px 0 var(--pink)!important;overflow:auto!important}
+table,.table-wrap{border-color:var(--black)!important;border-radius:0!important}
+th{background:var(--black)!important;color:var(--lime)!important}
+td{border-color:var(--black)!important}
+.quote{border-left:8px solid var(--black)!important;color:var(--black)!important}
+.btn,.repo,.actions a{
+  display:inline-block!important;border:3px solid var(--black)!important;background:var(--black)!important;color:#fff!important;
+  border-radius:0!important;padding:12px 16px!important;text-decoration:none!important;font-weight:900!important;
+  box-shadow:5px 5px 0 var(--lime)!important;transition:.15s!important;
+}
+.btn:hover,.repo:hover,.actions a:hover{transform:translate(3px,3px)!important;box-shadow:2px 2px 0 var(--lime)!important;background:var(--black)!important}
+.btn.primary{background:var(--pink)!important;color:var(--black)!important;box-shadow:5px 5px 0 var(--black)!important}
+footer{
+  background:var(--black)!important;border-top:3px solid var(--black)!important;color:var(--cream)!important;
+  padding:28px 0!important;font:900 11px 'Courier New',monospace!important;letter-spacing:.06em!important;
+}
+footer *{color:var(--cream)!important}
+@media(max-width:800px){
+  .hero-grid,.grid,.grid2,.insights,.kpis{grid-template-columns:1fr!important}
+  .hero-copy{border-right:0!important;padding-right:0!important}
+  .nav{top:52px!important}.top .w:after{display:none!important}
+}
 </style></head><body><div class="top"><div class="w"><a class="back" href="index.html#projetos">← Voltar aos projetos</a></div></div><main class="w"><section class="hero"><div class="k">Python · Pandas · Automação</div><h1>Automação de Extratos de Boletos</h1><p class="lead">Da leitura de um CSV à geração de arquivos por cliente: um exercício de automação de rotina operacional com tratamento e proteção visual de dados.</p><div class="kpis"><div class="kpi"><b>100</b>boletos</div><div class="kpi"><b>10</b>clientes fictícios</div><div class="kpi"><b>10</b>PNGs</div><div class="kpi"><b>1 ZIP</b>final</div></div></section><section class="sec"><h2>1. Problema</h2><p>Gerar extratos individualmente é repetitivo. O projeto automatiza seleção, agrupamento, cálculo, formatação e geração visual para cada cliente de uma base fictícia.</p></section><section class="sec"><h2>2. Leitura e preservação dos dados</h2><pre>df = pd.read_csv(
   "/content/boletos_ficticios.csv",
   sep=";", decimal=",",
