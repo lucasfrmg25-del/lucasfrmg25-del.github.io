@@ -75,4 +75,75 @@ p,li,table,pre,code,.detail,.skill-panel{position:relative;z-index:2}
   .projects:after,.skills:after,.contact:after,.section:after{opacity:.55;transform:scale(.8)}
   .section-head:before{display:none}
 }
+</style>
+<style id="graffiti-medium-layer">
+/* Medium graffiti treatment: builds on the subtle layer without changing the site's neo-brutalist structure. */
+:root{--graffiti-purple:#8b1fe8;--graffiti-lime:#dcff47;--graffiti-pink:#f04db8}
+
+/* HERO — one stronger statement area */
+.hero{overflow:hidden}
+.hero:before{
+  content:"";position:absolute;left:1.5%;top:7%;width:120px;height:120px;z-index:0;pointer-events:none;opacity:.9;
+  background:
+    radial-gradient(circle at 20% 20%,var(--graffiti-purple) 0 5px,transparent 6px),
+    radial-gradient(circle at 62% 35%,var(--graffiti-purple) 0 3px,transparent 4px),
+    radial-gradient(circle at 84% 68%,var(--graffiti-purple) 0 4px,transparent 5px),
+    linear-gradient(24deg,transparent 43%,var(--graffiti-purple) 44% 51%,transparent 52%);
+  transform:rotate(-13deg)
+}
+.hero h1:after{
+  content:"";display:block;width:min(78%,560px);height:10px;margin-top:8px;background:var(--graffiti-lime);
+  transform:rotate(-1.6deg);border-radius:55% 45% 60% 40%
+}
+.hero-side:after,.hero-box:after{
+  content:"DATA × RISK";position:absolute;right:2%;bottom:3%;font:900 20px 'Courier New',monospace;color:var(--graffiti-purple);
+  transform:rotate(-7deg);letter-spacing:-.06em;text-transform:uppercase;z-index:3
+}
+.hero-side,.hero-box{position:relative}
+
+/* PROJECTS — stronger visual identity, but cards remain clean */
+.projects:before,.section[id*="projet"]:before{
+  content:"";position:absolute;left:0;top:0;width:130px;height:26px;background:var(--graffiti-lime);
+  transform:rotate(-2deg);z-index:0;opacity:.95
+}
+.projects .heading:after,.section[id*="projet"] .section-head h2:before{
+  content:"↘";display:inline-block;margin-left:12px;color:var(--graffiti-purple);font:900 42px/1 'Courier New',monospace;
+  transform:rotate(10deg)
+}
+.project-card:nth-child(2n):after{
+  content:"";position:absolute;right:18px;bottom:16px;width:54px;height:18px;
+  background:repeating-linear-gradient(135deg,var(--graffiti-purple) 0 4px,transparent 4px 8px);
+  transform:rotate(-8deg);opacity:.9
+}
+.project-card:nth-child(3n):after{
+  content:"✦";position:absolute;right:20px;bottom:14px;color:var(--graffiti-lime);font-size:28px;transform:rotate(12deg)
+}
+
+/* SECTION transitions — one larger doodle every few blocks */
+.timeline:before,.skills:before,.section:nth-of-type(5n):before{
+  content:"⌁";position:absolute;left:2%;top:8%;font:900 46px/1 'Courier New',monospace;color:var(--graffiti-purple);
+  transform:rotate(-12deg);opacity:.8;pointer-events:none
+}
+
+/* CONTACT — stronger closing moment */
+.contact:before,.section:last-of-type:before{
+  content:"";position:absolute;right:2%;top:8%;width:110px;height:90px;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 18% 28%,var(--graffiti-pink) 0 4px,transparent 5px),
+    radial-gradient(circle at 68% 40%,var(--graffiti-pink) 0 3px,transparent 4px),
+    linear-gradient(-12deg,transparent 42%,var(--graffiti-pink) 43% 49%,transparent 50%);
+  transform:rotate(7deg)
+}
+.contact h2:after,.section:last-of-type .section-head h2:after{
+  content:"";display:block;width:55%;height:8px;background:var(--graffiti-lime);margin-top:7px;transform:rotate(-1.2deg)
+}
+
+/* Keep body copy and technical elements quiet */
+pre,code,table,.detail,.skill-panel,.kpi,.box,.card,.insight{isolation:isolate}
+@media(max-width:760px){
+  .hero:before{width:80px;height:80px;opacity:.6}
+  .hero-side:after,.hero-box:after{font-size:14px}
+  .projects:before{width:90px;height:20px}
+  .timeline:before,.skills:before,.section:nth-of-type(5n):before{font-size:32px;opacity:.55}
+}
 </style></head><body><header class="top"><div class="wrap"><a class="back" href="./#projetos">← Voltar ao portfólio</a><span class="tag">LFM / PROJECT CASE</span></div></header><section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">04 / PYTHON + PIX</div><h1>TRIAGEM<br>PIX</h1><p class="lead">Um exercício introdutório de Fraud Analytics que transforma uma regra de negócio simples em seleção programática, indicadores e explicação auditável.</p></div><aside class="hero-box"><h3>O PROBLEMA</h3><p>Como transformar um critério operacional simples em uma rotina reproduzível, sem confundir sinalização com fraude confirmada?</p><p><strong>Base didática:</strong> 5 transações.</p><p><strong>Linguagem:</strong> Python.</p></aside></div></section><nav class="nav"><div class="wrap"><a href="#problema">Problema</a><a href="#regra">Regra</a><a href="#resultado">Resultado</a><a href="#insights">Insights</a><a href="#aprendizado">Aprendizado</a></div></nav><main><section class="section" id="problema"><div class="wrap"><div class="section-head"><h2>PROBLEMA</h2><span>01 / CONTEXTO</span></div><div class="grid"><article class="card"><h3>Triagem manual</h3><p>Verificar uma lista pequena é simples; repetir o processo em escala aumenta risco de inconsistência.</p></article><article class="card"><h3>Critério explícito</h3><p>O exercício força a regra a ficar clara no código, facilitando revisão e ajuste.</p></article></div></div></section><section class="section" id="regra"><div class="wrap"><div class="section-head"><h2>REGRA DE TRIAGEM</h2><span>02 / LÓGICA</span></div><p>A transação é selecionada quando o meio de pagamento é PIX e o valor supera R$ 22.000. O limite é didático e não foi calibrado com dados reais.</p><div class="flow"><span>Transação</span><i>→</i><span>É PIX?</span><i>→</i><span>Valor &gt; R$ 22 mil?</span><i>→</i><span>Selecionar para revisão</span></div></div></section><section class="section" id="resultado"><div class="wrap"><div class="section-head"><h2>RESULTADO DO EXEMPLO</h2><span>03 / OUTPUT</span></div><div class="kpis"><div class="kpi"><small>Transações</small><b>5</b></div><div class="kpi"><small>Selecionadas</small><b>2</b></div><div class="kpi"><small>Proporção</small><b>40%</b></div><div class="kpi"><small>Volume sinalizado</small><b>R$ 54 mil</b></div></div></div></section><section class="section" id="insights"><div class="wrap"><div class="section-head"><h2>INSIGHTS</h2><span>04 / LEITURA</span></div><div class="grid3"><article class="insight"><div class="num">INSIGHT 01</div><h3>Regra simples é auditável</h3><p>O motivo da seleção pode ser explicado diretamente: tipo PIX + valor acima do limite.</p></article><article class="insight"><div class="num">INSIGHT 02</div><h3>Volume sinalizado importa</h3><p>Além de contar casos, somar o valor selecionado ajuda a enxergar exposição financeira.</p></article><article class="insight"><div class="num">INSIGHT 03</div><h3>Regra não é conclusão</h3><p>O filtro apenas prioriza revisão. Ele não determina que as transações são fraudulentas.</p></article></div></div></section><section class="section" id="aprendizado"><div class="wrap"><div class="section-head"><h2>APRENDIZADOS E LIMITES</h2><span>05 / FUNDAMENTOS</span></div><div class="grid"><article class="card"><h3>Conceitos praticados</h3><p>Listas, dicionários, <code>for</code>, <code>if</code>, contador, acumulador e percentual.</p></article><article class="card"><h3>Limite</h3><p>Base pequena e limiar fixo. O próximo passo natural seria usar dados históricos e múltiplos sinais.</p></article></div></div></section></main><footer><div class="wrap">LUCAS FREIRE MARTINS · FRAUD × DATA × ANALYTICS</div></footer></body></html>
