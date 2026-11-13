@@ -75,4 +75,75 @@ p,li,table,pre,code,.detail,.skill-panel{position:relative;z-index:2}
   .projects:after,.skills:after,.contact:after,.section:after{opacity:.55;transform:scale(.8)}
   .section-head:before{display:none}
 }
+</style>
+<style id="graffiti-medium-layer">
+/* Medium graffiti treatment: builds on the subtle layer without changing the site's neo-brutalist structure. */
+:root{--graffiti-purple:#8b1fe8;--graffiti-lime:#dcff47;--graffiti-pink:#f04db8}
+
+/* HERO — one stronger statement area */
+.hero{overflow:hidden}
+.hero:before{
+  content:"";position:absolute;left:1.5%;top:7%;width:120px;height:120px;z-index:0;pointer-events:none;opacity:.9;
+  background:
+    radial-gradient(circle at 20% 20%,var(--graffiti-purple) 0 5px,transparent 6px),
+    radial-gradient(circle at 62% 35%,var(--graffiti-purple) 0 3px,transparent 4px),
+    radial-gradient(circle at 84% 68%,var(--graffiti-purple) 0 4px,transparent 5px),
+    linear-gradient(24deg,transparent 43%,var(--graffiti-purple) 44% 51%,transparent 52%);
+  transform:rotate(-13deg)
+}
+.hero h1:after{
+  content:"";display:block;width:min(78%,560px);height:10px;margin-top:8px;background:var(--graffiti-lime);
+  transform:rotate(-1.6deg);border-radius:55% 45% 60% 40%
+}
+.hero-side:after,.hero-box:after{
+  content:"DATA × RISK";position:absolute;right:2%;bottom:3%;font:900 20px 'Courier New',monospace;color:var(--graffiti-purple);
+  transform:rotate(-7deg);letter-spacing:-.06em;text-transform:uppercase;z-index:3
+}
+.hero-side,.hero-box{position:relative}
+
+/* PROJECTS — stronger visual identity, but cards remain clean */
+.projects:before,.section[id*="projet"]:before{
+  content:"";position:absolute;left:0;top:0;width:130px;height:26px;background:var(--graffiti-lime);
+  transform:rotate(-2deg);z-index:0;opacity:.95
+}
+.projects .heading:after,.section[id*="projet"] .section-head h2:before{
+  content:"↘";display:inline-block;margin-left:12px;color:var(--graffiti-purple);font:900 42px/1 'Courier New',monospace;
+  transform:rotate(10deg)
+}
+.project-card:nth-child(2n):after{
+  content:"";position:absolute;right:18px;bottom:16px;width:54px;height:18px;
+  background:repeating-linear-gradient(135deg,var(--graffiti-purple) 0 4px,transparent 4px 8px);
+  transform:rotate(-8deg);opacity:.9
+}
+.project-card:nth-child(3n):after{
+  content:"✦";position:absolute;right:20px;bottom:14px;color:var(--graffiti-lime);font-size:28px;transform:rotate(12deg)
+}
+
+/* SECTION transitions — one larger doodle every few blocks */
+.timeline:before,.skills:before,.section:nth-of-type(5n):before{
+  content:"⌁";position:absolute;left:2%;top:8%;font:900 46px/1 'Courier New',monospace;color:var(--graffiti-purple);
+  transform:rotate(-12deg);opacity:.8;pointer-events:none
+}
+
+/* CONTACT — stronger closing moment */
+.contact:before,.section:last-of-type:before{
+  content:"";position:absolute;right:2%;top:8%;width:110px;height:90px;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 18% 28%,var(--graffiti-pink) 0 4px,transparent 5px),
+    radial-gradient(circle at 68% 40%,var(--graffiti-pink) 0 3px,transparent 4px),
+    linear-gradient(-12deg,transparent 42%,var(--graffiti-pink) 43% 49%,transparent 50%);
+  transform:rotate(7deg)
+}
+.contact h2:after,.section:last-of-type .section-head h2:after{
+  content:"";display:block;width:55%;height:8px;background:var(--graffiti-lime);margin-top:7px;transform:rotate(-1.2deg)
+}
+
+/* Keep body copy and technical elements quiet */
+pre,code,table,.detail,.skill-panel,.kpi,.box,.card,.insight{isolation:isolate}
+@media(max-width:760px){
+  .hero:before{width:80px;height:80px;opacity:.6}
+  .hero-side:after,.hero-box:after{font-size:14px}
+  .projects:before{width:90px;height:20px}
+  .timeline:before,.skills:before,.section:nth-of-type(5n):before{font-size:32px;opacity:.55}
+}
 </style></head><body><header class="top"><div class="wrap"><a class="back" href="./#projetos">← Voltar ao portfólio</a><span class="tag">LFM / PROJECT CASE</span></div></header><section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">06 / DATA QUALITY + PYTHON</div><h1>WE CLEAN<br>.CSV</h1><p class="lead">Uma ferramenta guiada para diagnosticar e tratar problemas comuns em arquivos CSV, mantendo o usuário no controle das decisões de limpeza.</p></div><aside class="hero-box"><h3>O PROBLEMA</h3><p>Arquivos tabulares chegam com nulos, duplicatas, colunas vazias e textos inconsistentes. Limpar sem rastreabilidade pode introduzir novos erros.</p><p><strong>Versão:</strong> v1.0 funcional.</p><p><strong>Stack:</strong> Python · Pandas.</p></aside></div></section><nav class="nav"><div class="wrap"><a href="#problema">Problema</a><a href="#fluxo">Fluxo</a><a href="#recursos">Recursos</a><a href="#insights">Insights</a><a href="#limites">Limites</a><a href="#app">Aplicação</a></div></nav><main><section class="section" id="problema"><div class="wrap"><div class="section-head"><h2>PROBLEMA DE DADOS</h2><span>01 / DATA QUALITY</span></div><div class="grid"><article class="card"><h3>Inconsistência</h3><p>Nulos, duplicatas e textos mal padronizados comprometem análises posteriores.</p></article><article class="card"><h3>Decisão de limpeza</h3><p>Nem todo problema deve ser tratado automaticamente; o usuário precisa escolher a estratégia adequada.</p></article></div></div></section><section class="section" id="fluxo"><div class="wrap"><div class="section-head"><h2>FLUXO DA SOLUÇÃO</h2><span>02 / PIPELINE</span></div><div class="flow"><span>Importação</span><i>→</i><span>Diagnóstico</span><i>→</i><span>Colunas vazias</span><i>→</i><span>Duplicatas</span><i>→</i><span>Nulos</span><i>→</i><span>Textos</span><i>→</i><span>Relatório</span><i>→</i><span>Exportação</span></div></div></section><section class="section" id="recursos"><div class="wrap"><div class="section-head"><h2>O QUE A V1.0 FAZ</h2><span>03 / FEATURES</span></div><div class="grid"><article class="card"><h3>Diagnóstico</h3><p>Linhas, colunas, tipos, nulos e duplicatas.</p></article><article class="card"><h3>Nulos</h3><p>Remoção, valor informado, média, mediana ou moda.</p></article><article class="card"><h3>Textos</h3><p>Remoção de espaços e padronização de caixa.</p></article><article class="card"><h3>Relatório</h3><p>Histórico das alterações e comparação antes/depois.</p></article></div></div></section><section class="section" id="insights"><div class="wrap"><div class="section-head"><h2>INSIGHTS</h2><span>04 / LEITURA</span></div><div class="grid3"><article class="insight"><div class="num">INSIGHT 01</div><h3>Limpeza é decisão</h3><p>Uma ferramenta útil não deve apenas “corrigir”; ela precisa expor opções e consequências.</p></article><article class="insight"><div class="num">INSIGHT 02</div><h3>Ordem das etapas importa</h3><p>Nova checagem de duplicatas após padronizar textos evita perder duplicatas que só aparecem depois da normalização.</p></article><article class="insight"><div class="num">INSIGHT 03</div><h3>Rastreabilidade aumenta confiança</h3><p>Relatório antes/depois permite entender o que foi alterado antes de exportar o CSV final.</p></article></div></div></section><section class="section" id="limites"><div class="wrap"><div class="section-head"><h2>LIMITES E PRÓXIMOS PASSOS</h2><span>05 / EVOLUÇÃO</span></div><div class="grid"><article class="card"><h3>Limites</h3><p>A ferramenta cobre problemas comuns, mas não substitui regras específicas de domínio nem validações semânticas.</p></article><article class="card"><h3>Próxima evolução</h3><p>Adicionar perfis de qualidade, tipos esperados por coluna, regras customizadas e resumo visual mais detalhado.</p></article></div></div></section><section class="section" id="app"><div class="wrap"><div class="section-head"><h2>APLICAÇÃO E CÓDIGO</h2><span>06 / USE IT</span></div><p>Além do estudo de caso, há uma interface funcional no próprio site.</p><div class="actions"><a class="btn alt" href="we-clean-app.html">ABRIR WE CLEAN ↗</a><a class="btn" href="https://github.com/lucasfrmg25-del/we_clean_CSV" target="_blank" rel="noopener">VER REPOSITÓRIO ↗</a></div></div></section></main><footer><div class="wrap">LUCAS FREIRE MARTINS · FRAUD × DATA × ANALYTICS</div></footer></body></html>
