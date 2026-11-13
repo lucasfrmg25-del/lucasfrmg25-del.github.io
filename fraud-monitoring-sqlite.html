@@ -25,7 +25,78 @@ pre{background:var(--black);color:var(--lime);border:var(--edge);padding:20px;bo
 footer{background:var(--black);color:var(--cream);padding:28px 0;font:900 11px 'Courier New',monospace}
 @media(max-width:820px){.hero-grid,.grid,.insights,.kpis{grid-template-columns:1fr}.top .tag{display:none}.hero{padding-top:50px}}
 </style>
-</head>
+
+<style id="graffiti-accent-layer">
+/* Subtle graffiti accents layered over the existing neo-brutalist system. */
+body{position:relative}
+.hero,.projects,.skills,.timeline,.contact,.section{position:relative;isolation:isolate}
+.hero:after,.projects:after,.skills:after,.timeline:after,.contact:after,.section:after{
+  pointer-events:none;position:absolute;z-index:0;opacity:.95
+}
+.hero>* ,.projects>* ,.skills>* ,.timeline>* ,.contact>* ,.section>*{position:relative;z-index:1}
+
+/* Marker swipes under selected headings */
+.heading .highlight,.section-head h2,.hero h1 .stripe{
+  position:relative;display:inline-block
+}
+.heading .highlight:after,.section-head h2:after{
+  content:"";position:absolute;left:4%;right:2%;bottom:-7px;height:8px;
+  background:var(--lime,#dcff47);transform:rotate(-1.4deg);z-index:-1;
+  border-radius:50% 40% 55% 45%;opacity:.85
+}
+.section:nth-of-type(3n) .section-head h2:after{background:var(--pink,#f7a7d9)}
+.section:nth-of-type(4n) .section-head h2:after{background:var(--blue,#b0ccff)}
+
+/* Tiny hand-drawn corner marks */
+.section-head:before,.project-card:before,.stat:before,.hero-box:before{
+  content:"✦";position:absolute;font:900 22px/1 Arial,sans-serif;color:var(--black,#141414);
+  transform:rotate(-14deg)
+}
+.section-head:before{right:8px;top:-18px}
+.project-card:before{right:10px;top:8px;font-size:16px}
+.stat:before{right:10px;top:8px;font-size:14px}
+.hero-box:before{right:10px;top:8px}
+
+/* Minimal spray/scribble accents in margins */
+.hero:after{
+  content:"";right:2.5%;top:12%;width:110px;height:90px;
+  background:
+    radial-gradient(circle at 18% 34%, var(--pink,#f7a7d9) 0 3px, transparent 4px),
+    radial-gradient(circle at 52% 18%, var(--pink,#f7a7d9) 0 2px, transparent 3px),
+    radial-gradient(circle at 82% 58%, var(--pink,#f7a7d9) 0 3px, transparent 4px),
+    linear-gradient(14deg,transparent 42%,var(--pink,#f7a7d9) 43% 50%,transparent 51%);
+  transform:rotate(-8deg)
+}
+.projects:after,.section:nth-of-type(3n):after{
+  content:"↗";left:1.2%;bottom:4%;font:900 42px/1 'Courier New',monospace;color:var(--lime,#dcff47);
+  transform:rotate(-18deg)
+}
+.skills:after,.section:nth-of-type(4n):after{
+  content:"≋";right:2%;top:8%;font:900 54px/1 'Courier New',monospace;color:var(--pink,#f7a7d9);
+  transform:rotate(9deg)
+}
+.contact:after,.section:last-of-type:after{
+  content:"✎";right:3%;bottom:10%;font:900 42px/1 Arial,sans-serif;color:var(--lime,#dcff47);
+  transform:rotate(-10deg)
+}
+
+/* Graffiti-like underline for interactive labels */
+.project-action span,.btn,.filter[aria-pressed="true"],.back{
+  position:relative
+}
+.project-action span:after,.filter[aria-pressed="true"]:after{
+  content:"";position:absolute;left:0;right:0;bottom:-4px;height:3px;background:currentColor;
+  transform:rotate(-1.8deg);opacity:.85
+}
+
+/* Keep reading areas clean */
+p,li,table,pre,code,.detail,.skill-panel{position:relative;z-index:2}
+@media(max-width:760px){
+  .hero:after{width:72px;height:60px;opacity:.65}
+  .projects:after,.skills:after,.contact:after,.section:after{opacity:.55;transform:scale(.8)}
+  .section-head:before{display:none}
+}
+</style></head>
 <body>
 <header class="top"><div class="wrap"><a class="back" href="./#projetos">← Voltar ao portfólio</a><span class="tag">LFM / FRAUD × DATA × SQL</span></div></header>
 <section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">06 / SQL + FRAUD MONITORING</div><h1>FRAUD<br>MONITORING<br>/ SQLITE</h1><p class="lead">Case de portfólio construído passo a passo para transformar uma base transacional sintética em KPIs de fraude, análise por canal e uma visão consolidada por cliente.</p></div><aside class="hero-box"><h3>O PROBLEMA</h3><p>Onde estão as ocorrências de fraude? Quanto dinheiro está exposto? Quais canais e clientes exigem maior atenção?</p><p><strong>Base:</strong> 50 clientes · 325 transações sintéticas.</p><p><strong>Stack:</strong> SQLite · SQL.</p></aside></div></section>
