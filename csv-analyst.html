@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f5f5f1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Data Analyst Studio — Lucas Freire</title>
 <meta name="description" content="Ferramenta local para preparar, explorar e visualizar arquivos CSV diretamente no navegador.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,6 +12,8 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
 <style>
 :root{
   --bg:#f5f5f1;--panel:#ffffff;--ink:#171918;--muted:#737872;--line:#dedfd9;
@@ -65,7 +68,7 @@ select{width:100%;border:1px solid var(--line);background:#fbfbf8;border-radius:
 .empty-state{min-height:460px;display:grid;place-items:center;text-align:center;color:var(--muted)}
 .empty-icon{width:58px;height:58px;margin:auto;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:1.35rem;color:#4d524d}
 .empty-state h3{font-size:1rem;color:var(--ink);margin:13px 0 7px}.empty-state p{font-size:.78rem;line-height:1.55;max-width:320px;margin:0}
-.chart-wrap{display:none;position:relative;min-height:460px}.chart-wrap.active{display:block}.special-visual{display:none;min-height:460px}.special-visual.active{display:block}.special-visual svg{width:100%;height:auto;display:block}.saved-special{height:280px;padding:8px}.saved-special svg{width:100%;height:100%;display:block}
+.chart-wrap{display:none;position:relative;min-height:460px}.chart-wrap.active{display:block}.special-visual{display:none;min-height:460px}.special-visual.active{display:block}.special-visual svg{width:100%;height:auto;display:block}.map-visual{display:none;height:460px;border:1px solid var(--line);border-radius:12px;overflow:hidden}.map-visual.active{display:block}.geo-panel{display:none;grid-column:1/-1;border:1px solid var(--line);border-radius:11px;background:#fafaf7;padding:11px;margin-top:3px}.geo-panel.active{display:block}.geo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.geo-note{font-size:.62rem;color:var(--muted);line-height:1.45;margin-top:8px}.geo-status{font-size:.65rem;color:var(--muted);margin-top:7px;min-height:18px}.saved-special{height:280px;padding:8px}.saved-special svg{width:100%;height:100%;display:block}.saved-map{height:280px}.leaflet-container{font-family:Manrope,system-ui,sans-serif;background:#eef0eb}.leaflet-popup-content{font-size:.72rem;line-height:1.45}
 .insight{display:none;margin-top:12px;padding:11px 13px;background:#f7f8f4;border:1px solid var(--line);border-radius:10px;font-size:.76rem;line-height:1.5}.insight.active{display:block}
 .tabs{display:flex;gap:4px;padding:6px;background:#f1f2ed;border-radius:10px;margin-bottom:12px}
 .tab{flex:1;border:0;background:transparent;border-radius:7px;padding:8px 5px;font-size:.7rem;font-weight:700;color:#6b716a}.tab.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.05)}
@@ -91,7 +94,7 @@ th{position:sticky;top:0;background:#f7f8f4;font-size:.63rem;text-transform:uppe
 .toast{position:fixed;right:20px;bottom:20px;background:var(--ink);color:#fff;padding:11px 14px;border-radius:10px;font-size:.74rem;opacity:0;transform:translateY(8px);pointer-events:none;transition:.22s;z-index:20}
 .toast.show{opacity:1;transform:none}
 @media(max-width:1100px){.workspace{grid-template-columns:240px 1fr}.right-panel{grid-column:1/-1}.right-panel .panel-body{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tabs{grid-column:1/-1}.tabpage{grid-column:1/-1}.summary{grid-template-columns:repeat(2,1fr)}.saved-grid{grid-template-columns:1fr}}
-@media(max-width:760px){.wrap{width:min(94vw,1450px)}.topbar{align-items:flex-start;flex-direction:column}.hero{grid-template-columns:1fr;padding-top:28px}.workspace{grid-template-columns:1fr}.right-panel{grid-column:auto}.right-panel .panel-body{display:block}.summary{grid-template-columns:1fr 1fr}.canvas-panel{min-height:520px}.builder{grid-template-columns:1fr}.control.full{grid-column:auto}.chart-types{grid-template-columns:repeat(2,1fr)}.kpi-strip{grid-template-columns:1fr 1fr}.filter-builder{grid-template-columns:1fr}}
+@media(max-width:760px){.wrap{width:min(94vw,1450px)}.topbar{align-items:flex-start;flex-direction:column}.hero{grid-template-columns:1fr;padding-top:28px}.workspace{grid-template-columns:1fr}.right-panel{grid-column:auto}.right-panel .panel-body{display:block}.summary{grid-template-columns:1fr 1fr}.canvas-panel{min-height:520px}.builder{grid-template-columns:1fr}.control.full{grid-column:auto}.chart-types{grid-template-columns:repeat(2,1fr)}.kpi-strip{grid-template-columns:1fr 1fr}.filter-builder{grid-template-columns:1fr}.geo-grid{grid-template-columns:1fr}}
 @media(max-width:440px){.nav{flex-wrap:wrap}.summary{grid-template-columns:1fr}.hero h1{font-size:46px}}
 </style>
 </head>
@@ -172,9 +175,24 @@ th{position:sticky;top:0;background:#f7f8f4;font-size:.63rem;text-transform:uppe
               <button class="chart-btn" type="button" data-chart="boxplot">Boxplot</button>
               <button class="chart-btn" type="button" data-chart="heatmap">Heatmap</button>
               <button class="chart-btn" type="button" data-chart="wordcloud">Nuvem</button>
+              <button class="chart-btn" type="button" data-chart="map">Mapa</button>
               <button class="chart-btn" type="button" data-chart="doughnut">Donut</button>
               <button class="chart-btn" type="button" data-chart="horizontal">Ranking</button>
             </div></div>
+            <div class="geo-panel" id="geoPanel">
+              <div class="geo-grid">
+                <div class="control"><label>Fonte geográfica</label><select id="geoMode"><option value="auto">Automático</option><option value="coords">Latitude + Longitude</option><option value="place">Cidade / Estado / País</option></select></div>
+                <div class="control"><label>Latitude</label><select id="geoLat"><option value="">Nenhuma</option></select></div>
+                <div class="control"><label>Longitude</label><select id="geoLon"><option value="">Nenhuma</option></select></div>
+                <div class="control"><label>Cidade</label><select id="geoCity"><option value="">Nenhuma</option></select></div>
+                <div class="control"><label>Estado / Região</label><select id="geoState"><option value="">Nenhum</option></select></div>
+                <div class="control"><label>País</label><select id="geoCountry"><option value="">Nenhum</option></select></div>
+                <div class="control"><label>Métrica do ponto</label><select id="geoMetric"><option value="">Contagem de registros</option></select></div>
+                <div class="control"><label>Agregação</label><select id="geoAgg"><option value="count">Contagem</option><option value="sum">Soma</option><option value="mean">Média</option></select></div>
+              </div>
+              <div class="geo-note">Com latitude/longitude, o mapa é imediato. Para nomes de cidade/estado/país, a geocodificação é acionada por você, usa cache local e consulta no máximo 20 localidades únicas por análise.</div>
+              <div class="geo-status" id="geoStatus"></div>
+            </div>
           </div>
           <div class="action-row"><button class="primary-btn" id="generateBtn" type="button">Gerar gráfico</button><button class="soft-btn" id="autoBtn" type="button">Melhor visual</button></div>
           <div class="kpi-strip" id="kpiStrip">
@@ -183,8 +201,8 @@ th{position:sticky;top:0;background:#f7f8f4;font-size:.63rem;text-transform:uppe
             <div class="mini-kpi"><div class="mini-kpi-label" id="kpi3Label">Média</div><div class="mini-kpi-value" id="kpi3Value">—</div></div>
             <div class="mini-kpi"><div class="mini-kpi-label" id="kpi4Label">Mediana</div><div class="mini-kpi-value" id="kpi4Value">—</div></div>
           </div>
-          <div class="empty-state" id="emptyState"><div><div class="empty-icon">⌁</div><h3>Seu gráfico aparece aqui</h3><p>Escolha as colunas e o tipo de visual. Histograma, boxplot e nuvem de palavras funcionam com uma única coluna; heatmap usa duas categorias.</p></div></div>
-          <div class="chart-wrap" id="chartWrap"><canvas id="chartCanvas"></canvas><div class="special-visual" id="specialVisual" aria-live="polite"></div></div>
+          <div class="empty-state" id="emptyState"><div><div class="empty-icon">⌁</div><h3>Seu gráfico aparece aqui</h3><p>Escolha as colunas e o tipo de visual. Histograma, boxplot e nuvem funcionam com uma coluna; heatmap usa duas categorias; mapa aceita latitude/longitude ou cidade/estado/país.</p></div></div>
+          <div class="chart-wrap" id="chartWrap"><canvas id="chartCanvas"></canvas><div class="special-visual" id="specialVisual" aria-live="polite"></div><div class="map-visual" id="mapVisual" aria-label="Mapa geográfico interativo"></div></div>
           <div class="insight" id="insight"></div>
           <div class="visual-actions">
             <button class="soft-btn" id="saveVisualBtn" type="button">+ Adicionar ao dashboard</button>
@@ -227,7 +245,7 @@ th{position:sticky;top:0;background:#f7f8f4;font-size:.63rem;text-transform:uppe
 <script>
 (function(){
 "use strict";
-var state={original:[],rows:[],headers:[],types:{},selected:[],chartType:"bar",chart:null,fileName:"",filters:[],savedCharts:[],savedInstances:[]};
+var state={original:[],rows:[],headers:[],types:{},selected:[],chartType:"bar",chart:null,fileName:"",filters:[],savedCharts:[],savedInstances:[],leafletMap:null,savedLeafletMaps:[]};
 var $=function(id){return document.getElementById(id)};
 var fileInput=$("fileInput"),drop=$("dropZone");
 
@@ -351,12 +369,22 @@ function renderFields(){
 }
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
 function typeLabel(t){return {numeric:"NÚM",category:"CAT",date:"DATA",id:"ID",empty:"VAZIO"}[t]||t}
+function normHeader(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_")}
+function findHeaderAliases(aliases){var hs=state.headers.map(function(h){return {h:h,n:normHeader(h)}});for(var i=0;i<aliases.length;i++){var a=aliases[i];var exact=hs.find(function(o){return o.n===a});if(exact)return exact.h}for(var j=0;j<aliases.length;j++){var b=aliases[j];var part=hs.find(function(o){return o.n.indexOf(b)>=0});if(part)return part.h}return ""}
+function geoCandidates(){return {lat:findHeaderAliases(["latitude","lat"]),lon:findHeaderAliases(["longitude","lon","lng","long"]),city:findHeaderAliases(["cidade","city","municipio","municipality"]),state:findHeaderAliases(["estado","state","uf","province","regiao","region"]),country:findHeaderAliases(["pais","country","nacao","nation"])}}
+function hasGeoCandidate(){var g=geoCandidates();return !!(g.lat||g.lon||g.city||g.state||g.country)}
+function populateGeoSelects(){
+  var ids=["geoLat","geoLon","geoCity","geoState","geoCountry","geoMetric"];
+  ids.forEach(function(id){var el=$(id),label=id==="geoMetric"?"Contagem de registros":"Nenhum";el.innerHTML='<option value="">'+label+'</option>'+state.headers.map(function(h){return '<option value="'+esc(h)+'">'+esc(h)+'</option>'}).join("")});
+  var g=geoCandidates();$("geoLat").value=g.lat;$("geoLon").value=g.lon;$("geoCity").value=g.city;$("geoState").value=g.state;$("geoCountry").value=g.country;
+  var num=state.headers.find(function(h){return state.types[h]==="numeric"&&h!==g.lat&&h!==g.lon});if(num)$("geoMetric").value=num;
+}
 function populateSelects(){
   ["xSelect","ySelect","segmentSelect"].forEach(function(id){
     var el=$(id),first=id==="segmentSelect"?'<option value="">Nenhum</option>':'<option value="">Selecione</option>';
     el.innerHTML=first+state.headers.map(function(h){return '<option value="'+esc(h)+'">'+esc(h)+'</option>'}).join("");
   });
-  renderFilterControls();
+  renderFilterControls();populateGeoSelects();
 }
 function syncBuilderFromSelected(){
   var s=state.selected.slice(),num=s.find(function(h){return state.types[h]==="numeric"}),dim=s.find(function(h){return h!==num&&state.types[h]!=="id"});
@@ -389,12 +417,14 @@ function recommendButtons(){
     else if(xt==="numeric"&&textY)allowed=["histogram","boxplot"];
   }
   if(x&&textX&&!allowed.includes("wordcloud"))allowed.push("wordcloud");
+  if(hasGeoCandidate()&&!allowed.includes("map"))allowed.push("map");
   disableExcept(allowed);
   var active=document.querySelector(".chart-btn.active");
   if(active&&active.disabled){active.classList.remove("active");var first=document.querySelector(".chart-btn:not(:disabled)");if(first){first.classList.add("active");state.chartType=first.dataset.chart}}
 }
 function disableExcept(allowed){document.querySelectorAll(".chart-btn").forEach(function(b){b.disabled=allowed.indexOf(b.dataset.chart)<0})}
-document.querySelectorAll(".chart-btn").forEach(function(b){b.addEventListener("click",function(){if(b.disabled)return;document.querySelectorAll(".chart-btn").forEach(function(x){x.classList.remove("active")});b.classList.add("active");state.chartType=b.dataset.chart})});
+function toggleGeoPanel(){$("geoPanel").classList.toggle("active",state.chartType==="map")}
+document.querySelectorAll(".chart-btn").forEach(function(b){b.addEventListener("click",function(){if(b.disabled)return;document.querySelectorAll(".chart-btn").forEach(function(x){x.classList.remove("active")});b.classList.add("active");state.chartType=b.dataset.chart;toggleGeoPanel()})});
 $("filterColumn").addEventListener("change",updateFilterOperators);
 $("filterOperator").addEventListener("change",updateSecondFilterValue);
 $("addFilterBtn").addEventListener("click",function(){
@@ -430,10 +460,10 @@ function aggregate(x,y,segment,agg,rows){
     return {x:g.x,segment:g.segment,value:v};
   });
 }
-function currentConfig(){return {x:$("xSelect").value,y:$("ySelect").value,segment:$("segmentSelect").value,agg:$("aggSelect").value,type:state.chartType,filters:JSON.parse(JSON.stringify(state.filters))}}
+function currentConfig(){return {x:$("xSelect").value,y:$("ySelect").value,segment:$("segmentSelect").value,agg:$("aggSelect").value,type:state.chartType,filters:JSON.parse(JSON.stringify(state.filters)),geo:{mode:$("geoMode").value,lat:$("geoLat").value,lon:$("geoLon").value,city:$("geoCity").value,state:$("geoState").value,country:$("geoCountry").value,metric:$("geoMetric").value,agg:$("geoAgg").value}}}
 function numericField(cfg){if(cfg.y&&state.types[cfg.y]==="numeric")return cfg.y;if(cfg.x&&state.types[cfg.x]==="numeric")return cfg.x;return ""}
 function textField(cfg){if(cfg.x&&(state.types[cfg.x]==="category"||state.types[cfg.x]==="id"))return cfg.x;if(cfg.y&&(state.types[cfg.y]==="category"||state.types[cfg.y]==="id"))return cfg.y;return ""}
-function chartLabel(type){return {bar:"Barras",grouped:"Barras agrupadas",stacked:"Barras empilhadas",stacked100:"100% empilhado",line:"Linha",area:"Área",scatter:"Dispersão",histogram:"Histograma",boxplot:"Boxplot",heatmap:"Heatmap",wordcloud:"Nuvem de palavras",doughnut:"Donut",horizontal:"Ranking"}[type]||type}
+function chartLabel(type){return {bar:"Barras",grouped:"Barras agrupadas",stacked:"Barras empilhadas",stacked100:"100% empilhado",line:"Linha",area:"Área",scatter:"Dispersão",histogram:"Histograma",boxplot:"Boxplot",heatmap:"Heatmap",wordcloud:"Nuvem de palavras",map:"Mapa geográfico",doughnut:"Donut",horizontal:"Ranking"}[type]||type}
 function buildHistogram(cfg,rows){
   var field=numericField(cfg),vals=rows.map(function(r){return numericValue(r[field])}).filter(function(v){return v!==null});
   if(!field||vals.length<2)return null;
@@ -443,6 +473,7 @@ function buildHistogram(cfg,rows){
   return {title:"Histograma · "+field,rawData:null,chartType:"bar",data:{labels:labels,datasets:[{label:"Frequência",data:counts,backgroundColor:palette(1),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxRotation:45,minRotation:45,font:{size:9}}},y:{beginAtZero:true,grid:{color:"#eceee8"}}}}};
 }
 function buildChartPayload(cfg,rows){
+  if(cfg.type==="map")return {map:true,title:"Mapa geográfico"};
   if(cfg.type==="histogram")return buildHistogram(cfg,rows);
   if(["boxplot","heatmap","wordcloud"].indexOf(cfg.type)>=0)return {special:true,title:chartLabel(cfg.type),svg:buildSpecialSVG(cfg,rows)};
   if(!cfg.x||!cfg.y)return null;
@@ -501,25 +532,96 @@ function buildWordCloudSVG(cfg,rows){
   });
   return svg+'</svg>';
 }
+function geoCacheRead(){try{return JSON.parse(localStorage.getItem("dataAnalystGeoCacheV1")||"{}")}catch(e){return {}}}
+function geoCacheWrite(cache){try{localStorage.setItem("dataAnalystGeoCacheV1",JSON.stringify(cache))}catch(e){}}
+function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms)})}
+function locationLabel(r,g){return [g.city&&r[g.city],g.state&&r[g.state],g.country&&r[g.country]].filter(function(v){return !isEmpty(v)}).join(", ")}
+function aggregateGeoPoints(rows,g,coordsByLabel){
+  var groups={};
+  rows.forEach(function(r){
+    var lat=null,lon=null,label="";
+    if(g.mode==="coords"||(g.mode==="auto"&&g.lat&&g.lon)){lat=numericValue(r[g.lat]);lon=numericValue(r[g.lon]);label=locationLabel(r,g)||((lat!==null&&lon!==null)?lat.toFixed(4)+", "+lon.toFixed(4):"")}
+    else {label=locationLabel(r,g);var p=coordsByLabel&&coordsByLabel[label];if(p){lat=p.lat;lon=p.lon}}
+    if(lat===null||lon===null||lat<-90||lat>90||lon<-180||lon>180)return;
+    var key=(Math.round(lat*1e5)/1e5)+"|"+(Math.round(lon*1e5)/1e5)+"|"+label;
+    if(!groups[key])groups[key]={lat:lat,lon:lon,label:label||"Local",count:0,vals:[]};
+    groups[key].count++;if(g.metric){var v=numericValue(r[g.metric]);if(v!==null)groups[key].vals.push(v)}
+  });
+  return Object.keys(groups).map(function(k){var o=groups[k],value=o.count;if(g.metric&&o.vals.length){if(g.agg==="sum")value=o.vals.reduce(function(a,b){return a+b},0);else if(g.agg==="mean")value=o.vals.reduce(function(a,b){return a+b},0)/o.vals.length;else value=o.count}o.value=value;return o});
+}
+async function geocodeLabels(labels,statusEl){
+  var cache=geoCacheRead(),out={},missing=labels.filter(function(q){return q&&!cache[q]}).slice(0,20);
+  labels.forEach(function(q){if(cache[q])out[q]=cache[q]});
+  for(var i=0;i<missing.length;i++){
+    var q=missing[i];if(statusEl)statusEl.textContent="Geocodificando "+(i+1)+" de "+missing.length+": "+q;
+    try{
+      var url="https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=pt-BR&q="+encodeURIComponent(q);
+      var res=await fetch(url,{headers:{"Accept":"application/json"}});
+      if(res.ok){var data=await res.json();if(data&&data[0]){cache[q]={lat:Number(data[0].lat),lon:Number(data[0].lon)};out[q]=cache[q];geoCacheWrite(cache)}}
+    }catch(e){}
+    if(i<missing.length-1)await sleep(1100);
+  }
+  if(statusEl)statusEl.textContent=missing.length?("Geocodificação concluída. "+missing.length+" localidade(s) consultada(s)."):"Coordenadas recuperadas do cache local.";
+  return out;
+}
+function destroyLeafletMap(map){if(map){try{map.remove()}catch(e){}}}
+function baseLeafletMap(host){
+  var map=L.map(host,{zoomControl:true,preferCanvas:true}).setView([-14.2,-51.9],4);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+  return map;
+}
+async function renderGeoMapInto(cfg,rows,host,isSaved){
+  if(!window.L||!host)return null;var g=cfg.geo||{},mode=g.mode;
+  if(mode==="auto")mode=(g.lat&&g.lon)?"coords":"place";
+  if(mode==="coords"&&(!g.lat||!g.lon))return null;
+  if(mode==="place"&&!g.city&&!g.state&&!g.country)return null;
+  var coords={};
+  if(mode==="place"){
+    var labels=unique(rows.map(function(r){return locationLabel(r,g)}).filter(Boolean));
+    if(!isSaved&&labels.length>20)$("geoStatus").textContent="Há "+labels.length+" localidades únicas; esta análise consulta no máximo as 20 primeiras sem cache.";
+    coords=await geocodeLabels(labels,isSaved?null:$("geoStatus"));
+  } else if(!isSaved) $("geoStatus").textContent="Usando coordenadas do próprio arquivo.";
+  var gg=Object.assign({},g,{mode:mode}),points=aggregateGeoPoints(rows,gg,coords);if(!points.length)return null;
+  var map=baseLeafletMap(host),bounds=[],vals=points.map(function(p){return Number(p.value)||0}),min=Math.min.apply(null,vals),max=Math.max.apply(null,vals),span=max-min||1;
+  points.slice(0,1000).forEach(function(p){
+    var radius=6+((Number(p.value)||0)-min)/span*18;
+    var circle=L.circleMarker([p.lat,p.lon],{radius:radius,color:"#171918",weight:1.5,fillColor:"#9fe870",fillOpacity:.68}).addTo(map);
+    var metric=g.metric?(esc(g.metric)+": <b>"+esc(formatVal(p.value))+"</b>"):("Registros: <b>"+p.count+"</b>");
+    circle.bindPopup("<b>"+esc(p.label)+"</b><br>"+metric+"<br><span style='color:#737872'>"+p.lat.toFixed(4)+", "+p.lon.toFixed(4)+"</span>");
+    bounds.push([p.lat,p.lon]);
+  });
+  if(bounds.length===1)map.setView(bounds[0],8);else if(bounds.length)map.fitBounds(bounds,{padding:[25,25],maxZoom:10});
+  setTimeout(function(){try{map.invalidateSize()}catch(e){}},60);
+  return map;
+}
 function buildSpecialSVG(cfg,rows){
   if(cfg.type==="boxplot")return buildBoxplotSVG(cfg,rows);
   if(cfg.type==="heatmap")return buildHeatmapSVG(cfg,rows);
   if(cfg.type==="wordcloud")return buildWordCloudSVG(cfg,rows);
   return "";
 }
-function generateChart(silent){
-  var cfg=currentConfig(),needsOne=["histogram","boxplot","wordcloud"].indexOf(cfg.type)>=0,needsTwo=cfg.type==="heatmap";
-  if(needsOne&&!cfg.x&&!cfg.y){if(!silent)toast("Selecione uma coluna para esse gráfico.");return}
-  if(needsTwo&&(!cfg.x||!cfg.y)){if(!silent)toast("Heatmap exige duas colunas categóricas.");return}
-  if(!needsOne&&!needsTwo&&(!cfg.x||!cfg.y)){if(!silent)toast("Escolha uma dimensão e um valor.");return}
+async function generateChart(silent){
+  var cfg=currentConfig(),isMap=cfg.type==="map",needsOne=["histogram","boxplot","wordcloud"].indexOf(cfg.type)>=0,needsTwo=cfg.type==="heatmap";
+  if(isMap){
+    var g=cfg.geo||{},mode=g.mode==="auto"?((g.lat&&g.lon)?"coords":"place"):g.mode;
+    if(mode==="coords"&&(!g.lat||!g.lon)){if(!silent)toast("Mapa por coordenadas exige Latitude e Longitude.");return}
+    if(mode==="place"&&!g.city&&!g.state&&!g.country){if(!silent)toast("Selecione Cidade, Estado/Região ou País.");return}
+  }else{
+    if(needsOne&&!cfg.x&&!cfg.y){if(!silent)toast("Selecione uma coluna para esse gráfico.");return}
+    if(needsTwo&&(!cfg.x||!cfg.y)){if(!silent)toast("Heatmap exige duas colunas categóricas.");return}
+    if(!needsOne&&!needsTwo&&(!cfg.x||!cfg.y)){if(!silent)toast("Escolha uma dimensão e um valor.");return}
+  }
   var rows=getFilteredRows(),payload=buildChartPayload(cfg,rows);
   if(!payload||(payload.special&&!payload.svg)){if(!silent)toast("Não há dados válidos para essa combinação.");return}
-  showChart();if(state.chart){state.chart.destroy();state.chart=null}
-  if(payload.special){
-    $("chartCanvas").style.display="none";$("specialVisual").classList.add("active");$("specialVisual").innerHTML=payload.svg;
+  showChart();if(state.chart){state.chart.destroy();state.chart=null}destroyLeafletMap(state.leafletMap);state.leafletMap=null;
+  $("chartCanvas").style.display="none";$("specialVisual").classList.remove("active");$("specialVisual").innerHTML="";$("mapVisual").classList.remove("active");$("mapVisual").innerHTML="";
+  if(payload.map){
+    $("mapVisual").classList.add("active");state.leafletMap=await renderGeoMapInto(cfg,rows,$("mapVisual"),false);
+    if(!state.leafletMap){$("mapVisual").classList.remove("active");if(!silent)toast("Não foi possível localizar pontos geográficos.");return}
+  }else if(payload.special){
+    $("specialVisual").classList.add("active");$("specialVisual").innerHTML=payload.svg;
   }else{
-    $("specialVisual").classList.remove("active");$("specialVisual").innerHTML="";$("chartCanvas").style.display="block";
-    state.chart=new Chart($("chartCanvas"),{type:payload.chartType,data:payload.data,options:payload.options});
+    $("chartCanvas").style.display="block";state.chart=new Chart($("chartCanvas"),{type:payload.chartType,data:payload.data,options:payload.options});
   }
   $("canvasTitle").textContent=payload.title;
   if(payload.rawData)makeInsight(payload.rawData,cfg.x,cfg.y,cfg.segment,cfg.agg);else $("insight").classList.remove("active");
@@ -563,7 +665,7 @@ function loadFile(file){
   Papa.parse(file,{header:true,skipEmptyLines:false,dynamicTyping:false,complete:function(res){
     var hs=(res.meta.fields||[]).filter(Boolean);if(!hs.length){toast("Não foi possível identificar as colunas.");return}
     state.fileName=file.name;state.headers=hs;state.rows=(res.data||[]).map(function(r){var o={};hs.forEach(function(h){o[h]=r[h]});return o});state.original=JSON.parse(JSON.stringify(state.rows));state.selected=[];state.filters=[];state.savedCharts=[];destroySavedInstances();$("savedGrid").innerHTML="";$("dashboardSection").hidden=true;
-    inferTypes();populateSelects();renderFields();updateSummary();renderPreview();recommendButtons();renderKpis();
+    inferTypes();populateSelects();renderFields();updateSummary();renderPreview();recommendButtons();renderKpis();toggleGeoPanel();$("geoStatus").textContent="";
     $("datasetName").textContent=file.name;$("fileBadge").textContent=file.name.length>18?file.name.slice(0,15)+"…":file.name;
     $("uploadCard").style.display="none";$("app").classList.add("active");toast("CSV importado com sucesso.");
   },error:function(){toast("Falha ao ler o CSV.")}});
@@ -581,31 +683,33 @@ function clean(kind){
   inferTypes();populateSelects();state.selected=[];state.filters=state.filters.filter(function(f){return state.headers.indexOf(f.column)>=0});renderFields();renderFilterChips();updateSummary();renderPreview();renderKpis();renderSavedCharts();$("cleanLog").textContent=msg;toast(msg||"Transformação concluída.");
 }
 $("resetBtn").addEventListener("click",function(){state.rows=JSON.parse(JSON.stringify(state.original));state.headers=state.original.length?Object.keys(state.original[0]):state.headers;state.selected=[];state.filters=[];inferTypes();populateSelects();renderFields();renderFilterChips();updateSummary();renderPreview();renderKpis();renderSavedCharts();$("cleanLog").textContent="Dataset restaurado ao estado original.";toast("Dataset restaurado.")});
-function destroySavedInstances(){state.savedInstances.forEach(function(ch){try{ch.destroy()}catch(e){}});state.savedInstances=[]}
-function renderSavedCharts(){
+function destroySavedInstances(){state.savedInstances.forEach(function(ch){try{ch.destroy()}catch(e){}});state.savedInstances=[];state.savedLeafletMaps.forEach(function(m){destroyLeafletMap(m)});state.savedLeafletMaps=[]}
+async function renderSavedCharts(){
   destroySavedInstances();
   var grid=$("savedGrid");grid.innerHTML=state.savedCharts.map(function(v){
-    var title=(v.x||v.y||"Visual")+(v.x&&v.y?" × "+v.y:""),special=["boxplot","heatmap","wordcloud"].indexOf(v.type)>=0;
-    return '<article class="saved-card"><div class="saved-card-head"><div><div class="saved-card-title">'+esc(title)+'</div><div class="saved-card-meta">'+esc(chartLabel(v.type)+" · "+aggLabel(v.agg)+(v.segment?" · por "+v.segment:"")+(v.filters.length?" · "+v.filters.length+" filtro(s)":""))+'</div></div><button type="button" data-remove-visual="'+v.id+'" aria-label="Remover visual">×</button></div>'+(special?'<div class="saved-special" id="saved-special-'+v.id+'"></div>':'<div class="saved-canvas"><canvas id="saved-'+v.id+'"></canvas></div>')+'</article>';
+    var title=v.type==="map"?"Mapa geográfico":((v.x||v.y||"Visual")+(v.x&&v.y?" × "+v.y:"")),special=["boxplot","heatmap","wordcloud"].indexOf(v.type)>=0,isMap=v.type==="map";
+    return '<article class="saved-card"><div class="saved-card-head"><div><div class="saved-card-title">'+esc(title)+'</div><div class="saved-card-meta">'+esc(chartLabel(v.type)+(v.type!=="map"?" · "+aggLabel(v.agg):"")+(v.segment?" · por "+v.segment:"")+(v.filters.length?" · "+v.filters.length+" filtro(s)":""))+'</div></div><button type="button" data-remove-visual="'+v.id+'" aria-label="Remover visual">×</button></div>'+(isMap?'<div class="saved-map" id="saved-map-'+v.id+'"></div>':(special?'<div class="saved-special" id="saved-special-'+v.id+'"></div>':'<div class="saved-canvas"><canvas id="saved-'+v.id+'"></canvas></div>'))+'</article>';
   }).join("");
   $("dashboardSection").hidden=!state.savedCharts.length;
-  state.savedCharts.forEach(function(v){
-    var rows=getFilteredRows(v.filters),payload=buildChartPayload(v,rows);if(!payload)return;
-    if(payload.special){var host=$("saved-special-"+v.id);if(host)host.innerHTML=payload.svg;return}
-    var canvas=$("saved-"+v.id);if(!canvas)return;
+  for(var i=0;i<state.savedCharts.length;i++){
+    var v=state.savedCharts[i],rows=getFilteredRows(v.filters),payload=buildChartPayload(v,rows);if(!payload)continue;
+    if(payload.map){var mh=$("saved-map-"+v.id);if(mh){var mm=await renderGeoMapInto(v,rows,mh,true);if(mm)state.savedLeafletMaps.push(mm)}continue}
+    if(payload.special){var host=$("saved-special-"+v.id);if(host)host.innerHTML=payload.svg;continue}
+    var canvas=$("saved-"+v.id);if(!canvas)continue;
     var opts=JSON.parse(JSON.stringify(payload.options,function(k,val){return typeof val==="function"?undefined:val}));opts.animation=false;
     if(payload.chartType!=="doughnut"){opts.scales=opts.scales||{};if(opts.scales.y&&opts.scales.y.ticks)delete opts.scales.y.ticks.callback}
     state.savedInstances.push(new Chart(canvas,{type:payload.chartType,data:payload.data,options:opts}));
-  });
+  }
   grid.querySelectorAll("[data-remove-visual]").forEach(function(b){b.addEventListener("click",function(){state.savedCharts=state.savedCharts.filter(function(v){return v.id!==b.dataset.removeVisual});renderSavedCharts()})});
 }
 $("saveVisualBtn").addEventListener("click",function(){
-  var cfg=currentConfig(),one=["histogram","boxplot","wordcloud"].indexOf(cfg.type)>=0;if((one&&!cfg.x&&!cfg.y)||(!one&&(!cfg.x||!cfg.y))){toast("Gere ou configure um visual antes de salvar.");return}
+  var cfg=currentConfig(),one=["histogram","boxplot","wordcloud"].indexOf(cfg.type)>=0,isMap=cfg.type==="map";if(!isMap&&((one&&!cfg.x&&!cfg.y)||(!one&&(!cfg.x||!cfg.y)))){toast("Gere ou configure um visual antes de salvar.");return}
   if(state.savedCharts.length>=6){toast("Limite de 6 visuais no dashboard da sessão.");return}
   cfg.id="v"+Date.now()+Math.floor(Math.random()*1000);state.savedCharts.push(cfg);renderSavedCharts();toast("Visual adicionado ao dashboard.");
 });
 $("clearDashboardBtn").addEventListener("click",function(){state.savedCharts=[];renderSavedCharts();toast("Dashboard limpo.")});
 $("exportPngBtn").addEventListener("click",function(){
+  if(state.chartType==="map"&&state.leafletMap){toast("PNG do mapa não é exportado nesta versão por restrições dos tiles. O mapa continua interativo e pode ser salvo no dashboard.");return}
   if(state.chart){var a=document.createElement("a");a.href=$("chartCanvas").toDataURL("image/png",1);a.download="data-analyst-"+Date.now()+".png";document.body.appendChild(a);a.click();a.remove();return}
   var svg=$("specialVisual").querySelector("svg");if(!svg){toast("Gere um gráfico primeiro.");return}
   var xml=new XMLSerializer().serializeToString(svg),blob=new Blob([xml],{type:"image/svg+xml;charset=utf-8"}),url=URL.createObjectURL(blob),img=new Image();
