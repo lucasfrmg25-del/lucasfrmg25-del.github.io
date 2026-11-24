@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f5f1">
+<title>Data Analyst Studio — Lucas Freire</title>
+<meta name="description" content="Ferramenta local para preparar, explorar e visualizar arquivos CSV diretamente no navegador.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f5f5f1;--panel:#ffffff;--ink:#171918;--muted:#737872;--line:#dedfd9;
+  --soft:#eceee8;--accent:#9fe870;--accent-2:#e5f8d7;--danger:#b54a4a;--shadow:0 18px 50px rgba(20,24,20,.07);
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
+a{color:inherit;text-decoration:none}.mono{font-family:"DM Mono",monospace}
+.wrap{width:min(1450px,96vw);margin:auto;padding:22px 0 44px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:8px 2px 22px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.03em}
+.brand-mark{width:31px;height:31px;border-radius:9px;background:var(--ink);display:grid;place-items:center;color:var(--accent);font-family:"DM Mono";font-weight:500}
+.nav{display:flex;align-items:center;gap:8px}.nav a,.ghost-btn,.soft-btn,.primary-btn{
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:10px 14px;border-radius:10px;font-weight:600;font-size:.82rem;transition:.18s
+}
+.nav a:hover,.ghost-btn:hover,.soft-btn:hover{border-color:#bfc1ba;background:#fafaf7}
+.primary-btn{background:var(--ink);color:#fff;border-color:var(--ink)}.primary-btn:hover{background:#292d2a}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:end;padding:44px 0 32px;border-top:1px solid var(--line)}
+.eyebrow{font-family:"DM Mono";font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:13px}
+.hero h1{font-size:clamp(42px,6.2vw,86px);line-height:.98;letter-spacing:-.065em;margin:0;max-width:900px}
+.hero p{color:var(--muted);line-height:1.65;font-size:1rem;max-width:620px;margin:0 0 8px}
+.hero-note{display:inline-flex;gap:8px;align-items:center;margin-top:16px;padding:8px 11px;background:var(--accent-2);border-radius:999px;font-size:.77rem;font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;background:#58aa2b}
+.upload-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.drop{border:1px dashed #bfc3bb;border-radius:14px;padding:28px;text-align:center;background:#fafaf7;transition:.18s}
+.drop.drag{border-color:#6dac44;background:var(--accent-2)}
+.drop-title{font-weight:700;font-size:1rem;margin:7px 0}.drop-sub{color:var(--muted);font-size:.8rem;margin-bottom:13px}
+.app{display:none;margin-top:22px}.app.active{display:block}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 16px}
+.stat-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}.stat-value{font-size:1.5rem;font-weight:700;margin-top:4px;letter-spacing:-.04em}
+.workspace{display:grid;grid-template-columns:270px minmax(0,1fr) 300px;gap:12px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden}
+.panel-head{padding:15px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel-title{font-size:.82rem;font-weight:700}.panel-sub{font-size:.68rem;color:var(--muted)}
+.panel-body{padding:14px}.field-list{display:flex;flex-direction:column;gap:6px;max-height:520px;overflow:auto;padding-right:2px}
+.field{width:100%;display:grid;grid-template-columns:19px 1fr auto;gap:8px;align-items:center;border:1px solid transparent;background:transparent;border-radius:9px;padding:9px 8px;text-align:left}
+.field:hover{background:#f7f8f4}.field.selected{background:var(--accent-2);border-color:#c8e9b5}
+.field input{accent-color:#182016}.field-name{font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-family:"DM Mono";font-size:.58rem;padding:3px 6px;border-radius:999px;background:var(--soft);color:#666c65}
+.builder{display:grid;grid-template-columns:1fr 1fr;gap:9px}.control{display:flex;flex-direction:column;gap:6px}.control.full{grid-column:1/-1}
+.control label{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+select{width:100%;border:1px solid var(--line);background:#fbfbf8;border-radius:9px;padding:10px 10px;color:var(--ink);font-size:.78rem}
+.chart-types{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.chart-btn{border:1px solid var(--line);border-radius:9px;background:#fff;padding:9px 5px;font-size:.69rem;font-weight:600;color:#5f645e}
+.chart-btn.active{background:var(--ink);border-color:var(--ink);color:#fff}.chart-btn:disabled{opacity:.32;cursor:not-allowed}
+.action-row{display:flex;gap:8px;margin-top:11px}.action-row button{flex:1}
+.canvas-panel{min-height:620px}.canvas-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:center}
+.canvas-title{font-weight:700;font-size:.9rem}.canvas-meta{font-size:.7rem;color:var(--muted);margin-top:3px}
+.canvas-body{padding:18px;min-height:520px;display:flex;flex-direction:column}
+.empty-state{min-height:460px;display:grid;place-items:center;text-align:center;color:var(--muted)}
+.empty-icon{width:58px;height:58px;margin:auto;border-radius:16px;background:var(--soft);display:grid;place-items:center;font-size:1.35rem;color:#4d524d}
+.empty-state h3{font-size:1rem;color:var(--ink);margin:13px 0 7px}.empty-state p{font-size:.78rem;line-height:1.55;max-width:320px;margin:0}
+.chart-wrap{display:none;position:relative;min-height:460px}.chart-wrap.active{display:block}
+.insight{display:none;margin-top:12px;padding:11px 13px;background:#f7f8f4;border:1px solid var(--line);border-radius:10px;font-size:.76rem;line-height:1.5}.insight.active{display:block}
+.tabs{display:flex;gap:4px;padding:6px;background:#f1f2ed;border-radius:10px;margin-bottom:12px}
+.tab{flex:1;border:0;background:transparent;border-radius:7px;padding:8px 5px;font-size:.7rem;font-weight:700;color:#6b716a}.tab.active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.tabpage{display:none}.tabpage.active{display:block}
+.quality-list{display:flex;flex-direction:column;gap:7px}.quality-item{display:flex;justify-content:space-between;gap:9px;padding:10px 0;border-bottom:1px solid #eee}.quality-item:last-child{border-bottom:0}
+.quality-name{font-size:.75rem;font-weight:600}.quality-val{font-family:"DM Mono";font-size:.68rem;color:var(--muted)}
+.clean-actions{display:flex;flex-direction:column;gap:7px}.clean-btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 11px;text-align:left;font-size:.73rem;font-weight:600}
+.clean-btn:hover{background:#f8f8f5}.clean-btn span{display:block;color:var(--muted);font-size:.63rem;font-weight:500;margin-top:3px}
+.clean-log{font-size:.68rem;color:var(--muted);line-height:1.55;margin-top:10px;min-height:22px}
+.preview-wrap{overflow:auto;max-height:430px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:max-content;min-width:100%;font-size:.69rem}
+th,td{border-bottom:1px solid #ecece8;border-right:1px solid #f0f0ed;padding:8px 10px;text-align:left;white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis}
+th{position:sticky;top:0;background:#f7f8f4;font-size:.63rem;text-transform:uppercase;letter-spacing:.04em;z-index:1}
+.footer-actions{display:flex;gap:7px;margin-top:12px}.footer-actions button{flex:1}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--ink);color:#fff;padding:11px 14px;border-radius:10px;font-size:.74rem;opacity:0;transform:translateY(8px);pointer-events:none;transition:.22s;z-index:20}
+.toast.show{opacity:1;transform:none}
+@media(max-width:1100px){.workspace{grid-template-columns:240px 1fr}.right-panel{grid-column:1/-1}.right-panel .panel-body{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tabs{grid-column:1/-1}.tabpage{grid-column:1/-1}.summary{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.wrap{width:min(94vw,1450px)}.topbar{align-items:flex-start;flex-direction:column}.hero{grid-template-columns:1fr;padding-top:28px}.workspace{grid-template-columns:1fr}.right-panel{grid-column:auto}.right-panel .panel-body{display:block}.summary{grid-template-columns:1fr 1fr}.canvas-panel{min-height:520px}.builder{grid-template-columns:1fr}.control.full{grid-column:auto}.chart-types{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:440px){.nav{flex-wrap:wrap}.summary{grid-template-columns:1fr}.hero h1{font-size:46px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">D.</div><span>Data Analyst Studio</span></div>
+    <nav class="nav"><a href="index.html">← Portfólio</a><a href="https://github.com/lucasfrmg25-del" target="_blank" rel="noopener">GitHub</a></nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">CSV workspace / client-side</div>
+      <h1>Explore dados sem começar pelo código.</h1>
+    </div>
+    <div>
+      <p>Importe um CSV, escolha as colunas que quer cruzar e gere a visualização em um clique. Você decide a análise; a ferramenta cuida da parte mecânica.</p>
+      <div class="hero-note"><span class="dot"></span> Seus dados permanecem no navegador.</div>
+    </div>
+  </section>
+
+  <section class="upload-card" id="uploadCard">
+    <div class="drop" id="dropZone">
+      <input id="fileInput" type="file" accept=".csv,text/csv" hidden>
+      <div class="mono" style="font-size:1.35rem">↥</div>
+      <div class="drop-title">Importar arquivo CSV</div>
+      <div class="drop-sub">Arraste e solte ou selecione um arquivo local.</div>
+      <button class="primary-btn" id="chooseFile" type="button">Escolher arquivo</button>
+    </div>
+  </section>
+
+  <section class="app" id="app">
+    <div class="summary">
+      <div class="stat"><div class="stat-label">Linhas</div><div class="stat-value" id="sRows">0</div></div>
+      <div class="stat"><div class="stat-label">Colunas</div><div class="stat-value" id="sCols">0</div></div>
+      <div class="stat"><div class="stat-label">Valores ausentes</div><div class="stat-value" id="sNulls">0</div></div>
+      <div class="stat"><div class="stat-label">Duplicatas</div><div class="stat-value" id="sDup">0</div></div>
+    </div>
+
+    <div class="workspace">
+      <aside class="panel">
+        <div class="panel-head"><div><div class="panel-title">Campos</div><div class="panel-sub">Selecione até 3 colunas</div></div><button class="ghost-btn" id="clearFields" type="button" style="padding:6px 8px">Limpar</button></div>
+        <div class="panel-body"><div class="field-list" id="fieldList"></div></div>
+      </aside>
+
+      <main class="panel canvas-panel">
+        <div class="canvas-head">
+          <div><div class="canvas-title" id="canvasTitle">Construtor de visual</div><div class="canvas-meta" id="canvasMeta">Selecione os campos para começar.</div></div>
+          <span class="badge" id="fileBadge">CSV</span>
+        </div>
+        <div class="canvas-body">
+          <div class="builder">
+            <div class="control"><label>Dimensão / eixo X</label><select id="xSelect"><option value="">Selecione</option></select></div>
+            <div class="control"><label>Valor / eixo Y</label><select id="ySelect"><option value="">Selecione</option></select></div>
+            <div class="control"><label>Segmentar por</label><select id="segmentSelect"><option value="">Nenhum</option></select></div>
+            <div class="control"><label>Agregação</label><select id="aggSelect"><option value="sum">Soma</option><option value="mean">Média</option><option value="median">Mediana</option><option value="count">Contagem</option><option value="min">Mínimo</option><option value="max">Máximo</option></select></div>
+            <div class="control full"><label>Visualização</label><div class="chart-types">
+              <button class="chart-btn active" type="button" data-chart="bar">Barras</button>
+              <button class="chart-btn" type="button" data-chart="stacked">Empilhado</button>
+              <button class="chart-btn" type="button" data-chart="line">Linha</button>
+              <button class="chart-btn" type="button" data-chart="scatter">Dispersão</button>
+              <button class="chart-btn" type="button" data-chart="doughnut">Donut</button>
+              <button class="chart-btn" type="button" data-chart="horizontal">Ranking</button>
+            </div></div>
+          </div>
+          <div class="action-row"><button class="primary-btn" id="generateBtn" type="button">Gerar gráfico</button><button class="soft-btn" id="autoBtn" type="button">Melhor visual</button></div>
+          <div class="empty-state" id="emptyState"><div><div class="empty-icon">⌁</div><h3>Seu gráfico aparece aqui</h3><p>Escolha uma dimensão e um valor. Para barras empilhadas, adicione também uma coluna em “Segmentar por”.</p></div></div>
+          <div class="chart-wrap" id="chartWrap"><canvas id="chartCanvas"></canvas></div>
+          <div class="insight" id="insight"></div>
+        </div>
+      </main>
+
+      <aside class="panel right-panel">
+        <div class="panel-head"><div><div class="panel-title">Dataset</div><div class="panel-sub" id="datasetName">Nenhum arquivo</div></div></div>
+        <div class="panel-body">
+          <div class="tabs"><button class="tab active" data-tab="quality" type="button">Qualidade</button><button class="tab" data-tab="clean" type="button">Preparar</button><button class="tab" data-tab="preview" type="button">Prévia</button></div>
+          <div class="tabpage active" id="tab-quality"><div class="quality-list" id="qualityList"></div></div>
+          <div class="tabpage" id="tab-clean">
+            <div class="clean-actions">
+              <button class="clean-btn" type="button" data-clean="emptyRows">Remover linhas vazias<span>Exclui registros sem nenhum valor.</span></button>
+              <button class="clean-btn" type="button" data-clean="duplicates">Remover duplicatas<span>Mantém a primeira ocorrência.</span></button>
+              <button class="clean-btn" type="button" data-clean="trim">Limpar espaços em textos<span>Aplica trim nas colunas textuais.</span></button>
+              <button class="clean-btn" type="button" data-clean="emptyCols">Remover colunas vazias<span>Exclui campos 100% sem dados.</span></button>
+              <button class="clean-btn" type="button" data-clean="median">Preencher nulos numéricos<span>Usa a mediana de cada coluna numérica.</span></button>
+            </div>
+            <div class="clean-log" id="cleanLog">Nenhuma transformação aplicada.</div>
+            <div class="footer-actions"><button class="soft-btn" id="resetBtn" type="button">Restaurar</button><button class="primary-btn" id="exportBtn" type="button">Exportar CSV</button></div>
+          </div>
+          <div class="tabpage" id="tab-preview"><div class="preview-wrap"><table id="previewTable"></table></div></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var state={original:[],rows:[],headers:[],types:{},selected:[],chartType:"bar",chart:null,fileName:""};
+var $=function(id){return document.getElementById(id)};
+var fileInput=$("fileInput"),drop=$("dropZone");
+
+$("chooseFile").addEventListener("click",function(){fileInput.click()});
+fileInput.addEventListener("change",function(e){if(e.target.files[0])loadFile(e.target.files[0])});
+["dragenter","dragover"].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add("drag")})});
+["dragleave","drop"].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove("drag")})});
+drop.addEventListener("drop",function(e){var f=e.dataTransfer.files[0];if(f)loadFile(f)});
+
+function toast(msg){var t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove("show")},1800)}
+function isEmpty(v){return v===null||v===undefined||String(v).trim()===""}
+function fmt(n){return Number(n||0).toLocaleString("pt-BR")}
+function unique(arr){return Array.from(new Set(arr))}
+function numericValue(v){
+  if(typeof v==="number"&&Number.isFinite(v))return v;
+  if(isEmpty(v))return null;
+  var s=String(v).trim().replace(/\s/g,"");
+  if(/^[-+]?\d{1,3}(\.\d{3})*,\d+$/.test(s))s=s.replace(/\./g,"").replace(",",".");
+  else if(/^[-+]?\d+,\d+$/.test(s))s=s.replace(",",".");
+  var n=Number(s);return Number.isFinite(n)?n:null;
+}
+function detectType(h){
+  var vals=state.rows.map(function(r){return r[h]}).filter(function(v){return !isEmpty(v)}).slice(0,500);
+  if(!vals.length)return "empty";
+  var lower=h.toLowerCase();
+  if(/date|data|time|hora|timestamp/.test(lower)){
+    var dates=vals.filter(function(v){return !isNaN(Date.parse(v))}).length;
+    if(dates/vals.length>.7)return "date";
+  }
+  var nums=vals.filter(function(v){return numericValue(v)!==null}).length;
+  if(nums/vals.length>.85)return "numeric";
+  var ratio=unique(vals.map(String)).length/vals.length;
+  if((/id|codigo|código|uuid/.test(lower)&&ratio>.75)||ratio>.97)return "id";
+  return "category";
+}
+function inferTypes(){state.types={};state.headers.forEach(function(h){state.types[h]=detectType(h)})}
+function duplicateCount(){
+  var seen=new Set(),d=0;
+  state.rows.forEach(function(r){var k=JSON.stringify(state.headers.map(function(h){return isEmpty(r[h])?"":String(r[h])}));if(seen.has(k))d++;else seen.add(k)});
+  return d;
+}
+function nullCount(){
+  var n=0;state.rows.forEach(function(r){state.headers.forEach(function(h){if(isEmpty(r[h]))n++})});return n;
+}
+function emptyColumns(){return state.headers.filter(function(h){return state.rows.every(function(r){return isEmpty(r[h])})})}
+function updateSummary(){
+  $("sRows").textContent=fmt(state.rows.length);$("sCols").textContent=fmt(state.headers.length);$("sNulls").textContent=fmt(nullCount());$("sDup").textContent=fmt(duplicateCount());
+  $("qualityList").innerHTML=[
+    ["Linhas",fmt(state.rows.length)],["Colunas",fmt(state.headers.length)],["Ausentes",fmt(nullCount())],["Duplicatas",fmt(duplicateCount())],["Colunas vazias",fmt(emptyColumns().length)]
+  ].map(function(x){return '<div class="quality-item"><span class="quality-name">'+x[0]+'</span><span class="quality-val">'+x[1]+'</span></div>'}).join("");
+}
+function renderFields(){
+  $("fieldList").innerHTML=state.headers.map(function(h){
+    var checked=state.selected.indexOf(h)>=0?" checked":"";
+    return '<label class="field'+(checked?" selected":"")+'"><input type="checkbox" value="'+esc(h)+'"'+checked+'><span class="field-name" title="'+esc(h)+'">'+esc(h)+'</span><span class="badge">'+typeLabel(state.types[h])+'</span></label>';
+  }).join("");
+  $("fieldList").querySelectorAll("input").forEach(function(cb){
+    cb.addEventListener("change",function(){
+      if(cb.checked&&state.selected.length>=3){cb.checked=false;toast("Selecione no máximo 3 colunas.");return}
+      state.selected=state.headers.filter(function(h){var el=Array.from($("fieldList").querySelectorAll("input")).find(function(x){return x.value===h});return el&&el.checked});
+      syncBuilderFromSelected();renderFields();recommendButtons();
+    });
+  });
+}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
+function typeLabel(t){return {numeric:"NÚM",category:"CAT",date:"DATA",id:"ID",empty:"VAZIO"}[t]||t}
+function populateSelects(){
+  ["xSelect","ySelect","segmentSelect"].forEach(function(id){
+    var el=$(id),first=id==="segmentSelect"?'<option value="">Nenhum</option>':'<option value="">Selecione</option>';
+    el.innerHTML=first+state.headers.map(function(h){return '<option value="'+esc(h)+'">'+esc(h)+'</option>'}).join("");
+  });
+}
+function syncBuilderFromSelected(){
+  var s=state.selected.slice(),num=s.find(function(h){return state.types[h]==="numeric"}),dim=s.find(function(h){return h!==num&&state.types[h]!=="id"});
+  if(s.length===1){$("xSelect").value=s[0];$("ySelect").value=""}
+  if(s.length>=2){
+    $("xSelect").value=dim||s[0];
+    $("ySelect").value=num||s.find(function(h){return h!==$("xSelect").value})||"";
+  }
+  $("segmentSelect").value=s.length>=3?s.find(function(h){return h!==$("xSelect").value&&h!==$("ySelect").value})||"":"";
+  updateMeta();recommendButtons();
+}
+function updateMeta(){
+  var x=$("xSelect").value,y=$("ySelect").value,s=$("segmentSelect").value;
+  var parts=[];if(x)parts.push("X: "+x);if(y)parts.push("Y: "+y);if(s)parts.push("segmento: "+s);
+  $("canvasMeta").textContent=parts.length?parts.join(" · "):"Selecione os campos para começar.";
+}
+["xSelect","ySelect","segmentSelect","aggSelect"].forEach(function(id){$(id).addEventListener("change",function(){updateMeta();recommendButtons()})});
+function recommendButtons(){
+  var x=$("xSelect").value,y=$("ySelect").value,s=$("segmentSelect").value,xt=state.types[x],yt=state.types[y];
+  document.querySelectorAll(".chart-btn").forEach(function(b){b.disabled=false});
+  if(!x||!y)return;
+  if(xt==="numeric"&&yt==="numeric"){
+    disableExcept(["scatter","line"]);
+  }else if(xt==="date"&&yt==="numeric"){
+    disableExcept(["line","bar"]);
+  }else if((xt==="category"||xt==="id")&&yt==="numeric"){
+    disableExcept(s?["bar","stacked","horizontal"]:["bar","horizontal","doughnut","line"]);
+  }else{
+    disableExcept(["bar","horizontal"]);
+  }
+}
+function disableExcept(allowed){document.querySelectorAll(".chart-btn").forEach(function(b){b.disabled=allowed.indexOf(b.dataset.chart)<0})}
+document.querySelectorAll(".chart-btn").forEach(function(b){b.addEventListener("click",function(){if(b.disabled)return;document.querySelectorAll(".chart-btn").forEach(function(x){x.classList.remove("active")});b.classList.add("active");state.chartType=b.dataset.chart})});
+$("autoBtn").addEventListener("click",function(){
+  var x=$("xSelect").value,y=$("ySelect").value,s=$("segmentSelect").value,xt=state.types[x],yt=state.types[y],best="bar";
+  if(xt==="numeric"&&yt==="numeric")best="scatter";else if(xt==="date"&&yt==="numeric")best="line";else if(s&&yt==="numeric")best="stacked";else if((xt==="category"||xt==="id")&&yt==="numeric")best="bar";
+  var btn=document.querySelector('.chart-btn[data-chart="'+best+'"]');if(btn&&!btn.disabled){btn.click();generateChart()}
+});
+$("generateBtn").addEventListener("click",generateChart);
+function aggregate(x,y,segment,agg){
+  var groups=new Map();
+  state.rows.forEach(function(r){
+    if(isEmpty(r[x]))return;
+    var key=String(r[x]),seg=segment?(isEmpty(r[segment])?"(vazio)":String(r[segment])):"__one__",k=key+"|||"+seg;
+    var val=agg==="count"?1:numericValue(r[y]);if(agg!=="count"&&val===null)return;
+    if(!groups.has(k))groups.set(k,{x:key,segment:seg,values:[]});
+    groups.get(k).values.push(val);
+  });
+  return Array.from(groups.values()).map(function(g){
+    var a=g.values.slice().sort(function(a,b){return a-b}),v=0;
+    if(agg==="sum"||agg==="count")v=a.reduce(function(p,c){return p+c},0);
+    else if(agg==="mean")v=a.reduce(function(p,c){return p+c},0)/a.length;
+    else if(agg==="median")v=a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2;
+    else if(agg==="min")v=Math.min.apply(null,a);else if(agg==="max")v=Math.max.apply(null,a);
+    return {x:g.x,segment:g.segment,value:v};
+  });
+}
+function generateChart(){
+  var x=$("xSelect").value,y=$("ySelect").value,segment=$("segmentSelect").value,agg=$("aggSelect").value,type=state.chartType;
+  if(!x||!y){toast("Escolha uma dimensão e um valor.");return}
+  if(type==="scatter"){
+    if(state.types[x]!=="numeric"||state.types[y]!=="numeric"){toast("Dispersão exige duas colunas numéricas.");return}
+    drawScatter(x,y,segment);return;
+  }
+  var data=aggregate(x,y,segment,agg);if(!data.length){toast("Não há dados válidos para essa combinação.");return}
+  var labels=unique(data.map(function(d){return d.x}));
+  var totals=labels.map(function(l){return data.filter(function(d){return d.x===l}).reduce(function(p,c){return p+c.value},0)});
+  var order=labels.map(function(l,i){return {l:l,t:totals[i]}}).sort(function(a,b){return b.t-a.t}).slice(0,20);
+  labels=order.map(function(o){return o.l});
+  var segments=segment?unique(data.map(function(d){return d.segment})):["__one__"];
+  var datasets=segments.map(function(seg,i){
+    return {label:segment?seg:(agg.toUpperCase()+" "+y),data:labels.map(function(l){var d=data.find(function(z){return z.x===l&&z.segment===seg});return d?round(d.value):0}),borderWidth:0,borderRadius:type==="stacked"?2:6,backgroundColor:palette(i),tension:.28,pointRadius:type==="line"?3:0};
+  });
+  var chartJsType=(type==="line")?"line":(type==="doughnut"?"doughnut":"bar");
+  var indexAxis=type==="horizontal"?"y":"x";
+  showChart();
+  if(state.chart)state.chart.destroy();
+  state.chart=new Chart($("chartCanvas"),{type:chartJsType,data:{labels:labels,datasets:datasets},options:{
+    responsive:true,maintainAspectRatio:false,indexAxis:indexAxis,animation:{duration:500},
+    plugins:{legend:{display:segment||type==="doughnut",position:"bottom",labels:{usePointStyle:true,boxWidth:8,font:{family:"Manrope",size:11}}},tooltip:{callbacks:{label:function(c){return " "+c.dataset.label+": "+formatVal(c.raw)}}}},
+    scales:chartJsType==="doughnut"?{}:{x:{stacked:type==="stacked",grid:{display:false},ticks:{font:{family:"Manrope",size:10}}},y:{stacked:type==="stacked",grid:{color:"#eceee8"},ticks:{font:{family:"DM Mono",size:9},callback:function(v){return compact(v)}}}}
+  }});
+  $("canvasTitle").textContent=(segment&&type==="stacked"?"Barras empilhadas":"Visualização")+" · "+x+" × "+y;
+  makeInsight(data,x,y,segment,agg);
+}
+function drawScatter(x,y,segment){
+  var groups={};
+  state.rows.slice(0,5000).forEach(function(r){var xv=numericValue(r[x]),yv=numericValue(r[y]);if(xv===null||yv===null)return;var seg=segment?(isEmpty(r[segment])?"(vazio)":String(r[segment])):"Dados";if(!groups[seg])groups[seg]=[];groups[seg].push({x:xv,y:yv})});
+  showChart();if(state.chart)state.chart.destroy();
+  var ds=Object.keys(groups).map(function(k,i){return {label:k,data:groups[k],backgroundColor:palette(i),pointRadius:3,pointHoverRadius:5}});
+  state.chart=new Chart($("chartCanvas"),{type:"scatter",data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:!!segment,position:"bottom"}},scales:{x:{grid:{color:"#eceee8"},title:{display:true,text:x}},y:{grid:{color:"#eceee8"},title:{display:true,text:y}}}}});
+  $("canvasTitle").textContent="Dispersão · "+x+" × "+y;$("insight").classList.remove("active");
+}
+function showChart(){$("emptyState").style.display="none";$("chartWrap").classList.add("active")}
+function makeInsight(data,x,y,segment,agg){
+  var top=data.slice().sort(function(a,b){return b.value-a.value})[0];if(!top)return;
+  $("insight").innerHTML="<strong>Leitura rápida:</strong> maior resultado em <b>"+esc(top.x)+"</b>"+(segment?" / "+esc(top.segment):"")+" com <b>"+formatVal(top.value)+"</b> usando "+aggLabel(agg)+" de "+esc(y)+".";
+  $("insight").classList.add("active");
+}
+function aggLabel(a){return {sum:"soma",mean:"média",median:"mediana",count:"contagem",min:"mínimo",max:"máximo"}[a]||a}
+function palette(i){return ["#171918","#9fe870","#8ca2a0","#d8c3a5","#9c8fb4","#c77f6b","#79a36e"][i%7]}
+function compact(v){var n=Number(v);if(Math.abs(n)>=1e9)return (n/1e9).toFixed(1)+"B";if(Math.abs(n)>=1e6)return (n/1e6).toFixed(1)+"M";if(Math.abs(n)>=1e3)return (n/1e3).toFixed(1)+"K";return n}
+function formatVal(v){return Number(v).toLocaleString("pt-BR",{maximumFractionDigits:2})}
+function round(v){return Math.round((v+Number.EPSILON)*100)/100}
+
+function renderPreview(){
+  var hs=state.headers.slice(0,12),rows=state.rows.slice(0,8);
+  $("previewTable").innerHTML="<thead><tr>"+hs.map(function(h){return "<th>"+esc(h)+"</th>"}).join("")+"</tr></thead><tbody>"+rows.map(function(r){return "<tr>"+hs.map(function(h){return "<td title='"+esc(r[h]||"")+"'>"+esc(isEmpty(r[h])?"—":r[h])+"</td>"}).join("")+"</tr>"}).join("")+"</tbody>";
+}
+function loadFile(file){
+  if(!/\.csv$/i.test(file.name)){toast("Selecione um arquivo .CSV");return}
+  Papa.parse(file,{header:true,skipEmptyLines:false,dynamicTyping:false,complete:function(res){
+    var hs=(res.meta.fields||[]).filter(Boolean);if(!hs.length){toast("Não foi possível identificar as colunas.");return}
+    state.fileName=file.name;state.headers=hs;state.rows=(res.data||[]).map(function(r){var o={};hs.forEach(function(h){o[h]=r[h]});return o});state.original=JSON.parse(JSON.stringify(state.rows));state.selected=[];
+    inferTypes();populateSelects();renderFields();updateSummary();renderPreview();recommendButtons();
+    $("datasetName").textContent=file.name;$("fileBadge").textContent=file.name.length>18?file.name.slice(0,15)+"…":file.name;
+    $("uploadCard").style.display="none";$("app").classList.add("active");toast("CSV importado com sucesso.");
+  },error:function(){toast("Falha ao ler o CSV.")}});
+}
+$("clearFields").addEventListener("click",function(){state.selected=[];renderFields();$("xSelect").value="";$("ySelect").value="";$("segmentSelect").value="";updateMeta()});
+document.querySelectorAll(".tab").forEach(function(t){t.addEventListener("click",function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("active")});document.querySelectorAll(".tabpage").forEach(function(x){x.classList.remove("active")});t.classList.add("active");$("tab-"+t.dataset.tab).classList.add("active")})});
+document.querySelectorAll("[data-clean]").forEach(function(b){b.addEventListener("click",function(){clean(b.dataset.clean)})});
+function clean(kind){
+  var msg="";
+  if(kind==="emptyRows"){var before=state.rows.length;state.rows=state.rows.filter(function(r){return state.headers.some(function(h){return !isEmpty(r[h])})});msg=(before-state.rows.length)+" linha(s) vazia(s) removida(s)."}
+  if(kind==="duplicates"){var seen=new Set(),beforeD=state.rows.length;state.rows=state.rows.filter(function(r){var k=JSON.stringify(state.headers.map(function(h){return isEmpty(r[h])?"":String(r[h])}));if(seen.has(k))return false;seen.add(k);return true});msg=(beforeD-state.rows.length)+" duplicata(s) removida(s)."}
+  if(kind==="trim"){var c=0;state.rows.forEach(function(r){state.headers.forEach(function(h){if(typeof r[h]==="string"){var n=r[h].trim();if(n!==r[h])c++;r[h]=n}})});msg=c+" valor(es) textual(is) normalizado(s)."}
+  if(kind==="emptyCols"){var emp=emptyColumns();state.headers=state.headers.filter(function(h){return emp.indexOf(h)<0});state.rows.forEach(function(r){emp.forEach(function(h){delete r[h]})});msg=emp.length+" coluna(s) vazia(s) removida(s)."}
+  if(kind==="median"){var filled=0;state.headers.forEach(function(h){if(state.types[h]!=="numeric")return;var vals=state.rows.map(function(r){return numericValue(r[h])}).filter(function(v){return v!==null}).sort(function(a,b){return a-b});if(!vals.length)return;var m=vals.length%2?vals[(vals.length-1)/2]:(vals[vals.length/2-1]+vals[vals.length/2])/2;state.rows.forEach(function(r){if(isEmpty(r[h])){r[h]=m;filled++}})});msg=filled+" nulo(s) numérico(s) preenchido(s) pela mediana."}
+  inferTypes();populateSelects();state.selected=[];renderFields();updateSummary();renderPreview();$("cleanLog").textContent=msg;toast(msg||"Transformação concluída.");
+}
+$("resetBtn").addEventListener("click",function(){state.rows=JSON.parse(JSON.stringify(state.original));state.headers=state.original.length?Object.keys(state.original[0]):state.headers;state.selected=[];inferTypes();populateSelects();renderFields();updateSummary();renderPreview();$("cleanLog").textContent="Dataset restaurado ao estado original.";toast("Dataset restaurado.")});
+$("exportBtn").addEventListener("click",function(){var csv=Papa.unparse(state.rows,{columns:state.headers});var blob=new Blob([csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=(state.fileName.replace(/\.csv$/i,"")||"dataset")+"_prepared.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast("CSV exportado.")});
+})();
+</script>
+</body>
+</html>
